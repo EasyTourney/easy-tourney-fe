@@ -4,6 +4,7 @@ import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
 import { useCallback, useState } from 'react'
+import { DialogAddCategory } from '../../components/DialogAddCategory'
 
 const Category = () => {
   const [value, setValue] = useState<string | number>('')
@@ -35,14 +36,19 @@ const Category = () => {
   }, [])
   return (
     <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'end', m: '1rem' }}>
-        <Input
-          label="Search"
-          id="outlined-search"
-          placeholder="Search here..."
-          handleChange={(e) => setValue(e.target.value)}
-          value={value}
-        />
+      <Box sx={{ display: 'flex', alignItems: 'center',  justifyContent: 'space-between' }}>
+        <Box sx={{ alignSelf: 'flex-start',marginBottom:"10px" }}>
+          <DialogAddCategory categories={[]} />
+        </Box>
+        <Box sx={{ alignSelf: 'flex-end' }}>
+          <Input
+            label="Search"
+            id="outlined-search"
+            placeholder="Search here..."
+            handleChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
+        </Box>
       </Box>
 
       <TableReused

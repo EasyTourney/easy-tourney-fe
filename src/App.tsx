@@ -8,7 +8,7 @@ import { ToastContainer } from 'react-toastify'
 function App() {
   return (
     <div className="App">
-      <ToastContainer autoClose={1000} draggable />
+      <ToastContainer style={{ fontSize: '15px' }} autoClose={1000} draggable />
       <Routes>
         <Route path="/*" element={<Public />}>
           <Route path="" element={<Dashboard />} />
