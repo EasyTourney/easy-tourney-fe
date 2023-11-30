@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
-import CategorySchema from './category.validator'
+import { CategorySchema } from '../../services/validator/category.validator'
 interface AddCategoryProps {
   categories: { id: number; categoryName: string }[]
 }
@@ -23,7 +23,7 @@ export function DialogAddCategory({ categories }: AddCategoryProps) {
     initialValues: {
       categoryName: ''
     },
-    validationSchema: CategorySchema(),
+    validationSchema: CategorySchema,
     onSubmit: async () => {
       try {
         setIsSaving(true)

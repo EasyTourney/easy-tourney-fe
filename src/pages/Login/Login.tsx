@@ -35,7 +35,7 @@ const Login: React.FC = () => {
           }}
           validationSchema={LoginSchema}
           onSubmit={handleSubmitForm}
-          validateOnBlur={false}
+          validateOnBlur={true}
           validateOnChange={false}
         >
           {(formProps: any) => (
