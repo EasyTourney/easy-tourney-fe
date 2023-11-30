@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Category from './layouts/Categories'
 import Public from './pages/Public'
-import Login from './pages/Login'
+import { Login } from './pages/Login'
 import Dashboard from './layouts/Dashboard'
 import { ToastContainer } from 'react-toastify'
 

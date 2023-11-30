@@ -1,0 +1,45 @@
+.login-container {
+  height: 100vh;
+  display: flex;
+  background-color: transparent;
+  background-repeat: round;
+  background-image: linear-gradient(195deg, rgba(66, 66, 74, 0.6), rgba(25, 25, 25, 0.6)),
+    url(https://demos.creative-tim.com/material-dashboard-pro-react/static/media/bg-sign-in-basic.f327db1d0e4b00ba3c81.jpeg);
+}
+
+.login-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: #f0e7e7;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.login-title {
+  font-size: 2rem;
+  margin: 0 0 3rem;
+  text-align: center;
+}
+
+.error-message {
+  margin: 0 !important;
+  font-size: 0.9rem;
+  text-align: left;
+  color: red;
+  font-weight: 500;
+}
+
+.submit-login-btn {
+  width: 100%;
+  border-radius: 0.5rem;
+}
