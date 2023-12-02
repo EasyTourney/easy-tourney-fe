@@ -5,68 +5,70 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { Box, Button, Pagination } from '@mui/material'
-import { test } from '../../data/mockData'
+import { Box, Button } from '@mui/material'
 import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
 import { TiArrowSortedDown } from 'react-icons/ti'
 import { memo, useEffect, useState } from 'react'
 import { LiaEdit } from 'react-icons/lia'
 import { RiDeleteBin2Line } from 'react-icons/ri'
+import Paginations from '../Paginations'
+import { ColumnTypes } from '../../types/commom'
 
 interface ReusedTableProps {
-  columns: test[]
+  columns: ColumnTypes[]
   rows: { [key: string]: any }[]
   showActions?: boolean
   onEdit?: (rowData: { [key: string]: any }) => void
   onDelete?: (rowData: { [key: string]: any }) => void
-  handleNameColumnSort: (status: 'asc' | 'desc' | 'none') => void
+  handleColumnSort: (id: any, status: 'asc' | 'desc' | 'none') => void
 }
 
-const TableReused = ({
-  rows,
-  columns,
-  showActions = true,
-  onEdit,
-  onDelete,
-  handleNameColumnSort
-}: ReusedTableProps) => {
-  const [nameSortType, setNameSortType] = useState<'asc' | 'desc' | 'none'>('none')
+const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, handleColumnSort }: ReusedTableProps) => {
+  const [sortStates, setSortStates] = useState<{ [key: string]: 'asc' | 'desc' | 'none' }>(
+    Object.fromEntries(columns.map((column) => [column.id, 'none']))
+  )
 
-  const handleNameColumnClick = () => {
+  const handleSortTableClick = (id: any) => {
+    const currentSortType = sortStates[id]
     let nextSortType: 'asc' | 'desc' | 'none'
 
-    if (nameSortType === 'asc') {
+    if (currentSortType === 'asc') {
       nextSortType = 'desc'
-    } else if (nameSortType === 'desc') {
+    } else if (currentSortType === 'desc') {
       nextSortType = 'none'
     } else {
       nextSortType = 'asc'
     }
-    setNameSortType(nextSortType)
-    handleNameColumnSort(nextSortType)
+
+    const updatedSortStates = { ...sortStates, [id]: nextSortType }
+    setSortStates(updatedSortStates)
+    handleColumnSort(id, nextSortType)
   }
 
-  const getNameSortIcon = () => {
-    if (nameSortType === 'asc') {
+  const getColumnSortIcon = (id: any) => {
+    const sortType = sortStates[id]
+
+    if (sortType === 'asc') {
       return <TiArrowSortedDown size={15} />
-    } else if (nameSortType === 'desc') {
+    } else if (sortType === 'desc') {
       return <TiArrowSortedUp size={15} />
     } else {
       return <TiArrowUnsorted size={15} />
     }
   }
+  /// pagination
   const [page, setPage] = useState(1)
-  const rowsPerPage = 5
   const [paginatedRows, setPaginatedRows] = useState<{ [key: string]: any }[]>([])
+  const rowsPerPage = 10
   useEffect(() => {
     const startIndex = (page - 1) * rowsPerPage
     const endIndex = startIndex + rowsPerPage
     const newPaginatedRows = rows?.slice(startIndex, endIndex) || []
     setPaginatedRows(newPaginatedRows)
   }, [page, rows])
-  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value)
+  const handlePageChange = (pageNumber: number) => {
+    setPage(pageNumber)
   }
 
   return (
@@ -87,33 +89,47 @@ const TableReused = ({
                 padding: '8px 16px'
               }
             }}
+            style={{
+              WebkitTouchCallout: 'none',
+              WebkitUserSelect: 'none',
+              KhtmlUserSelect: 'none',
+              MozUserSelect: 'none',
+              msUserSelect: 'none',
+              userSelect: 'none'
+            }}
           >
             <TableRow>
               {columns?.map((column) => (
                 <TableCell
                   key={column.id}
                   sx={{
-                    textAlign: 'center',
+                    textAlign: `${column.left ? 'left' : 'center'}`,
                     color: 'white',
                     fontWeight: 'bold',
-                    textTransform: 'uppercase'
+                    textTransform: 'uppercase',
+                    borderRight: ' 1px solid rgba(224, 224, 224, 1)',
+                    borderCollapse: 'collapse'
                   }}
-                  style={{ width: `${column.id === 'name' ? '560px' : column.id === 'Id' ? '273px' : ''}` }}
+                  style={{ width: `${column.id === column.style?.filed && column.style.width}` }}
                 >
                   <Box
                     component="span"
                     sx={{
-                      display: 'flex',
+                      display: 'inline-flex',
                       justifyContent: 'center',
                       alignItems: 'center',
                       gap: '3px',
                       cursor: `${column.sortTable && 'pointer'}`
                     }}
-                    onClick={() => column.id && handleNameColumnClick()}
+                    onClick={() => {
+                      if (column.sortTable && column.id === column.sortBy) {
+                        handleSortTableClick(column.id)
+                      }
+                    }}
                   >
                     {column.label}
 
-                    {column.id && column.sortTable && getNameSortIcon()}
+                    {column.sortTable && getColumnSortIcon(column.id)}
                   </Box>
                 </TableCell>
               ))}
@@ -123,7 +139,8 @@ const TableReused = ({
                     textAlign: 'center',
                     color: 'white',
                     fontWeight: 'bold',
-                    textTransform: 'uppercase'
+                    textTransform: 'uppercase',
+                    width: '100px'
                   }}
                 >
                   Actions
@@ -133,24 +150,49 @@ const TableReused = ({
           </TableHead>
           <TableBody>
             {paginatedRows?.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
+              <TableRow
+                key={rowIndex}
+                sx={{
+                  '&:nth-of-type(even)': {
+                    backgroundColor: '#f9fafd'
+                  }
+                }}
+              >
                 {columns?.map((column, colIndex) => (
-                  <TableCell key={colIndex} component="th" scope="row" sx={{ textAlign: 'center' }}>
+                  <TableCell
+                    key={colIndex}
+                    component="td"
+                    scope="row"
+                    sx={{
+                      textAlign: `${column.left ? 'left' : 'center'}`,
+                      borderRight: ' 1px solid rgba(224, 224, 224, 1)',
+                      borderCollapse: 'collapse'
+                    }}
+                  >
                     {row[column.id]}
                   </TableCell>
                 ))}
                 {showActions && (
-                  <TableCell sx={{ textAlign: 'center' }}>
-                    {onEdit && (
-                      <Button title="Edit" onClick={() => onEdit(row)}>
-                        <LiaEdit color="green" size={20} />
-                      </Button>
-                    )}
-                    {onDelete && (
-                      <Button title="Delete" onClick={() => onDelete(row)}>
-                        <RiDeleteBin2Line color="red" size={20} />
-                      </Button>
-                    )}
+                  <TableCell
+                    scope="row"
+                    component="td"
+                    sx={{
+                      borderRight: ' 1px solid rgba(224, 224, 224, 1)',
+                      borderCollapse: 'collapse'
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center ', justifyContent: 'center' }}>
+                      {onEdit && (
+                        <Button title="Edit" onClick={() => onEdit(row)}>
+                          <LiaEdit color="green" size={20} />
+                        </Button>
+                      )}
+                      {onDelete && (
+                        <Button title="Delete" onClick={() => onDelete(row)}>
+                          <RiDeleteBin2Line color="red" size={20} />
+                        </Button>
+                      )}
+                    </Box>
                   </TableCell>
                 )}
               </TableRow>
@@ -158,16 +200,8 @@ const TableReused = ({
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Box sx={{ mt: '3rem', display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination
-          count={Math.ceil(rows?.length / rowsPerPage)}
-          page={page}
-          onChange={handleChangePage}
-          showFirstButton
-          showLastButton
-          color="primary"
-        />
+      <Box sx={{ mt: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+        <Paginations totalItems={rows.length} itemsPerPage={10} onPageChange={handlePageChange} />
       </Box>
     </Box>
   )

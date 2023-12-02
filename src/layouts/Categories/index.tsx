@@ -9,16 +9,28 @@ import { DialogAddCategory } from '../../components/DialogAddCategory'
 const Category = () => {
   const [value, setValue] = useState<string | number>('')
 
-  const columnsTest = [
+  const columns = [
     {
       id: 'Id',
-      sortTable: false,
-      label: 'Id'
+      sortTable: true,
+      sortBy: 'Id',
+      label: 'Id',
+      left: false,
+      style: {
+        filed: 'Id',
+        width: '100px'
+      }
     },
     {
       id: 'name',
       sortTable: true,
-      label: 'Name'
+      label: 'Name',
+      sortBy: 'name',
+      left: true,
+      style: {
+        filed: 'name',
+        width: '1000px'
+      }
     }
   ]
 
@@ -28,16 +40,15 @@ const Category = () => {
 
   const handleDelete = useCallback((rowData: { [key: string]: any }) => {
     //call api here
-    console.log(rowData)
   }, [])
 
-  const handleNameColumnSort = useCallback((sortType: 'asc' | 'desc' | 'none') => {
+  const handleColumnSort = useCallback((idColumm: any, sortType: 'asc' | 'desc' | 'none') => {
     //call api here
   }, [])
   return (
     <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center',  justifyContent: 'space-between' }}>
-        <Box sx={{ alignSelf: 'flex-start',marginBottom:"10px" }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
           <DialogAddCategory categories={[]} />
         </Box>
         <Box sx={{ alignSelf: 'flex-end' }}>
@@ -52,11 +63,11 @@ const Category = () => {
       </Box>
 
       <TableReused
-        columns={columnsTest}
+        columns={columns}
         rows={mockDataCategory}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        handleNameColumnSort={handleNameColumnSort}
+        handleColumnSort={handleColumnSort}
       />
     </Box>
   )

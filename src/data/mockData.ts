@@ -1,108 +1,102 @@
 export const mockDataCategory = [
-  {
-    Id: 1,
-    name: 'category1'
-  },
-  {
-    Id: 2,
-    name: 'category2'
-  },
-  {
-    Id: 3,
-    name: 'category3'
-  },
-  {
-    Id: 4,
-    name: 'category4'
-  },
-  {
-    Id: 5,
-    name: 'category5'
-  },
-  {
-    Id: 6,
-    name: 'category6'
-  },
-  {
-    Id: 7,
-    name: 'category7'
-  },
-  {
-    Id: 8,
-    name: 'category8'
-  },
-  {
-    Id: 9,
-    name: 'category9'
-  },
-  {
-    Id: 10,
-    name: 'category10'
-  },
-  {
-    Id: 11,
-    name: 'category11'
-  },
-  {
-    Id: 12,
-    name: 'category12'
-  },
-  {
-    Id: 13,
-    name: 'category13'
-  },
-  {
-    Id: 14,
-    name: 'category14'
-  },
-  {
-    Id: 15,
-    name: 'category15'
-  },
-  {
-    Id: 16,
-    name: 'category16'
-  },
-  {
-    Id: 17,
-    name: 'category17'
-  },
-  {
-    Id: 18,
-    name: 'category18'
-  },
-  {
-    Id: 19,
-    name: 'category19'
-  },
-  {
-    Id: 20,
-    name: 'category20'
-  },
-  {
-    Id: 21,
-    name: 'category 21'
-  },
-  {
-    Id: 22,
-    name: 'category 22'
-  },
-  {
-    Id: 23,
-    name: 'category 23'
-  },
-  {
-    Id: 24,
-    name: 'category 24'
-  },
-  {
-    Id: 25,
-    name: 'category 26'
-  }
+  { Id: 1, name: 'category1' },
+  { Id: 2, name: 'category2' },
+  { Id: 3, name: 'category3' },
+  { Id: 4, name: 'category4' },
+  { Id: 5, name: 'category5' },
+  { Id: 6, name: 'category6' },
+  { Id: 7, name: 'category7' },
+  { Id: 8, name: 'category8' },
+  { Id: 9, name: 'category9' },
+  { Id: 10, name: 'category10' },
+  { Id: 11, name: 'category11' },
+  { Id: 12, name: 'category12' },
+  { Id: 13, name: 'category13' },
+  { Id: 14, name: 'category14' },
+  { Id: 15, name: 'category15' },
+  { Id: 16, name: 'category16' },
+  { Id: 17, name: 'category17' },
+  { Id: 18, name: 'category18' },
+  { Id: 19, name: 'category19' },
+  { Id: 20, name: 'category20' },
+  { Id: 21, name: 'category21' },
+  { Id: 22, name: 'category22' },
+  { Id: 23, name: 'category23' },
+  { Id: 24, name: 'category24' },
+  { Id: 25, name: 'category25' },
+  { Id: 26, name: 'category26' },
+  { Id: 27, name: 'category27' },
+  { Id: 28, name: 'category28' },
+  { Id: 29, name: 'category29' },
+  { Id: 30, name: 'category30' },
+  { Id: 31, name: 'category31' },
+  { Id: 32, name: 'category32' },
+  { Id: 33, name: 'category33' },
+  { Id: 34, name: 'category34' },
+  { Id: 35, name: 'category35' },
+  { Id: 36, name: 'category36' },
+  { Id: 37, name: 'category37' },
+  { Id: 38, name: 'category38' },
+  { Id: 39, name: 'category39' },
+  { Id: 40, name: 'category40' },
+  { Id: 41, name: 'category41' },
+  { Id: 42, name: 'category42' },
+  { Id: 43, name: 'category43' },
+  { Id: 44, name: 'category44' },
+  { Id: 45, name: 'category45' },
+  { Id: 46, name: 'category46' },
+  { Id: 47, name: 'category47' },
+  { Id: 48, name: 'category48' },
+  { Id: 49, name: 'category49' },
+  { Id: 50, name: 'category50' },
+  { Id: 51, name: 'category51' },
+  { Id: 52, name: 'category52' },
+  { Id: 53, name: 'category53' },
+  { Id: 54, name: 'category54' },
+  { Id: 55, name: 'category55' },
+  { Id: 56, name: 'category56' },
+  { Id: 57, name: 'category57' },
+  { Id: 58, name: 'category58' },
+  { Id: 59, name: 'category59' },
+  { Id: 60, name: 'category60' },
+  { Id: 61, name: 'category61' },
+  { Id: 62, name: 'category62' },
+  { Id: 63, name: 'category63' },
+  { Id: 64, name: 'category64' },
+  { Id: 65, name: 'category65' },
+  { Id: 66, name: 'category66' },
+  { Id: 67, name: 'category67' },
+  { Id: 68, name: 'category68' },
+  { Id: 69, name: 'category69' },
+  { Id: 70, name: 'category70' },
+  { Id: 71, name: 'category71' },
+  { Id: 72, name: 'category72' },
+  { Id: 73, name: 'category73' },
+  { Id: 74, name: 'category74' },
+  { Id: 75, name: 'category75' },
+  { Id: 76, name: 'category76' },
+  { Id: 77, name: 'category77' },
+  { Id: 78, name: 'category78' },
+  { Id: 79, name: 'category79' },
+  { Id: 80, name: 'category80' },
+  { Id: 81, name: 'category81' },
+  { Id: 82, name: 'category82' },
+  { Id: 83, name: 'category83' },
+  { Id: 84, name: 'category84' },
+  { Id: 85, name: 'category85' },
+  { Id: 86, name: 'category86' },
+  { Id: 87, name: 'category87' },
+  { Id: 88, name: 'category88' },
+  { Id: 89, name: 'category89' },
+  { Id: 90, name: 'category90' },
+  { Id: 91, name: 'category91' },
+  { Id: 92, name: 'category92' },
+  { Id: 93, name: 'category93' },
+  { Id: 94, name: 'category94' },
+  { Id: 95, name: 'category95' },
+  { Id: 96, name: 'category96' },
+  { Id: 97, name: 'category97' },
+  { Id: 98, name: 'category98' },
+  { Id: 99, name: 'category99' },
+  { Id: 100, name: 'category100' }
 ]
-
-export interface test {
-  id: string
-  sortTable: boolean
-  label: string
-}

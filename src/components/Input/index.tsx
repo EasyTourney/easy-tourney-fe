@@ -13,11 +13,21 @@ interface InputProps {
   value?: string | number
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   useIcon?: boolean
+  hoverIcon?: boolean
 }
 
-const Input = ({ id, label, type = 'text', placeholder, value, handleChange, useIcon = true }: InputProps) => {
+const Input = ({
+  id,
+  label,
+  type = 'text',
+  placeholder,
+  value,
+  handleChange,
+  useIcon = true,
+  hoverIcon = false
+}: InputProps) => {
   return (
-    <FormControl sx={{ m: 1 }} variant="outlined">
+    <FormControl sx={{ mb: 1 }} variant="outlined">
       <InputLabel
         sx={{
           fontSize: '15px',
@@ -52,7 +62,10 @@ const Input = ({ id, label, type = 'text', placeholder, value, handleChange, use
         endAdornment={
           useIcon && (
             <InputAdornment position="end">
-              <IconButton edge="end">
+              <IconButton
+                edge="end"
+                sx={{ '&:hover': { backgroundColor: `${hoverIcon ? '' : 'transparent'}` }, pointerEvents: 'none' }}
+              >
                 <GridSearchIcon />
               </IconButton>
             </InputAdornment>
