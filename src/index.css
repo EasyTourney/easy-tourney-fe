@@ -1,15 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap");
-
-
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@1,600;1,800&family=Space+Grotesk:wght@700&display=swap');
 html,
 body,
-#root,h1,h2,h3,h4,h5,h6 {
+#root,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   width: 100%;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
-.App{
-    background-color: rgb(240, 242, 245)
+.App {
+  background-color: rgb(240, 242, 245);
 }
 
 .MuiDataGrid-root .MuiDataGrid-columnHeader,
@@ -17,3 +22,6 @@ body,
   outline: none !important;
 }
 
+::-ms-reveal {
+  display: none;
+}

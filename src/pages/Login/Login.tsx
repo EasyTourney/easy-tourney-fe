@@ -1,24 +1,41 @@
 import React, { useCallback, useState } from 'react'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
+import { Formik, Field, Form, ErrorMessage, FormikProps } from 'formik'
 import { LoginSchema } from '../../services/validator/auth.validator'
-import { Box, Button, IconButton, InputAdornment, Stack, TextField } from '@mui/material'
+import { Alert, Box, Button, IconButton, InputAdornment, Stack, TextField } from '@mui/material'
 import { LoginForm } from './Login.types'
-import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { LockOutlined, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
 import styles from './Login.module.css'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const Login: React.FC = () => {
-  const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
 
-  const handleSubmitForm = useCallback((values: LoginForm, { resetForm }: { resetForm: () => void }) => {
-    alert(
-      JSON.stringify({
-        email: values.email,
-        password: values.password.trim()
-      })
-    )
-    resetForm()
-    setShowPassword(false)
-  }, [])
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState(false)
+
+  const handleSubmitForm = useCallback(
+    (values: LoginForm, { resetForm }: { resetForm: () => void }) => {
+      if (values.email === 'nguyenhuuhuy@gmail.com' && values.password.trim() === '123456') {
+        toast.success('Login successfully!', {
+          position: 'top-center',
+          theme: 'colored',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        })
+        navigate('/categories')
+      } else {
+        setError(true)
+      }
+
+      resetForm()
+      setShowPassword(false)
+    },
+    [navigate]
+  )
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((showPassword) => !showPassword)
@@ -27,7 +44,7 @@ const Login: React.FC = () => {
   return (
     <Box className={styles['login-container']}>
       <Box className={styles['login-wrapper']}>
-        <h1 className={styles['login-title']}>LOGIN PAGE</h1>
+        <h1 className={styles['login-title']}>EASY TOURNEY</h1>
         <Formik
           initialValues={{
             email: '',
@@ -37,35 +54,60 @@ const Login: React.FC = () => {
           onSubmit={handleSubmitForm}
           validateOnBlur={true}
           validateOnChange={false}
+          validateOnMount={true}
         >
-          {(formProps: any) => (
+          {(formProps: FormikProps<any>) => (
             <Form onSubmit={formProps.handleSubmit} className={styles['login-form']}>
-              <Stack spacing={2} width={'60vw'} maxWidth={500}>
+              <Stack spacing={2} width={'60vw'} maxWidth={450}>
+                {error && (
+                  <Alert className={styles['login-alert-message']} severity="error">
+                    Login failed! Incorrect username or password
+                  </Alert>
+                )}
                 <Field
-                  fullWidth
                   as={TextField}
+                  color={formProps.touched.email && formProps.errors.email && 'error'}
+                  error={formProps.touched.email && formProps.errors.email ? true : false}
+                  fullWidth
                   id="email-login"
-                  name="email"
                   label="Email"
-                  variant="outlined"
+                  name="email"
+                  placeholder="Email address"
+                  required
                   type="email"
-                  color={formProps.errors.email && 'error'}
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonOutline />
+                      </InputAdornment>
+                    )
+                  }}
                 />
                 <span className={styles['error-message']}>
                   <ErrorMessage name="email" />
                 </span>
               </Stack>
-              <Stack spacing={2} width={'60vw'} maxWidth={500}>
+              <Stack spacing={2} width={'60vw'} maxWidth={450}>
                 <Field
-                  fullWidth
                   as={TextField}
+                  color={formProps.touched.password && formProps.errors.password && 'error'}
+                  error={formProps.touched.password && formProps.errors.password ? true : false}
+                  fullWidth
                   id="password-login"
-                  name="password"
                   label="Password"
-                  variant="outlined"
+                  name="password"
+                  placeholder="Password"
+                  required
                   type={showPassword ? 'text' : 'password'}
-                  color={formProps.errors.password && 'error'}
+                  variant="outlined"
                   InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockOutlined />
+                      </InputAdornment>
+                    ),
+
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton onClick={handleTogglePasswordVisibility}>
@@ -79,7 +121,13 @@ const Login: React.FC = () => {
                   <ErrorMessage name="password" />
                 </span>
               </Stack>
-              <Button variant="contained" type="submit" size="large" className={styles['submit-login-btn']}>
+              <Button
+                className={styles['submit-login-btn']}
+                disabled={!formProps.isValid || !formProps.dirty}
+                size="large"
+                type="submit"
+                variant="contained"
+              >
                 Login
               </Button>
             </Form>

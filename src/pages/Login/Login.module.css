@@ -4,7 +4,7 @@
   background-color: transparent;
   background-repeat: round;
   background-image: linear-gradient(195deg, rgba(66, 66, 74, 0.6), rgba(25, 25, 25, 0.6)),
-    url(https://demos.creative-tim.com/material-dashboard-pro-react/static/media/bg-sign-in-basic.f327db1d0e4b00ba3c81.jpeg);
+    url(https://png.pngtree.com/background/20210709/original/pngtree-sports-basketball-backplane-picture-image_780138.jpg);
 }
 
 .login-wrapper {
@@ -13,8 +13,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 2rem;
-  border-radius: 1rem;
-  background-color: #f0e7e7;
+  border-radius: 3rem;
+  background-color: #f2f0f0;
 }
 
 .login-form {
@@ -22,13 +22,14 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  margin: 1rem 0;
+  margin: 1rem 0 0 0;
 }
 
 .login-title {
-  font-size: 2rem;
-  margin: 0 0 3rem;
+  font-size: 2.2rem;
+  margin: 0 0 1.5rem;
   text-align: center;
+  font-family: 'Exo 2', sans-serif;
 }
 
 .error-message {
@@ -39,7 +40,11 @@
   font-weight: 500;
 }
 
+.login-alert-message {
+  font-weight: 700 !important;
+}
+
 .submit-login-btn {
   width: 100%;
-  border-radius: 0.5rem;
+  border-radius: 4rem !important;
 }
