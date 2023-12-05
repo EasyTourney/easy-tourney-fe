@@ -5,7 +5,6 @@ import { Alert, Box, Button, IconButton, InputAdornment, Stack, TextField } from
 import { LoginForm } from './Login.types'
 import { LockOutlined, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
 import styles from './Login.module.css'
-import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 
 const Login: React.FC = () => {
@@ -17,15 +16,6 @@ const Login: React.FC = () => {
   const handleSubmitForm = useCallback(
     (values: LoginForm, { resetForm }: { resetForm: () => void }) => {
       if (values.email === 'nguyenhuuhuy@gmail.com' && values.password.trim() === '123456') {
-        toast.success('Login successfully!', {
-          position: 'top-center',
-          theme: 'colored',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true
-        })
         navigate('/categories')
       } else {
         setError(true)

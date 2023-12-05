@@ -1,0 +1,28 @@
+.main-app-header {
+  border-radius: 0.5rem;
+  top: 0;
+  z-index: 1000;
+}
+
+.menu-title {
+  flex-grow: 1;
+}
+
+.menu-list-item {
+  display: flex;
+  gap: 1rem;
+}
+
+.menu-info-item {
+  width: 250px;
+  font-weight: bold !important;
+  opacity: 1 !important;
+}
+
+.menu-divider {
+  margin: 0.5rem 0;
+}
+
+.toolbar {
+  justify-content: flex-end;
+}
