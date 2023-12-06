@@ -1,5 +1,5 @@
-import axios from '../config/axios-config'
-import {UserResponse} from "../../types/user";
+import axios from '../../config/axios-config'
+import {UserResponse} from "../../../types/user";
 
 export const loginRequest = (data: any) =>
     axios({

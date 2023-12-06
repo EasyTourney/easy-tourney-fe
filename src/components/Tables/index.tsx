@@ -9,11 +9,12 @@ import { Box, Button } from '@mui/material'
 import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
 import { TiArrowSortedDown } from 'react-icons/ti'
-import { memo, useEffect, useState } from 'react'
+import { memo, useState } from 'react'
 import { LiaEdit } from 'react-icons/lia'
 import { RiDeleteBin2Line } from 'react-icons/ri'
 import Paginations from '../Paginations'
 import { ColumnTypes } from '../../types/commom'
+
 
 interface ReusedTableProps {
   columns: ColumnTypes[]
@@ -21,22 +22,26 @@ interface ReusedTableProps {
   showActions?: boolean
   onEdit?: (rowData: { [key: string]: any }) => void
   onDelete?: (rowData: { [key: string]: any }) => void
-  handleColumnSort: (id: any, status: 'asc' | 'desc' | 'none') => void
+  handleColumnSort: (id: any, status: 'asc' | 'desc' | '') => void
+  total: number,
+  handlePageSearch: (page: number) => void
 }
 
-const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, handleColumnSort }: ReusedTableProps) => {
-  const [sortStates, setSortStates] = useState<{ [key: string]: 'asc' | 'desc' | 'none' }>(
-    Object.fromEntries(columns.map((column) => [column.id, 'none']))
+const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, handleColumnSort, total,
+  handlePageSearch }: ReusedTableProps) => {
+  const [sortStates, setSortStates] = useState<{ [key: string]: 'asc' | 'desc' | '' }>(
+    Object.fromEntries(columns.map((column) => [column.id, '']))
   )
 
   const handleSortTableClick = (id: any) => {
     const currentSortType = sortStates[id]
-    let nextSortType: 'asc' | 'desc' | 'none'
+
+    let nextSortType: 'asc' | 'desc' | ''
 
     if (currentSortType === 'asc') {
       nextSortType = 'desc'
     } else if (currentSortType === 'desc') {
-      nextSortType = 'none'
+      nextSortType = ''
     } else {
       nextSortType = 'asc'
     }
@@ -57,19 +62,11 @@ const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, hand
       return <TiArrowUnsorted size={15} />
     }
   }
-  /// pagination
-  const [page, setPage] = useState(1)
-  const [paginatedRows, setPaginatedRows] = useState<{ [key: string]: any }[]>([])
-  const rowsPerPage = 10
-  useEffect(() => {
-    const startIndex = (page - 1) * rowsPerPage
-    const endIndex = startIndex + rowsPerPage
-    const newPaginatedRows = rows?.slice(startIndex, endIndex) || []
-    setPaginatedRows(newPaginatedRows)
-  }, [page, rows])
+ 
   const handlePageChange = (pageNumber: number) => {
-    setPage(pageNumber)
+    handlePageSearch(pageNumber)
   }
+
 
   return (
     <Box>
@@ -125,6 +122,7 @@ const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, hand
                       if (column.sortTable && column.id === column.sortBy) {
                         handleSortTableClick(column.id)
                       }
+
                     }}
                   >
                     {column.label}
@@ -149,59 +147,67 @@ const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, hand
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedRows?.map((row, rowIndex) => (
-              <TableRow
-                key={rowIndex}
-                sx={{
-                  '&:nth-of-type(even)': {
-                    backgroundColor: '#f9fafd'
-                  }
-                }}
-              >
-                {columns?.map((column, colIndex) => (
-                  <TableCell
-                    key={colIndex}
-                    component="td"
-                    scope="row"
-                    sx={{
-                      textAlign: `${column.left ? 'left' : 'center'}`,
-                      borderRight: ' 1px solid rgba(224, 224, 224, 1)',
-                      borderCollapse: 'collapse'
-                    }}
-                  >
-                    {row[column.id]}
-                  </TableCell>
-                ))}
-                {showActions && (
-                  <TableCell
-                    scope="row"
-                    component="td"
-                    sx={{
-                      borderRight: ' 1px solid rgba(224, 224, 224, 1)',
-                      borderCollapse: 'collapse'
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center ', justifyContent: 'center' }}>
-                      {onEdit && (
-                        <Button title="Edit" onClick={() => onEdit(row)}>
-                          <LiaEdit color="green" size={20} />
-                        </Button>
-                      )}
-                      {onDelete && (
-                        <Button title="Delete" onClick={() => onDelete(row)}>
-                          <RiDeleteBin2Line color="red" size={20} />
-                        </Button>
-                      )}
-                    </Box>
-                  </TableCell>
-                )}
+            {rows.length === 0 ?
+              <TableRow>
+                <TableCell>
+                  NOT FOUND
+                </TableCell>
               </TableRow>
-            ))}
+              :
+              rows?.map((row, rowIndex) => (
+                <TableRow
+                  key={rowIndex}
+                  sx={{
+                    '&:nth-of-type(even)': {
+                      backgroundColor: '#f9fafd'
+                    }
+                  }}
+                >
+                  {columns?.map((column, colIndex) => (
+
+                    <TableCell
+                      key={colIndex}
+                      component="td"
+                      scope="row"
+                      sx={{
+                        textAlign: `${column.left ? 'left' : 'center'}`,
+                        borderRight: ' 1px solid rgba(224, 224, 224, 1)',
+                        borderCollapse: 'collapse'
+                      }}
+                    >
+                      {row[column.id]}
+                    </TableCell>
+                  ))}
+                  {showActions && (
+                    <TableCell
+                      scope="row"
+                      component="td"
+                      sx={{
+                        borderRight: ' 1px solid rgba(224, 224, 224, 1)',
+                        borderCollapse: 'collapse'
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center ', justifyContent: 'center' }}>
+                        {onEdit && (
+                          <Button title="Edit" onClick={() => onEdit(row)}>
+                            <LiaEdit color="green" size={20} />
+                          </Button>
+                        )}
+                        {onDelete && (
+                          <Button title="Delete" onClick={() => onDelete(row)}>
+                            <RiDeleteBin2Line color="red" size={20} />
+                          </Button>
+                        )}
+                      </Box>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
       <Box sx={{ mt: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
-        <Paginations totalItems={rows.length} itemsPerPage={10} onPageChange={handlePageChange} />
+        <Paginations totalItems={total} itemsPerPage={10} onPageChange={handlePageChange} />
       </Box>
     </Box>
   )

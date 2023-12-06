@@ -22,3 +22,11 @@ export interface ColumnTypes {
     width: string
   }
 }
+
+export interface ParamApi {
+  sortType?:string,
+  page?: number,
+  size?: number,
+  keyword?: string,
+  sortValue?:string
+}

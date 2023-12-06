@@ -1,14 +1,14 @@
 import { Route, Routes } from 'react-router-dom'
 import Category from './layouts/Categories'
 import Public from './pages/Public'
-import { Login } from './pages/Login'
 import Dashboard from './layouts/Dashboard'
 import { ToastContainer } from 'react-toastify'
+import { Login } from './pages/Login'
 
 function App() {
   return (
     <div className="App">
-      <ToastContainer style={{ fontSize: '15px' }} autoClose={1000} draggable />
+      <ToastContainer autoClose={1000} draggable />
       <Routes>
         <Route path="/*" element={<Public />}>
           <Route path="" element={<Dashboard />} />

@@ -5,7 +5,7 @@ import { Alert, Box, Button, IconButton, InputAdornment, Stack, TextField } from
 import { LoginForm } from './Login.types'
 import { LockOutlined, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
 import styles from './Login.module.css'
-import {loginRequest} from "../../apis/axios/login";
+import {loginRequest} from "../../apis/axios/auth/login";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {login} from "../../redux/reducers/auth/auth.reducer";

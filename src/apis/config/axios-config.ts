@@ -1,19 +1,23 @@
 import axios, {AxiosResponse} from "axios";
 
-const instance= axios.create({
-    baseURL: 'http://localhost:8080/api',
+const instance = axios.create({
+    baseURL: 'http://easy-tourney.mgm-edv.de/api',
     headers: {
         'Content-Type': 'application/json'
     }
 });
 
 instance.interceptors.request.use(
-    function (config) {
-        return config
-    },
-    function (error) {
-        return Promise.reject(error)
+  function (config) {
+    const accessToken =window.localStorage.getItem('token');
+    if(accessToken){
+      config.headers['Authorization']='Bearer '+ accessToken
     }
+    return config
+  },
+  function (error) {
+    return Promise.reject(error)
+  }
 )
 
 instance.interceptors.response.use(

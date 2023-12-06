@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md'
 import { MdOutlineKeyboardDoubleArrowRight } from 'react-icons/md'
 import { IoIosArrowBack } from 'react-icons/io'
@@ -9,7 +9,6 @@ import styles from './Pagination.module.css'
 interface PaginationProps {
   totalItems: number
   itemsPerPage: number
-
   onPageChange: (pageNumber: number) => void
 }
 
@@ -39,6 +38,11 @@ const Paginations: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, onPa
       onPageChange(pageNumber)
     }
   }
+
+  useEffect(()=>{
+    setCurrentPage(1)
+  },[totalItems])
+
 
   const pages: JSX.Element[] = []
   if (currentPage >= 1) {
