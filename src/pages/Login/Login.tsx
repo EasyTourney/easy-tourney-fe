@@ -1,34 +1,52 @@
-import React, { useCallback, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Formik, Field, Form, ErrorMessage, FormikProps } from 'formik'
 import { LoginSchema } from '../../services/validator/auth.validator'
 import { Alert, Box, Button, IconButton, InputAdornment, Stack, TextField } from '@mui/material'
 import { LoginForm } from './Login.types'
 import { LockOutlined, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
 import styles from './Login.module.css'
-import { useNavigate } from 'react-router-dom'
+import {loginRequest} from "../../apis/axios/login";
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {login} from "../../redux/reducers/auth/auth.reducer";
+import {VscLoading} from "react-icons/vsc";
 
 const Login: React.FC = () => {
-  const navigate = useNavigate()
-
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
   const [error, setError] = useState(false)
+  const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleSubmitForm = useCallback(
-    (values: LoginForm, { resetForm }: { resetForm: () => void }) => {
-      if (values.email === 'nguyenhuuhuy@gmail.com' && values.password.trim() === '123456') {
-        navigate('/categories')
-      } else {
+  const handleSubmitForm = async (values: LoginForm, { resetForm }: { resetForm: () => void }) => {
+    const [res] = await Promise.all([loginRequest(values)]);
+
+    if(res && res.data.token){
+      dispatch(login(res.data.token))
+      navigate('/', { replace: true });
+    }
+    else {
         setError(true)
-      }
+    }
 
-      resetForm()
-      setShowPassword(false)
-    },
-    [navigate]
-  )
+    resetForm()
+    setShowPassword(false)
+  };
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((showPassword) => !showPassword)
+  }
+
+  useEffect(() => {
+    if(localStorage.getItem('token')) {
+      navigate('/', {replace: true});
+    } else {
+      setIsLoading(false);
+    }
+  }, [navigate]);
+
+  if(isLoading) {
+    return <VscLoading/>;
   }
 
   return (

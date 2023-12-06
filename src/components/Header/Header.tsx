@@ -11,7 +11,7 @@ import { Logout } from '@mui/icons-material'
 import styles from './Header.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { logout } from '../../redux/reducers/auth'
+import { logout } from '../../redux/reducers'
 
 const Header: React.FC = () => {
   const dispatch = useDispatch()

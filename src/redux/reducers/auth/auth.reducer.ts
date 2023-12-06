@@ -20,10 +20,17 @@ const authSlice = createSlice({
       state.isLoggedIn = false
       state.accessToken = undefined
       state.userInfo = undefined
+    },
+    login: (state: AuthState, action) => {
+      console.log(action);
+      localStorage.setItem('token', action.payload)
+      state.isLoggedIn = true
+      state.accessToken = action.payload
+      // state.userInfo = action.payload.userInfo
     }
   }
 })
 
-export const { logout } = authSlice.actions
+export const { logout, login } = authSlice.actions
 
 export default authSlice.reducer
