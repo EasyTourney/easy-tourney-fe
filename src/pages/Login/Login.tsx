@@ -5,48 +5,47 @@ import { Alert, Box, Button, IconButton, InputAdornment, Stack, TextField } from
 import { LoginForm } from './Login.types'
 import { LockOutlined, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
 import styles from './Login.module.css'
-import {loginRequest} from "../../apis/axios/auth/login";
-import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {login} from "../../redux/reducers/auth/auth.reducer";
-import {VscLoading} from "react-icons/vsc";
+import { loginRequest } from '../../apis/axios/auth/login'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { login } from '../../redux/reducers/auth/auth.reducer'
+import { VscLoading } from 'react-icons/vsc'
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleSubmitForm = async (values: LoginForm, { resetForm }: { resetForm: () => void }) => {
-    const [res] = await Promise.all([loginRequest(values)]);
+    const [res] = await Promise.all([loginRequest(values)])
 
-    if(res && res.data.token){
+    if (res && res.data && res.data.token) {
       dispatch(login(res.data.token))
-      navigate('/', { replace: true });
-    }
-    else {
-        setError(true)
+      navigate('/', { replace: true })
+    } else {
+      setError(true)
     }
 
     resetForm()
     setShowPassword(false)
-  };
+  }
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((showPassword) => !showPassword)
   }
 
   useEffect(() => {
-    if(localStorage.getItem('token')) {
-      navigate('/', {replace: true});
+    if (localStorage.getItem('token')) {
+      navigate('/', { replace: true })
     } else {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [navigate]);
+  }, [navigate])
 
-  if(isLoading) {
-    return <VscLoading/>;
+  if (isLoading) {
+    return <VscLoading />
   }
 
   return (
