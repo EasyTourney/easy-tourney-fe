@@ -8,15 +8,19 @@ import { BrowserRouter } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <Provider store={store}>
-    <BrowserRouter>
-      <CssVarsProvider theme={theme}>
-        <CssBaseline />
-        <App />
-      </CssVarsProvider>
-    </BrowserRouter>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <BrowserRouter>
+        <CssVarsProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </CssVarsProvider>
+      </BrowserRouter>
+    </LocalizationProvider>
   </Provider>
 )

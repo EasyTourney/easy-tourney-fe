@@ -80,7 +80,6 @@ const Login: React.FC = () => {
                   label="Email"
                   name="email"
                   placeholder="Email address"
-                  required
                   type="email"
                   variant="outlined"
                   InputProps={{
@@ -105,7 +104,6 @@ const Login: React.FC = () => {
                   label="Password"
                   name="password"
                   placeholder="Password"
-                  required
                   type={showPassword ? 'text' : 'password'}
                   variant="outlined"
                   InputProps={{
@@ -130,7 +128,7 @@ const Login: React.FC = () => {
               </Stack>
               <Button
                 className={styles['submit-login-btn']}
-                disabled={!formProps.isValid || !formProps.dirty}
+                // disabled={!formProps.isValid || !formProps.dirty}
                 size="large"
                 type="submit"
                 variant="contained"
