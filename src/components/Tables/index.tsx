@@ -5,16 +5,17 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { Box, Button } from '@mui/material'
+import { Box, Button, Skeleton } from '@mui/material'
 import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
 import { TiArrowSortedDown } from 'react-icons/ti'
-import { memo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { LiaEdit } from 'react-icons/lia'
 import { RiDeleteBin2Line } from 'react-icons/ri'
 import Paginations from '../Paginations'
 import { ColumnTypes } from '../../types/commom'
-
+import { useSearchParams } from 'react-router-dom'
+import noItem from '../../assets/noItem.png'
 
 interface ReusedTableProps {
   columns: ColumnTypes[]
@@ -23,15 +24,31 @@ interface ReusedTableProps {
   onEdit?: (rowData: { [key: string]: any }) => void
   onDelete?: (rowData: { [key: string]: any }) => void
   handleColumnSort: (id: any, status: 'asc' | 'desc' | '') => void
-  total: number,
+  total: number
   handlePageSearch: (page: number) => void
+  totalCurrentPage: number
+  loading: boolean
 }
 
-const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, handleColumnSort, total,
-  handlePageSearch }: ReusedTableProps) => {
+const TableReused = ({
+  rows,
+  columns,
+  showActions = true,
+  onEdit,
+  onDelete,
+  handleColumnSort,
+  total,
+  handlePageSearch,
+  totalCurrentPage,
+  loading
+}: ReusedTableProps) => {
   const [sortStates, setSortStates] = useState<{ [key: string]: 'asc' | 'desc' | '' }>(
     Object.fromEntries(columns.map((column) => [column.id, '']))
   )
+
+  const [params] = useSearchParams()
+  const myPage = params.get('page')
+  const totalIndex = totalCurrentPage < 10 ? totalCurrentPage - totalCurrentPage + 10 : totalCurrentPage
 
   const handleSortTableClick = (id: any) => {
     const currentSortType = sortStates[id]
@@ -62,23 +79,50 @@ const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, hand
       return <TiArrowUnsorted size={15} />
     }
   }
- 
+  // pagination
+  const [page, setPage] = useState(1)
+  useEffect(() => {
+    // update when delete all records last page
+    if (rows?.length === 0 && page > 1) {
+      setPage(page - 1)
+    }
+  }, [page, rows])
   const handlePageChange = (pageNumber: number) => {
     handlePageSearch(pageNumber)
+    setPage(pageNumber)
   }
 
+  useEffect(() => {
+    setPage(1)
+  }, [total])
+
+  // Loading skeleton
+  const TableRowsLoader = ({ rowsNum }: any) => {
+    return (
+      <>
+        {[...Array(rowsNum)].map((row, index) => (
+          <TableRow key={index}>
+            {columns.map((item, index) => (
+              <TableCell component="th" scope="row" key={index}>
+                <Skeleton animation="wave" variant="text" />
+              </TableCell>
+            ))}
+
+            {showActions && (
+              <TableCell>
+                <Skeleton animation="wave" variant="text" />
+              </TableCell>
+            )}
+          </TableRow>
+        ))}
+      </>
+    )
+  }
 
   return (
     <Box>
       <TableContainer component={Paper}>
-        <Table
-          size="small"
-          sx={{
-            '& .MuiTableCell-sizeSmall': {
-              padding: '8px 16px'
-            }
-          }}
-        >
+        <Table size="small">
           <TableHead
             sx={{
               background: '#0094fd',
@@ -122,7 +166,6 @@ const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, hand
                       if (column.sortTable && column.id === column.sortBy) {
                         handleSortTableClick(column.id)
                       }
-
                     }}
                   >
                     {column.label}
@@ -147,13 +190,22 @@ const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, hand
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.length === 0 ?
+            {!loading ? (
+              <TableRowsLoader rowsNum={10} />
+            ) : rows?.length === 0 ? (
               <TableRow>
-                <TableCell>
-                  NOT FOUND
+                <TableCell colSpan={4}>
+                  <Box sx={{ textAlign: 'center', color: 'gray', padding: '20px 0px' }}>
+                    <Box
+                      component="img"
+                      src={noItem}
+                      alt="no-item"
+                      sx={{ width: '100%', height: '250px', objectFit: 'contain' }}
+                    />
+                  </Box>
                 </TableCell>
               </TableRow>
-              :
+            ) : (
               rows?.map((row, rowIndex) => (
                 <TableRow
                   key={rowIndex}
@@ -164,7 +216,6 @@ const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, hand
                   }}
                 >
                   {columns?.map((column, colIndex) => (
-
                     <TableCell
                       key={colIndex}
                       component="td"
@@ -175,7 +226,9 @@ const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, hand
                         borderCollapse: 'collapse'
                       }}
                     >
-                      {row[column.id]}
+                      {totalIndex && Object.values(column).indexOf('Id') > -1
+                        ? (Number(myPage) > 1 ? Number(myPage) - 1 : 0) * totalIndex + rowIndex + 1
+                        : row[column.id]}
                     </TableCell>
                   ))}
                   {showActions && (
@@ -202,7 +255,8 @@ const TableReused = ({ rows, columns, showActions = true, onEdit, onDelete, hand
                     </TableCell>
                   )}
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>

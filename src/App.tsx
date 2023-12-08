@@ -4,6 +4,7 @@ import Public from './pages/Public'
 import Dashboard from './layouts/Dashboard'
 import { ToastContainer } from 'react-toastify'
 import { Login } from './pages/Login'
+import Tournament from './layouts/Tournament'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/*" element={<Public />}>
           <Route path="" element={<Dashboard />} />
           <Route path="categories" element={<Category />} />
+          <Route path="tournament" element={<Tournament />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>

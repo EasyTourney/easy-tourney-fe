@@ -9,6 +9,7 @@ export interface APIRes extends AxiosResponse {
     totalCategories: number
   }
   message: string
+  errorMessage?: {}
 }
 
 export interface ColumnTypes {
@@ -24,9 +25,9 @@ export interface ColumnTypes {
 }
 
 export interface ParamApi {
-  sortType?:string,
-  page?: number,
-  size?: number,
-  keyword?: string,
-  sortValue?:string
+  sortType?: string
+  page?: number
+  size?: number
+  keyword?: string
+  sortValue?: string
 }

@@ -8,17 +8,16 @@ import { useEffect } from 'react'
 import { Categories } from '../../types/category'
 import { APIRes, ParamApi } from '../../types/commom'
 import { createSearchParams } from 'react-router-dom'
-import { getAllCategories } from '../../apis/axios/categories/category'
+import { apiDeleteCategory, getAllCategories } from '../../apis/axios/categories/category'
 import useDebounce from '../../hooks/useDebounce'
-
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
 
 const Category = ({ navigate, location }: any) => {
-
   const columns = [
     {
-      id: 'categoryId',
-      sortTable: true,
-      sortBy: 'categoryId',
+      id: 'Id',
+      sortTable: false,
       label: 'Id',
       left: false,
       style: {
@@ -41,42 +40,29 @@ const Category = ({ navigate, location }: any) => {
 
   const [value, setValue] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
-  const [categories, setCategoties] = useState<Categories[] | []>([]);
+  const [categories, setCategoties] = useState<Categories[] | []>([])
   const [totalCategories, setTotalCategories] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
-
-
+  const [update, setUpdate] = useState<boolean>(false)
+  const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const getAll = async (param: ParamApi) => {
+    const getCategories = (await getAllCategories(param)) as APIRes
 
-    const getCategories = (await getAllCategories(param)) as APIRes;
-    setCategoties(getCategories.data);
-    setTotalCategories(getCategories.additionalData.totalCategories);
-
+    setCategoties(getCategories?.data)
+    setTotalCategories(getCategories?.additionalData?.totalCategories)
+    setTotalCurrentPage(getCategories?.total)
   }
 
   const pageSearch = (value: number) => {
-    setCurrentPage((prev) => prev = value)
+    setCurrentPage((prev) => (prev = value))
   }
-
 
   const debouceSearch = useDebounce({
     value: value,
     ms: 800
   })
-
-  const handleEdit = useCallback((rowData: { [key: string]: any }) => {
-    // call api here
-  }, [])
-
-  const handleDelete = useCallback((rowData: { [key: string]: any }) => {
-    //call api here
-  }, [])
-
-  const handleColumnSort = useCallback((idColumm: any, sortType: 'asc' | 'desc' | '') => {
-    setSortType(sortType)
-  }, [])
-
 
   useEffect(() => {
     if (debouceSearch && sortType) {
@@ -84,19 +70,13 @@ const Category = ({ navigate, location }: any) => {
         pathname: location.pathname,
         search: createSearchParams({ keyword: value, sortType: sortType, page: String(currentPage) }).toString()
       })
-    } else if (sortType) {
+    } else {
       navigate({
         pathname: location.pathname,
         search: createSearchParams({ sortType: sortType, page: String(currentPage) }).toString()
-
-      })
-    } else {
-      navigate({
-        pathname: location.pathname
       })
     }
   }, [debouceSearch, sortType, currentPage, navigate, value, location.pathname])
-
 
   useEffect(() => {
     const param: ParamApi = {
@@ -104,9 +84,59 @@ const Category = ({ navigate, location }: any) => {
       page: currentPage,
       keyword: value
     }
-    getAll({ ...param })
-  }, [sortType, currentPage, value])
 
+    getAll({ ...param })
+    setLoading(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortType, currentPage, debouceSearch, update])
+
+  useEffect(() => {
+    if (totalCategories === undefined && currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1)
+    } else {
+      const param: ParamApi = {
+        sortType: sortType,
+        page: currentPage,
+        keyword: value
+      }
+
+      getAll({ ...param })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalCategories])
+
+  const handleEdit = useCallback((rowData: { [key: string]: any }) => {
+    // call api here
+  }, [])
+
+  const handleDelete = useCallback(async (rowData: { [key: string]: any }) => {
+    const { categoryId } = rowData //get categoryId
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      allowOutsideClick: false
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = (await apiDeleteCategory(categoryId)) as APIRes
+        if (res.success) {
+          toast.success(res.message)
+          setUpdate((prev) => !prev)
+        } else {
+          toast.error(res.message)
+        }
+      }
+    })
+  }, [])
+
+  const handleColumnSort = useCallback((idColumm: any, sortType: 'asc' | 'desc' | '') => {
+    setSortType(sortType)
+  }, [])
 
   return (
     <Box>
@@ -119,8 +149,10 @@ const Category = ({ navigate, location }: any) => {
             label="Search"
             id="outlined-search"
             placeholder="Search here..."
-            handleChange={(e) => {setValue(e.target.value) 
-            setCurrentPage(1)}}
+            handleChange={(e) => {
+              setValue(e.target.value)
+              setCurrentPage(1)
+            }}
             value={value}
           />
         </Box>
@@ -134,6 +166,8 @@ const Category = ({ navigate, location }: any) => {
         handleColumnSort={handleColumnSort}
         total={totalCategories}
         handlePageSearch={pageSearch}
+        totalCurrentPage={totalCurrentPage}
+        loading={loading}
       />
     </Box>
   )

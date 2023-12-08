@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-type BaseLogicProps = {
+export type BaseLogicProps = {
   navigate: ReturnType<typeof useNavigate>
   location: Location
 }

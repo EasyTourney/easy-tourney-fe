@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md'
 import { MdOutlineKeyboardDoubleArrowRight } from 'react-icons/md'
 import { IoIosArrowBack } from 'react-icons/io'
@@ -16,6 +16,7 @@ const Paginations: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, onPa
   const [currentPage, setCurrentPage] = useState(1)
 
   const totalPages: number = Math.ceil(totalItems / itemsPerPage)
+
   const siblingsToShow: number = 2
   let start: number, end: number
   if (totalPages <= 5) {
@@ -39,13 +40,8 @@ const Paginations: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, onPa
     }
   }
 
-  useEffect(()=>{
-    setCurrentPage(1)
-  },[totalItems])
-
-
   const pages: JSX.Element[] = []
-  if (currentPage >= 1) {
+  if (currentPage >= 1 && !isNaN(totalPages) && totalItems > 0) {
     pages.push(
       <Box
         key="first"
@@ -167,6 +163,10 @@ const Paginations: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, onPa
         <MdOutlineKeyboardDoubleArrowRight size={19} />
       </Box>
     )
+  }
+  // active pagination when delete all records last page
+  if (totalPages > 0 && currentPage > totalPages) {
+    setCurrentPage(totalPages)
   }
 
   return (

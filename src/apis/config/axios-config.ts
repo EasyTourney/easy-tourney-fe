@@ -1,17 +1,17 @@
-import axios, {AxiosResponse} from "axios";
+import axios, { AxiosResponse } from 'axios'
 
 const instance = axios.create({
-    baseURL: 'http://easy-tourney.mgm-edv.de/api',
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
+  baseURL: 'http://easy-tourney.mgm-edv.de/api',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
 
 instance.interceptors.request.use(
   function (config) {
-    const accessToken =window.localStorage.getItem('token');
-    if(accessToken){
-      config.headers['Authorization']='Bearer '+ accessToken
+    const accessToken = window.localStorage.getItem('token')
+    if (accessToken) {
+      config.headers['Authorization'] = 'Bearer ' + accessToken
     }
     return config
   },
@@ -21,12 +21,12 @@ instance.interceptors.request.use(
 )
 
 instance.interceptors.response.use(
-    function (response: AxiosResponse) {
-        return response?.data;
-    },
-    function (error) {
-        return error.response?.data;
-    }
+  function (response: AxiosResponse) {
+    return response?.data
+  },
+  function (error) {
+    return error.response?.data
+  }
 )
 
-export default instance;
+export default instance
