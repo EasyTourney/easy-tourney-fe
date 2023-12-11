@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { getAllCategories } from '../../../apis/axios/categories/category'
 import { APIRes } from '../../../types/commom'
+import { getAllCategory } from '../../../apis/axios/categories/category'
 
-export const getCategories = createAsyncThunk('user/todoList', async (data, { rejectWithValue }) => {
-  //   const response = ( await getAllCategories({...param})) as APIRes
-  // if (!response) rejectWithValue(response)
-  // return response
+export const getCategories = createAsyncThunk('categories/getAll', async (data, { rejectWithValue }) => {
+  const response = (await getAllCategory()) as APIRes
+  if (!response) rejectWithValue(response)
+  return response?.data
 })

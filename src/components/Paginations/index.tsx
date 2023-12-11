@@ -16,8 +16,7 @@ interface PaginationProps {
 const Paginations: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, onPageChange }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [params] = useSearchParams()
-  const pageURL = Number(params.get('page'));
-
+  const pageURL = Number(params.get('page'))
 
   const totalPages: number = Math.ceil(totalItems / itemsPerPage)
 
@@ -45,10 +44,8 @@ const Paginations: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, onPa
   }
 
   useEffect(() => {
-    setCurrentPage((prev) => prev = pageURL)
+    setCurrentPage((prev) => (prev = pageURL))
   }, [totalItems, pageURL])
-
-
 
   const pages: JSX.Element[] = []
   if (currentPage >= 1 && !isNaN(totalPages) && totalItems > 0) {

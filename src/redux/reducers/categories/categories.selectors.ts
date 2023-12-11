@@ -1,1 +1,1 @@
-export const testSelector = (state: any) => state.user.todoList
+export const categoriesSelector = (state: any) => state.category

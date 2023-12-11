@@ -51,4 +51,22 @@ const phoneNumber = Yup.string()
   .min(10, 'Phone number cannot be less than 10 digits')
   .max(11, 'Phone number cannot be more than 11 digits')
 
-export { email, password, categoryName, firstName, lastName, phoneNumber }
+const title = Yup.string()
+  .required('Please enter Title')
+  .test('no-leading-whitespace', 'Title must not contain leading whitespace', function (value) {
+    if (value && SPACE_START_REGEX.test(value)) {
+      return false
+    }
+    return true
+  })
+  .test('no-trailing-whitespace', 'Title must not contain trailing whitespace', function (value) {
+    if (value && SPACE_END_REGEX.test(value)) {
+      return false
+    }
+    return true
+  })
+  .min(2, 'Title must be at least 2 characters')
+  .max(30, 'Title must be less than 30 characters')
+  .matches(CHARACTERS_REGEX, 'Title must not contain special characters')
+const selectCategory = Yup.string().required('Category is required.')
+export { email, password, categoryName, firstName, lastName, phoneNumber, title, selectCategory }

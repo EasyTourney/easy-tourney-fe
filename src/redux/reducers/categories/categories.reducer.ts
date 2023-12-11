@@ -1,14 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { Categories } from '../../../types/category'
+import { Categories, CategoryName } from '../../../types/category'
+import { getCategories } from './categories.slice'
 
 interface UserState {
   categories: Categories[]
   isLoading: boolean
+  listCategory: CategoryName[]
 }
 
 const initialState: UserState = {
   categories: [],
-  isLoading: false
+  isLoading: false,
+  listCategory: []
 }
 
 const categoriesSlice = createSlice({
@@ -18,6 +21,22 @@ const categoriesSlice = createSlice({
     setCategories: (state, action) => {
       state.categories = [...action.payload]
     }
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase(getCategories.pending, (state, action) => {
+      state.isLoading = true
+    })
+
+    builder.addCase(getCategories.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.listCategory = action.payload as unknown as CategoryName[]
+    })
+
+    builder.addCase(getCategories.rejected, (state, action) => {
+      state.isLoading = false
+      state.listCategory = []
+    })
   }
 })
 

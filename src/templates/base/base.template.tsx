@@ -5,7 +5,6 @@ import { Header } from '../../components/Header'
 import { Suspense, useState } from 'react'
 import CustomizedBreadcrumbs from '../../components/Navigation'
 import React from 'react'
-import Loader from '../../components/Loader'
 
 function BaseTemplate() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -43,13 +42,7 @@ function BaseTemplate() {
               <CustomizedBreadcrumbs />
             </Box>
             <Box sx={{ marginRight: '15px' }}>
-              <Suspense
-                fallback={
-                  <>
-                    <Loader />
-                  </>
-                }
-              >
+              <Suspense fallback={<>Loading...</>}>
                 <Outlet />
               </Suspense>
             </Box>

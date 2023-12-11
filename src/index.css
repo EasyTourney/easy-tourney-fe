@@ -25,3 +25,27 @@ h6 {
 ::-ms-reveal {
   display: none;
 }
+
+.rdp{margin: 0 !important;}
+.rdp-caption_start{
+  border-radius: 5px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.rdp-caption{
+  padding: 10px !important;
+  background: rgb(88 96 101);
+  color:#fff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 350px;
+}
+.rdp-table{
+  width: 100%;
+  max-width: 370px !important;
+}
+.rdp-table .rdp-row{
+  border: none;
+}
+.rdp .rdp-day_today{
+  color:red
+}

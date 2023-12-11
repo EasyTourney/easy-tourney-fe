@@ -48,7 +48,7 @@ const Category = ({ navigate, location }: any) => {
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
   const [params] = useSearchParams()
-  const pageURL = Number(params.get('page'));
+  const pageURL = Number(params.get('page'))
 
   // get all organizer from DB
   const getAll = async (param: ParamApi) => {
@@ -100,11 +100,10 @@ const Category = ({ navigate, location }: any) => {
   }, [sortType, currentPage, debouceSearch, update])
 
   useEffect(() => {
-
     if (totalCategories === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
     } else if (debouceSearch) {
-      setCurrentPage((prevPage) => prevPage = 1)
+      setCurrentPage((prevPage) => (prevPage = 1))
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,7 +129,7 @@ const Category = ({ navigate, location }: any) => {
       if (result.isConfirmed) {
         const res = (await apiDeleteCategory(categoryId)) as APIRes
         if (res.success) {
-          toast.success(res.message)
+          toast.success('A category was deleted successfully !!!')
           setUpdate((prev) => !prev)
         } else {
           toast.error(res.message)

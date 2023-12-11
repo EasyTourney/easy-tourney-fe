@@ -19,11 +19,19 @@ export async function apiDeleteCategory(id: number) {
   return res
 }
 
-export async function addCategory(data : CategoryName) {
-  const res = await axios ({
-    url : '/category',
-    method : 'POST',
+export async function addCategory(data: CategoryName) {
+  const res = await axios({
+    url: '/category',
+    method: 'POST',
     data
+  })
+  return res
+}
+
+export async function getAllCategory() {
+  const res = await axios({
+    url: '/category/all',
+    method: 'GET'
   })
   return res
 }

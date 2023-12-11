@@ -4,10 +4,10 @@ export interface Categories {
 }
 
 export interface CategoryName {
-  categoryId: number;
-  categoryName: string;
-  createdAt: string;
-  deleted: boolean;
-  deletedAt: string | null;
-  updatedAt: string | null;
+  categoryId: number
+  categoryName: string
+  createdAt: string
+  deleted: boolean
+  deletedAt: string | null
+  updatedAt: string | null
 }
