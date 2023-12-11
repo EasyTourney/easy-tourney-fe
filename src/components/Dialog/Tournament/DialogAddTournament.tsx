@@ -51,12 +51,14 @@ const DialogAddTournament = ({ open, setOpen }: TournamentProps) => {
 
   const formatCaption: DateFormatter = (month, options) => {
     const season = getSeason(month)
+
+    const year = month.getFullYear()
     return (
       <>
         <Box component="span" role="img" aria-label={season}>
           {seasonEmoji[season]}
-        </Box>{' '}
-        {format(month, 'LLLL', { locale: options?.locale })}
+        </Box>
+        {format(month, 'LLLL', { locale: options?.locale })} {year}
       </>
     )
   }
@@ -250,6 +252,7 @@ const DialogAddTournament = ({ open, setOpen }: TournamentProps) => {
                 formatters={{ formatCaption }}
                 fromYear={2020}
                 toYear={2025}
+                mode="multiple"
               />
             </Box>
           </DialogContent>

@@ -6,3 +6,4 @@ export const SPACE_START_REGEX = /^\s/u
 export const SPACE_END_REGEX = /\s$/u
 export const PHONE_NUMBER_START_REGEX = /^0\d*$/
 export const PHONE_NUMBER_REGEX = /^\d*$/
+export const MULTIPLE_SPACE_REGEX = /\s{2,}/

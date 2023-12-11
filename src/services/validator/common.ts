@@ -6,7 +6,8 @@ import {
   CHARACTERS_REGEX,
   PHONE_NUMBER_REGEX,
   CHARACTERS_ONLY_REGEX,
-  PHONE_NUMBER_START_REGEX
+  PHONE_NUMBER_START_REGEX,
+  MULTIPLE_SPACE_REGEX
 } from '../../constants/regex'
 
 const email = Yup.string()
@@ -65,8 +66,19 @@ const title = Yup.string()
     }
     return true
   })
+  .test(
+    'no-multiple-whitespaces',
+    'Title must not contain multiple whitespaces in between two words',
+    function (value) {
+      if (value && MULTIPLE_SPACE_REGEX.test(value)) {
+        return false
+      }
+      return true
+    }
+  )
   .min(2, 'Title must be at least 2 characters')
   .max(30, 'Title must be less than 30 characters')
   .matches(CHARACTERS_REGEX, 'Title must not contain special characters')
+
 const selectCategory = Yup.string().required('Category is required.')
 export { email, password, categoryName, firstName, lastName, phoneNumber, title, selectCategory }

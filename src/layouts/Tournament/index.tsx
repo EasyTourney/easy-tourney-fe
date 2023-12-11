@@ -6,7 +6,6 @@ import { Box } from '@mui/material'
 
 const Tournament = () => {
   const [open, setOpen] = useState(false)
-
   const handleClickOpen = () => {
     setOpen(true)
   }
