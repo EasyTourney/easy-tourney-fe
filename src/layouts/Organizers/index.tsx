@@ -7,13 +7,13 @@ import { useEffect } from 'react'
 import { OrganizerAPIRes, ParamApi } from '../../types/commom'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
 import useDebounce from '../../hooks/useDebounce'
-import { getAllOrganizer } from '../../apis/axios/organizers/organizer'
+import { apiDeleteOrganizer, getAllOrganizer } from '../../apis/axios/organizers/organizer'
 import { Organizer } from '../../types/organizer'
 import moment from 'moment'
-
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
 
 const Organizers = ({ navigate, location }: any) => {
-
   const columns = [
     {
       id: 'Id',
@@ -62,7 +62,7 @@ const Organizers = ({ navigate, location }: any) => {
     {
       id: 'totalTournament',
       sortTable: true,
-      label: 'Total tournament',
+      label: 'Total tournaments',
       sortBy: 'totalTournament',
       left: false,
       style: {
@@ -86,32 +86,32 @@ const Organizers = ({ navigate, location }: any) => {
   const [value, setValue] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
   const [sortValue, setSortValue] = useState<string | ''>('')
-  const [organizers, setOrganizers] = useState<Organizer[] | []>([]);
+  const [organizers, setOrganizers] = useState<Organizer[] | []>([])
   const [totalOrganizer, setTotalOrganizer] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
+  const [update, setUpdate] = useState<boolean>(false)
   const [params] = useSearchParams()
-  const pageURL = Number(params.get('page'));
+  const pageURL = Number(params.get('page'))
 
   // get all organizer from DB
   const getAll = async (param: ParamApi) => {
-
-    const getOrganizers = (await getAllOrganizer(param)) as OrganizerAPIRes;
+    const getOrganizers = (await getAllOrganizer(param)) as OrganizerAPIRes
     if (getOrganizers?.data.length !== 0) {
       const formattedData = getOrganizers?.data.map((e) => {
-        return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY') };
-      });
-      setOrganizers(formattedData);
+        return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A') }
+      })
+      setOrganizers(formattedData)
     } else {
-      setOrganizers(getOrganizers?.data);
+      setOrganizers(getOrganizers?.data)
     }
-    setTotalOrganizer(getOrganizers?.additionalData?.totalOrganizer);
+    setTotalOrganizer(getOrganizers?.additionalData?.totalOrganizer)
     setTotalCurrentPage(getOrganizers?.total)
   }
 
   const pageSearch = (value: number) => {
-    setCurrentPage(prev => prev = value)
+    setCurrentPage((prev) => (prev = value))
   }
 
   //delaying the execution of function search
@@ -120,33 +120,53 @@ const Organizers = ({ navigate, location }: any) => {
     ms: 800
   })
 
-
   const handleEdit = useCallback((rowData: { [key: string]: any }) => {
-    // call api here
+    //call api here
   }, [])
 
   const handleDelete = useCallback((rowData: { [key: string]: any }) => {
-    //call api here
+    console.log(rowData)
+    const { id } = rowData //get categoryId
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      allowOutsideClick: false
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = (await apiDeleteOrganizer(id)) as OrganizerAPIRes
+        console.log(res)
+        if (res.success) {
+          toast.success('An organizer was deleted successfully !!!')
+          setUpdate((prev) => !prev)
+        } else {
+          toast.error(res.message)
+        }
+      }
+    })
   }, [])
 
   const handleColumnSort = useCallback((idColumm: any, sortType: 'asc' | 'desc' | '') => {
     setSortType(sortType)
-    if (idColumm === "createdAt") {
-      setSortValue("created_at")
-    } else if (idColumm === "phoneNumber") {
-      setSortValue("phone_number")
+    if (idColumm === 'createdAt') {
+      setSortValue('created_at')
+    } else if (idColumm === 'phoneNumber') {
+      setSortValue('phone_number')
     } else {
       setSortValue(idColumm)
     }
   }, [])
-
 
   useEffect(() => {
     if (pageURL > 0) {
       setCurrentPage(pageURL)
     }
   }, [pageURL])
-
 
   useEffect(() => {
     //create URL search params
@@ -164,7 +184,6 @@ const Organizers = ({ navigate, location }: any) => {
       navigate({
         pathname: location.pathname,
         search: createSearchParams({ page: String(currentPage) }).toString()
-
       })
     }
 
@@ -179,14 +198,13 @@ const Organizers = ({ navigate, location }: any) => {
     setLoading(true)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouceSearch, sortType, currentPage])
+  }, [debouceSearch, sortType, currentPage, update])
 
   useEffect(() => {
-
     if (totalOrganizer === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
     } else if (debouceSearch) {
-      setCurrentPage((prevPage) => prevPage = 1)
+      setCurrentPage((prevPage) => (prevPage = 1))
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -195,9 +213,7 @@ const Organizers = ({ navigate, location }: any) => {
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          {/* Add new organizer button here */}
-        </Box>
+        <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>{/* Add new organizer button here */}</Box>
         <Box sx={{ alignSelf: 'flex-end' }}>
           <Input
             label="Search"
