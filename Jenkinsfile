@@ -1,10 +1,17 @@
 pipeline {
-    agent any
-    tools { nodejs "Node16" }
+    agent {
+        label 'linux-node'
+    }
+    tools { nodejs "Node18" }
     stages {
         stage('Install deps') {
             steps {
                 sh 'npm install'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'npm run build'
             }
         }
         stage('Deploy') {
