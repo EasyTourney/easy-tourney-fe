@@ -3,14 +3,18 @@ import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextFie
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
 import { CategorySchema } from '../../services/validator/category.validator'
-interface AddCategoryProps {
-  categories: { id: number; categoryName: string }[]
+import { CategoryName } from '../../types/category'
+import { useDispatch, useSelector } from 'react-redux'
+import { setCategories } from '../../redux/reducers/categories/categories.reducer'
+interface DialogAddCategoryProps {
+  addCategory: (data: CategoryName) => Promise<any>
 }
 
-export function DialogAddCategory({ categories }: AddCategoryProps) {
+export function DialogAddCategory({  addCategory }: DialogAddCategoryProps) {
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
-
+  const category = useSelector((state: any) => state.category.categories)
+  const dispatch = useDispatch()
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -24,13 +28,31 @@ export function DialogAddCategory({ categories }: AddCategoryProps) {
       categoryName: ''
     },
     validationSchema: CategorySchema,
-    onSubmit: async () => {
+    onSubmit: async (values) => {
       try {
         setIsSaving(true)
-        toast.success('A category is created successfully!')
+        const categoryData = {
+          categoryId: 0,
+          categoryName: values.categoryName,
+          createdAt: new Date().toISOString(),
+          updatedAt: null,
+          deletedAt: null,
+          deleted: false
+        }
+        const response = await addCategory(categoryData)
+
+        if (response.success) {
+          const newCategory = response.data
+          const updatedCategories = [newCategory, ...category].slice(0, 10)
+          dispatch(setCategories(updatedCategories));
+          toast.success('A category is created successfully!')
+        } else {
+          toast.error('Failed to create the category. Please try again.')
+        }
+
         formik.resetForm()
       } catch (error) {
-        toast.error('An error occurred while creating the catalog!')
+        toast.error('An error occurred while creating the category!')
       } finally {
         setIsSaving(false)
         handleClose()

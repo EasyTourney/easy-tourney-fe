@@ -14,13 +14,13 @@ const initialState: UserState = {
 const categoriesSlice = createSlice({
   name: 'categories',
   initialState: initialState,
-  reducers: {},
-
-  extraReducers: (builder) => {
-    // builder.addCase()
+  reducers: {
+    setCategories: (state, action) => {
+      state.categories = [...action.payload]
+    }
   }
 })
 
-export const {} = categoriesSlice.actions
+export const { setCategories } = categoriesSlice.actions
 
 export default categoriesSlice.reducer

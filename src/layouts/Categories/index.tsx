@@ -5,13 +5,14 @@ import Input from '../../components/Input'
 import { useCallback, useState } from 'react'
 import { DialogAddCategory } from '../../components/DialogAddCategory'
 import { useEffect } from 'react'
-import { Categories } from '../../types/category'
 import { APIRes, ParamApi } from '../../types/commom'
 import { createSearchParams } from 'react-router-dom'
-import { apiDeleteCategory, getAllCategories } from '../../apis/axios/categories/category'
+import { apiDeleteCategory, getAllCategories, addCategory } from '../../apis/axios/categories/category'
 import useDebounce from '../../hooks/useDebounce'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import { useDispatch, useSelector } from 'react-redux'
+import { setCategories } from '../../redux/reducers/categories/categories.reducer'
 
 const Category = ({ navigate, location }: any) => {
   const columns = [
@@ -38,9 +39,10 @@ const Category = ({ navigate, location }: any) => {
     }
   ]
 
+  const dispatch = useDispatch()
   const [value, setValue] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
-  const [categories, setCategoties] = useState<Categories[] | []>([])
+  const categories = useSelector((state: any) => state.category.categories)
   const [totalCategories, setTotalCategories] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [update, setUpdate] = useState<boolean>(false)
@@ -50,9 +52,9 @@ const Category = ({ navigate, location }: any) => {
   const getAll = async (param: ParamApi) => {
     const getCategories = (await getAllCategories(param)) as APIRes
 
-    setCategoties(getCategories?.data)
-    setTotalCategories(getCategories?.additionalData?.totalCategories)
+    dispatch(setCategories([...getCategories.data]))
     setTotalCurrentPage(getCategories?.total)
+    setTotalCategories(getCategories.additionalData.totalCategories)
   }
 
   const pageSearch = (value: number) => {
@@ -76,7 +78,7 @@ const Category = ({ navigate, location }: any) => {
         search: createSearchParams({ sortType: sortType, page: String(currentPage) }).toString()
       })
     }
-  }, [debouceSearch, sortType, currentPage, navigate, value, location.pathname])
+  }, [sortType, currentPage, debouceSearch, update, categories, value, location.pathname])
 
   useEffect(() => {
     const param: ParamApi = {
@@ -142,7 +144,7 @@ const Category = ({ navigate, location }: any) => {
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          <DialogAddCategory categories={[]} />
+          <DialogAddCategory  addCategory={addCategory} />
         </Box>
         <Box sx={{ alignSelf: 'flex-end' }}>
           <Input
