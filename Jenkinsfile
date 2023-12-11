@@ -7,11 +7,6 @@ pipeline {
                 sh 'npm install'
             }
         }
-        stage('Build') {
-            steps {
-                sh 'npm run build'
-            }
-        }
         stage('Deploy') {
             when {
                 anyOf {
