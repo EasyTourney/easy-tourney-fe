@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkeasy_tourney_fe=self.webpackChunkeasy_tourney_fe||[]).push([[792],{5792:(e,n,r)=>{r.r(n),r.d(n,{default:()=>u});r(2791);var s=r(184);const u=function(){return(0,s.jsx)("div",{children:"Organe"})}}}]);
+//# sourceMappingURL=792.56c66858.chunk.js.map

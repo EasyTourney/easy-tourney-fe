@@ -1,24 +1,21 @@
-import { Route, Routes } from 'react-router-dom'
-import Category from './layouts/Categories'
-import Public from './pages/Public'
-import Dashboard from './layouts/Dashboard'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './router'
 import { ToastContainer } from 'react-toastify'
-import { Login } from './pages/Login'
-import Tournament from './layouts/Tournament'
+import { Suspense } from 'react'
+import { Box } from '@mui/material'
+import { GlobalStyle } from './styles/GlobalStyle'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
   return (
-    <div className="App">
-      <ToastContainer autoClose={1000} draggable />
-      <Routes>
-        <Route path="/*" element={<Public />}>
-          <Route path="" element={<Dashboard />} />
-          <Route path="categories" element={<Category />} />
-          <Route path="tournament" element={<Tournament />} />
-        </Route>
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </div>
+    <Box>
+      <Suspense fallback={<>Loading...</>}>
+        <GlobalStyle>
+          <ToastContainer style={{ fontSize: '15px' }} autoClose={1000} draggable />
+          <RouterProvider router={router}></RouterProvider>
+        </GlobalStyle>
+      </Suspense>
+    </Box>
   )
 }
 

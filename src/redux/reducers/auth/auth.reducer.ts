@@ -22,9 +22,10 @@ const authSlice = createSlice({
       state.userInfo = undefined
     },
     login: (state: AuthState, action) => {
-      localStorage.setItem('token', action.payload)
+      localStorage.setItem('token', action.payload.token)
       state.isLoggedIn = true
-      state.accessToken = action.payload
+      state.accessToken = action.payload.token
+      state.userInfo = action.payload.userInfo
     }
   }
 })

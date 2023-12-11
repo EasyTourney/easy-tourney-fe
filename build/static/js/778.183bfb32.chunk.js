@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkeasy_tourney_fe=self.webpackChunkeasy_tourney_fe||[]).push([[778],{5778:(e,s,n)=>{n.r(s),n.d(s,{default:()=>a});n(2791);var u=n(184);const a=()=>(0,u.jsx)("div",{children:"Tournament"})}}]);
+//# sourceMappingURL=778.183bfb32.chunk.js.map

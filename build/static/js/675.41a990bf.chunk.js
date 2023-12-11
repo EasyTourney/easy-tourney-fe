@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkeasy_tourney_fe=self.webpackChunkeasy_tourney_fe||[]).push([[675],{9675:(e,n,u)=>{u.r(n),u.d(n,{default:()=>t});u(2791);var s=u(184);const t=function(){return(0,s.jsx)("div",{children:"NotFound"})}}}]);
+//# sourceMappingURL=675.41a990bf.chunk.js.map

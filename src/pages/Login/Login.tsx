@@ -22,7 +22,7 @@ const Login: React.FC = () => {
     const [res] = await Promise.all([loginRequest(values)])
 
     if (res && res.data && res.data.token) {
-      dispatch(login(res.data.token))
+      dispatch(login(res.data))
       navigate('/', { replace: true })
     } else {
       setError(true)

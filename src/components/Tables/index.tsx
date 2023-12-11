@@ -125,7 +125,7 @@ const TableReused = ({
         <Table size="small">
           <TableHead
             sx={{
-              background: '#0094fd',
+              background: '#24292e',
               '& .MuiTableHead-root': {
                 padding: '8px 16px'
               }
@@ -260,7 +260,7 @@ const TableReused = ({
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{ mt: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+      <Box sx={{ mt: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
         <Paginations totalItems={total} itemsPerPage={10} onPageChange={handlePageChange} />
       </Box>
     </Box>

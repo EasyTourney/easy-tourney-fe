@@ -6,6 +6,7 @@ import { CategorySchema } from '../../services/validator/category.validator'
 import { CategoryName } from '../../types/category'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCategories } from '../../redux/reducers/categories/categories.reducer'
+import styles from "./DialogAddCategory.module.css"
 interface DialogAddCategoryProps {
   addCategory: (data: CategoryName) => Promise<any>
 }
@@ -69,7 +70,7 @@ export function DialogAddCategory({  addCategory }: DialogAddCategoryProps) {
   }
   return (
     <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
-      <Button variant="contained" style={{ backgroundColor: '#0094fd' }} onClick={handleClickOpen}>
+      <Button className={styles["btn-add"]} variant="contained" style={{ backgroundColor: '#24292e' }} onClick={handleClickOpen}>
         Add New
       </Button>
       <Dialog

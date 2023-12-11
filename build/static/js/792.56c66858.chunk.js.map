@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/792.56c66858.chunk.js","mappings":"oKAQA,QANA,WACE,OACEA,EAAAA,EAAAA,KAAA,OAAAC,SAAK,UAET,C","sources":["layouts/Organizer/index.tsx"],"sourcesContent":["import React from 'react'\r\n\r\nfunction Organe() {\r\n  return (\r\n    <div>Organe</div>\r\n  )\r\n}\r\n\r\nexport default Organe"],"names":["_jsx","children"],"sourceRoot":""}
