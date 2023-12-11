@@ -7,7 +7,7 @@ const Categories = lazy(() => import('../layouts/Categories'))
 const Login = lazy(() => import('../pages/Login/Login'))
 const NotFound = lazy(() => import('../pages/NotFound'))
 const Tournament = lazy(() => import('../layouts/Tournament'))
-const Organizer = lazy(() => import('../layouts/Organizer'))
+const Organizers = lazy(() => import('../layouts/Organizers'))
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'organizer',
-        element: <Organizer />
+        element: <Organizers />
       },
       {
         path: 'tournament',

@@ -2,24 +2,23 @@ import Box from '@mui/material/Box'
 import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
-import { useCallback, useState } from 'react'
-import { DialogAddCategory } from '../../components/DialogAddCategory'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { APIRes, ParamApi } from '../../types/commom'
-import { createSearchParams } from 'react-router-dom'
+import { createSearchParams, useSearchParams } from 'react-router-dom'
 import { apiDeleteCategory, getAllCategories, addCategory } from '../../apis/axios/categories/category'
 import useDebounce from '../../hooks/useDebounce'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCategories } from '../../redux/reducers/categories/categories.reducer'
+import { DialogAddCategory } from '../../components/DialogAddCategory'
 
 const Category = ({ navigate, location }: any) => {
   const columns = [
     {
       id: 'Id',
       sortTable: false,
-      label: 'Id',
+      label: 'No.',
       left: false,
       style: {
         filed: 'Id',
@@ -48,7 +47,10 @@ const Category = ({ navigate, location }: any) => {
   const [update, setUpdate] = useState<boolean>(false)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
+  const [params] = useSearchParams()
+  const pageURL = Number(params.get('page'));
 
+  // get all organizer from DB
   const getAll = async (param: ParamApi) => {
     const getCategories = (await getAllCategories(param)) as APIRes
 
@@ -61,10 +63,17 @@ const Category = ({ navigate, location }: any) => {
     setCurrentPage((prev) => (prev = value))
   }
 
+  //delaying the execution of function search
   const debouceSearch = useDebounce({
     value: value,
     ms: 800
   })
+
+  useEffect(() => {
+    if (pageURL > 0) {
+      setCurrentPage(pageURL)
+    }
+  }, [pageURL])
 
   useEffect(() => {
     if (debouceSearch && sortType) {
@@ -78,9 +87,7 @@ const Category = ({ navigate, location }: any) => {
         search: createSearchParams({ sortType: sortType, page: String(currentPage) }).toString()
       })
     }
-  }, [sortType, currentPage, debouceSearch, update, categories, value, location.pathname])
 
-  useEffect(() => {
     const param: ParamApi = {
       sortType: sortType,
       page: currentPage,
@@ -93,17 +100,13 @@ const Category = ({ navigate, location }: any) => {
   }, [sortType, currentPage, debouceSearch, update])
 
   useEffect(() => {
+
     if (totalCategories === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
-    } else {
-      const param: ParamApi = {
-        sortType: sortType,
-        page: currentPage,
-        keyword: value
-      }
-
-      getAll({ ...param })
+    } else if (debouceSearch) {
+      setCurrentPage((prevPage) => prevPage = 1)
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCategories])
 
@@ -144,7 +147,7 @@ const Category = ({ navigate, location }: any) => {
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          <DialogAddCategory  addCategory={addCategory} />
+          <DialogAddCategory addCategory={addCategory} />
         </Box>
         <Box sx={{ alignSelf: 'flex-end' }}>
           <Input

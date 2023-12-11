@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { Categories } from './category'
+import { Organizer } from './organizer'
 
 export interface APIRes extends AxiosResponse {
   success: boolean
@@ -10,6 +11,15 @@ export interface APIRes extends AxiosResponse {
   }
   message: string
   errorMessage?: {}
+}
+export interface OrganizerAPIRes extends AxiosResponse {
+  success: boolean
+  data: Organizer[]
+  total: number
+  additionalData: {
+    totalOrganizer: number
+  }
+  message: string
 }
 
 export interface ColumnTypes {

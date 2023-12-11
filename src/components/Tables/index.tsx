@@ -9,13 +9,14 @@ import { Box, Button, Skeleton } from '@mui/material'
 import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
 import { TiArrowSortedDown } from 'react-icons/ti'
-import { memo, useEffect, useState } from 'react'
+import { memo, useState, useEffect } from 'react'
 import { LiaEdit } from 'react-icons/lia'
 import { RiDeleteBin2Line } from 'react-icons/ri'
 import Paginations from '../Paginations'
 import { ColumnTypes } from '../../types/commom'
 import { useSearchParams } from 'react-router-dom'
 import noItem from '../../assets/noItem.png'
+
 
 interface ReusedTableProps {
   columns: ColumnTypes[]
@@ -87,14 +88,13 @@ const TableReused = ({
       setPage(page - 1)
     }
   }, [page, rows])
+
   const handlePageChange = (pageNumber: number) => {
     handlePageSearch(pageNumber)
     setPage(pageNumber)
   }
 
-  useEffect(() => {
-    setPage(1)
-  }, [total])
+
 
   // Loading skeleton
   const TableRowsLoader = ({ rowsNum }: any) => {
@@ -166,6 +166,7 @@ const TableReused = ({
                       if (column.sortTable && column.id === column.sortBy) {
                         handleSortTableClick(column.id)
                       }
+
                     }}
                   >
                     {column.label}
@@ -194,13 +195,13 @@ const TableReused = ({
               <TableRowsLoader rowsNum={10} />
             ) : rows?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={columns?.length}>
                   <Box sx={{ textAlign: 'center', color: 'gray', padding: '20px 0px' }}>
                     <Box
                       component="img"
                       src={noItem}
                       alt="no-item"
-                      sx={{ width: '100%', height: '250px', objectFit: 'contain' }}
+                      sx={{ width: '100%', height: '250px', objectFit: 'contain', }}
                     />
                   </Box>
                 </TableCell>

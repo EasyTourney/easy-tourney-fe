@@ -1,15 +1,15 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from "axios";
 
 const instance = axios.create({
   baseURL: 'http://easy-tourney.mgm-edv.de/api',
   headers: {
     'Content-Type': 'application/json'
   }
-})
+});
 
 instance.interceptors.request.use(
   function (config) {
-    const accessToken = window.localStorage.getItem('token')
+    const accessToken = window.localStorage.getItem('token');
     if (accessToken) {
       config.headers['Authorization'] = 'Bearer ' + accessToken
     }
