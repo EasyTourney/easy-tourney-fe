@@ -1,9 +1,18 @@
 import React from 'react'
-
-function NotFound() {
+import styles from './NotFound.module.css'
+import { Box } from '@mui/material'
+function Not() {
   return (
-    <div>NotFound</div>
+    <Box className={styles.container}>
+      <Box>
+        <img src="https://www.dienmayxanh.com/html/%C4%90MX/destop/images/404.png" alt="" />
+      </Box>
+
+      <Box className={styles.contet}>
+        <h2 className={styles.text}>Whoops, we couldn't find the page you were looking for!</h2>
+      </Box>
+    </Box>
   )
 }
 
-export default NotFound
+export default Not

@@ -12,6 +12,7 @@ import styles from './Header.module.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/reducers'
+import { getLocalStorage } from '../../utils/localStorage'
 
 const Header: React.FC = () => {
   const dispatch = useDispatch()
@@ -20,6 +21,12 @@ const Header: React.FC = () => {
   const pathSegments = location.pathname.split('/').filter((segment) => segment !== '')
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [userInfo, setUserInfo] = React.useState<any>(null)
+
+  React.useEffect(() => {
+    const storedUserInfo = getLocalStorage('user')
+    setUserInfo(storedUserInfo)
+  }, [])
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -42,9 +49,9 @@ const Header: React.FC = () => {
     <Box>
       <AppBar position="static" className={styles['main-app-header']}>
         <Toolbar className={styles['toolbar']}>
-        <Box className={styles['title']}>
+          <Box className={styles['title']}>
             <Typography sx={{ marginBottom: '0', fontSize: '25px', fontWeight: 600 }} variant="h5" gutterBottom>
-              {pathSegments.length > 0 ? capitalizeFirstLetter(pathSegments[pathSegments.length - 1]) : 'Default Title'}
+              {pathSegments.length > 0 ? capitalizeFirstLetter(pathSegments[pathSegments.length - 1]) : 'Home'}
             </Typography>
           </Box>
           <Box>
@@ -74,7 +81,7 @@ const Header: React.FC = () => {
               onClose={handleClose}
             >
               <MenuItem className={styles['menu-info-item']} onClick={handleClose} disabled>
-                Hello, Nguyen Huu Huy
+                Hello {userInfo ? `${userInfo.firstName} ${userInfo.lastName}` : 'Guest'}
               </MenuItem>
               <Divider className={styles['menu-divider']} />
               <MenuItem className={styles['menu-list-item']} onClick={handleLogout}>

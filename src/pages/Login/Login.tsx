@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '../../redux/reducers/auth/auth.reducer'
 import { VscLoading } from 'react-icons/vsc'
+import { setLocalStorage } from '../../utils/localStorage'
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -22,8 +23,17 @@ const Login: React.FC = () => {
     const [res] = await Promise.all([loginRequest(values)])
 
     if (res && res.data && res.data.token) {
+      const { userInfo } = res.data
       dispatch(login(res.data))
-      navigate('/', { replace: true })
+      setLocalStorage('user', JSON.stringify(userInfo));
+      setLocalStorage('userRole', userInfo.role)
+      if (userInfo.role === 'ADMIN') {
+        navigate('/category', { replace: true })
+      } else if (userInfo.role === 'ORGANIZER') {
+        navigate('/tournament', { replace: true })
+      } else {
+        navigate('/', { replace: true })
+      }
     } else {
       setError(true)
     }
@@ -128,7 +138,6 @@ const Login: React.FC = () => {
               </Stack>
               <Button
                 className={styles['submit-login-btn']}
-                // disabled={!formProps.isValid || !formProps.dirty}
                 size="large"
                 type="submit"
                 variant="contained"

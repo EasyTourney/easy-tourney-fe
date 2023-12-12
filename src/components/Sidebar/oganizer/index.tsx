@@ -7,20 +7,21 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ReorderIcon from '@mui/icons-material/Reorder'
 import SortIcon from '@mui/icons-material/Sort'
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
-import GroupIcon from '@mui/icons-material/Group'
-import CategoryIcon from '@mui/icons-material/Category';
+import WysiwygIcon from '@mui/icons-material/Wysiwyg';
+import GroupsIcon from '@mui/icons-material/Groups';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { IconButton } from '@mui/material'
-import styles from './Sidebar.module.css'
+import styles from './SibarOganizer.module.css'
 import React from 'react'
 
 type SidebarProps = {
   onToggleCollapse: () => void
 }
 
-function Sidebar({ onToggleCollapse }: SidebarProps) {
+function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
 
@@ -62,40 +63,52 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
             color: '#fff'
           }}
         >
-          <Link style={{ color: 'white', textDecoration: 'none' }} to="/category">
+          <Link style={{ color: 'white', textDecoration: 'none' }} to="/tournament/general">
             <ListItem
               button
-              selected={location.pathname === '/category'}
+              selected={location.pathname === '/tournament/general'}
               sx={{ '&.Mui-selected': { backgroundColor: 'gray',borderRadius:'10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
-                <CategoryIcon />
+                <WysiwygIcon />
               </ListItemIcon>
-              {!collapsed && <ListItemText className={styles["text-menu"]} primary="Category" />}
+              {!collapsed && <ListItemText className={styles["text-menu"]} primary="General" />}
             </ListItem>
           </Link>
-          <Link style={{ color: 'white' }} to="/organizer">
+          <Link style={{ color: 'white' }} to="/tournament/participant">
             <ListItem
               button
-              selected={location.pathname === '/organizer'}
+              selected={location.pathname === '/tournament/participant'}
               sx={{ '&.Mui-selected': { backgroundColor: 'gray',borderRadius:'10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
-                <GroupIcon />
+                <GroupsIcon />
               </ListItemIcon>
-              {!collapsed && <ListItemText className={styles["text-menu"]}  primary="Organizer" />}
+              {!collapsed && <ListItemText className={styles["text-menu"]}  primary="Participant" />}
             </ListItem>
           </Link>
-          <Link style={{ color: 'white' }} to="/tournament">
+          <Link style={{ color: 'white' }} to="/tournament/schedule">
             <ListItem
               button
-              selected={location.pathname === '/tournament'}
+              selected={location.pathname === '/tournament/schedule'}
               sx={{ '&.Mui-selected': { backgroundColor: 'gray',borderRadius:'10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
-                <EmojiEventsIcon />
+                <CalendarMonthIcon />
               </ListItemIcon>
-              {!collapsed && <ListItemText className={styles["text-menu"]}  primary="Tournament" />}
+              {!collapsed && <ListItemText className={styles["text-menu"]}  primary="Schedule" />}
+            </ListItem>
+          </Link>
+          <Link style={{ color: 'white' }} to="/tournament/result">
+            <ListItem
+              button
+              selected={location.pathname === '/tournament/result'}
+              sx={{ '&.Mui-selected': { backgroundColor: 'gray',borderRadius:'10px' } }}
+            >
+              <ListItemIcon sx={{ color: 'white' }}>
+                <ContentPasteIcon />
+              </ListItemIcon>
+              {!collapsed && <ListItemText className={styles["text-menu"]}  primary="Result" />}
             </ListItem>
           </Link>
         </List>
@@ -104,4 +117,4 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
   )
 }
 
-export default Sidebar
+export default SidebarOganizer

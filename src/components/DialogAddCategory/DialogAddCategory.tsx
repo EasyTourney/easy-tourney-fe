@@ -48,7 +48,7 @@ export function DialogAddCategory({  addCategory }: DialogAddCategoryProps) {
           dispatch(setCategories(updatedCategories));
           toast.success('A category is created successfully!')
         } else {
-          toast.error('Failed to create the category. Please try again.')
+          toast.error('Category name has already existed.')
         }
 
         formik.resetForm()

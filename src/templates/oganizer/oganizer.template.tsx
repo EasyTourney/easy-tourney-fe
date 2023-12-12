@@ -1,22 +1,14 @@
 import { Box, Grid } from '@mui/material'
 import { Outlet } from 'react-router-dom'
-import Sidebar from '../../components/Sidebar/admin'
 import { Header } from '../../components/Header'
-import {  useState, useEffect } from 'react'
-import CustomizedBreadcrumbs from '../../components/Navigation'
+import { Suspense, useState } from 'react'
 import React from 'react'
+import Loader from '../../components/Loader'
+import SidebarOganizer from '../../components/Sidebar/oganizer'
 import CustomizedBreadcrumbsOganizer from '../../components/Navigation/oganizer'
 
-function BaseTemplate() {
+function OrganizerTemplate() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [userRole, setUserRole] = useState('') 
-
-  useEffect(() => {
-    const storedUserRole = localStorage.getItem('userRole')
-    if (storedUserRole) {
-      setUserRole(storedUserRole)
-    }
-  }, [])
 
   const handleSidebarToggle = () => {
     setSidebarCollapsed(!sidebarCollapsed)
@@ -34,7 +26,7 @@ function BaseTemplate() {
           lg={sidebarCollapsed ? 0.7 : 2.3}
           xl={sidebarCollapsed ? 0.4 : 2}
         >
-          <Sidebar onToggleCollapse={handleSidebarToggle} />
+          <SidebarOganizer onToggleCollapse={handleSidebarToggle} />
         </Grid>
         <Grid
           item
@@ -48,11 +40,18 @@ function BaseTemplate() {
           <Box>
             <Header />
             <Box sx={{ marginTop: '20px' }}>
-              {userRole === 'ADMIN' && <CustomizedBreadcrumbs />}
-              {userRole === 'ORGANIZER' && <CustomizedBreadcrumbsOganizer />}
+              <CustomizedBreadcrumbsOganizer />
             </Box>
             <Box sx={{ marginRight: '15px' }}>
-              <Outlet />
+              <Suspense
+                fallback={
+                  <>
+                    <Loader />
+                  </>
+                }
+              >
+                <Outlet />
+              </Suspense>
             </Box>
           </Box>
         </Grid>
@@ -61,4 +60,4 @@ function BaseTemplate() {
   )
 }
 
-export default BaseTemplate
+export default OrganizerTemplate

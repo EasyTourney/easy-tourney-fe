@@ -2,8 +2,14 @@ import { emphasize, styled } from '@mui/material/styles'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Chip from '@mui/material/Chip'
 import HomeIcon from '@mui/icons-material/Home'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Link, useLocation } from 'react-router-dom'
+import {  useLocation } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom';
+interface CustomStyledBreadcrumbProps {
+  to: string | null;
+  component?: React.ElementType;
+  label: string;
+  icon?: React.ReactElement;
+}
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor = theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[800]
@@ -26,28 +32,31 @@ const capitalizeFirstLetter = (str: any) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
+const CustomStyledBreadcrumb: React.FC<CustomStyledBreadcrumbProps> = ({ to, ...props }) => {
+  const Component = props.component || 'div';
 
+  return <StyledBreadcrumb component={Component} to={to} {...props} />;
+};
 
-const CustomizedBreadcrumbs = () => {
+const CustomizedBreadcrumbsOganizer: React.FC = () => {
   const location = useLocation();
   const pathSegments = location.pathname.split('/').filter((segment) => segment !== '');
 
   return (
     <div role="presentation">
       <Breadcrumbs aria-label="breadcrumb">
-        <StyledBreadcrumb component={Link} to="/" label="Home" icon={<HomeIcon fontSize="small" />} />
+        <CustomStyledBreadcrumb component={RouterLink} to="/" label="Home" icon={<HomeIcon fontSize="small" />} />
 
         {pathSegments.map((segment, index) => {
           const isLastSegment = index === pathSegments.length - 1;
-          const to = `/${pathSegments.slice(0, index + 1).join('/')}`;
+          const to = isLastSegment ? null : `/${pathSegments.slice(0, index + 1).join('/')}`;
 
           return (
-            <StyledBreadcrumb
+            <CustomStyledBreadcrumb
               key={segment}
-              component={Link}
+              component={RouterLink}
               to={to}
-              label={isLastSegment ? capitalizeFirstLetter(segment) : undefined}
-              icon={isLastSegment ? undefined : <ExpandMoreIcon />}
+              label={capitalizeFirstLetter(segment)}
             />
           );
         })}
@@ -56,4 +65,4 @@ const CustomizedBreadcrumbs = () => {
   );
 };
 
-export default CustomizedBreadcrumbs;
+export default CustomizedBreadcrumbsOganizer;
