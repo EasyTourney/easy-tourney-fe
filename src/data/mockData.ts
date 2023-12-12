@@ -153,3 +153,30 @@ export const mockDataOrganizers = [
 {createdAt:"2023-12-07",fullName:"Phyllis Bosco",email:"Tianna18@hotmail.com",phoneNumber:"422.731.1112 x09492",totalTournament:89,id:48},
 {createdAt:"2023-12-07",fullName:"Sonya Hansen Jr.",email:"Aubrey41@hotmail.com",phoneNumber:"276.333.4384 x6272",totalTournament:51,id:49},
 {createdAt:"2023-12-07",fullName:"Sally Anderson",email:"Genoveva.Dach@hotmail.com",phoneNumber:"419.702.9172 x18356",totalTournament:53,id:50}]
+
+
+export const mockDataTeams=
+[
+  [{name:"Bradford McKenzie",id:1},
+  {name:"Lana Spinka",id:2},
+  {name:"Lynn Upton IV",id:3},
+  {name:"Maryann Ebert",id:4},
+  {name:"Stacy Dickens",id:5},
+  {name:"Ricardo Bartoletti",id:6},
+  {name:"Courtney Kiehn",id:7},
+  {name:"Ms. Marion Morar",id:8},
+  {name:"Elsa Grimes",id:9},
+  {name:"Ms. Joann Lehner",id:10},
+  {name:"Gretchen Ondricka",id:11},
+  {name:"Mrs. Ismael Weber",id:12},
+  {name:"Santiago Hegmann",id:13},
+  {name:"Abel Braun",id:14},
+  {name:"Valerie Pollich",id:15},
+  {name:"Antonio Reichel",id:16},
+  {name:"Ashley Littel Jr.",id:17},
+  {name:"Valerie Lebsack MD",id:18},
+  {name:"Olivia Heidenreich IV",id:19},
+  {name:"Jared Maggio III",id:20},
+  {name:"Desiree King MD",id:21},
+  {name:"Sheri Bahringer",id:22}]
+]

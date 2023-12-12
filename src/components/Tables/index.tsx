@@ -64,7 +64,7 @@ const TableReused = ({
       nextSortType = 'asc'
     }
 
-    const updatedSortStates = { ...sortStates, [id]: nextSortType }
+    const updatedSortStates = { id, [id]: nextSortType }
     setSortStates(updatedSortStates)
     handleColumnSort(id, nextSortType)
   }
@@ -166,7 +166,6 @@ const TableReused = ({
                       if (column.sortTable && column.id === column.sortBy) {
                         handleSortTableClick(column.id)
                       }
-
                     }}
                   >
                     {column.label}

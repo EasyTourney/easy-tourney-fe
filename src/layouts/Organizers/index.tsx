@@ -50,7 +50,7 @@ const Organizers = ({ navigate, location }: any) => {
     },
     {
       id: 'phoneNumber',
-      sortTable: true,
+      sortTable: false,
       label: 'Phone number',
       sortBy: 'phoneNumber',
       left: false,
@@ -198,11 +198,13 @@ const Organizers = ({ navigate, location }: any) => {
     setLoading(true)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouceSearch, sortType, currentPage, update])
+  }, [debouceSearch, sortType, currentPage, update,sortValue])
 
   useEffect(() => {
+    // update the current page when delete the last organizer on the current page
     if (totalOrganizer === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
+    // update the current page when starting a search
     } else if (debouceSearch) {
       setCurrentPage((prevPage) => (prevPage = 1))
     }

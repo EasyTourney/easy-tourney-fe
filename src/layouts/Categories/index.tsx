@@ -100,6 +100,7 @@ const Category = ({ navigate, location }: any) => {
   }, [sortType, currentPage, debouceSearch, update])
 
   useEffect(() => {
+
     if (totalCategories === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
     } else if (debouceSearch) {
