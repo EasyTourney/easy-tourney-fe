@@ -48,7 +48,7 @@ const TableReused = ({
     Object.fromEntries(columns.map((column) => [column.id, '']))
   )
 
-  
+
   const [params] = useSearchParams()
   const myPage = params.get('page')
   const totalIndex = totalCurrentPage < 10 ? totalCurrentPage - totalCurrentPage + 10 : totalCurrentPage
@@ -162,7 +162,8 @@ const TableReused = ({
                       justifyContent: 'center',
                       alignItems: 'center',
                       gap: '3px',
-                      cursor: `${column.sortTable && 'pointer'}`
+                      cursor: `${column.sortTable && 'pointer'}`,
+
                     }}
                     onClick={() => {
                       if (column.sortTable && column.id === column.sortBy) {
@@ -170,9 +171,12 @@ const TableReused = ({
                       }
                     }}
                   >
-                    {column.label}
-
-                    {column.sortTable && getColumnSortIcon(column.id)}
+                    <Box>
+                      {column.label}
+                    </Box>
+                    <Box>
+                      {column.sortTable && getColumnSortIcon(column.id)}
+                    </Box>
                   </Box>
                 </TableCell>
               ))}
@@ -226,7 +230,7 @@ const TableReused = ({
                         textAlign: `${column.left ? 'left' : 'center'}`,
                         borderRight: ' 1px solid rgba(224, 224, 224, 1)',
                         borderCollapse: 'collapse',
-                        whiteSpace: 'pre-wrap'
+                        wordWrap: 'break-word'
                       }}
                     >
                       {totalIndex && Object.values(column).indexOf('Id') > -1

@@ -123,7 +123,6 @@ const Participants = ({ navigate, location }: any) => {
   }, [sortType, currentPage, debouceSearch])
 
 
-
   useEffect(() => {
     if (totalParticipants === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)

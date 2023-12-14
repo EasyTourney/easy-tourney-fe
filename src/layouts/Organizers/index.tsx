@@ -36,7 +36,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'fullName',
-        width: '20%'
+        width: '30%'
       }
     },
     {
@@ -47,7 +47,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'email',
-        width: '20%'
+        width: '25%'
       }
     },
     {
@@ -99,7 +99,6 @@ const Organizers = ({ navigate, location }: any) => {
   const [value, setValue] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
   const [sortValue, setSortValue] = useState<string | ''>('')
-  // const [organizers, setOrganizers] = useState<OrganizerRecord[] | []>([])
   const organizers = useSelector((state: any) => state.organizer.organizers)
   const [totalOrganizer, setTotalOrganizer] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -114,21 +113,17 @@ const Organizers = ({ navigate, location }: any) => {
   const getAll = async (param: ParamApi) => {
     const getOrganizers = (await getAllOrganizer(param)) as OrganizerAPIRes
     if (getOrganizers?.data.length !== 0) {
+
       const formattedData = getOrganizers?.data.map((e) => {
         if (e.dateOfBirth === null) {
-          return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A'), dateOfBirth: '--' }
+          return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY'), dateOfBirth: "--" }
         }
-        return {
-          ...e,
-          createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A'),
-          dateOfBirth: moment(e.dateOfBirth).format('DD/MM/YYYY')
-        }
+        return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY'), dateOfBirth: moment(e.dateOfBirth).format('DD/MM/YYYY') }
       })
       dispatch(setOrganizer([...formattedData]))
     } else {
       dispatch(setOrganizer([...getOrganizers.data]))
     }
-    console.log('rerun')
     setTotalCurrentPage(getOrganizers?.total)
     setTotalOrganizer(getOrganizers?.additionalData?.totalOrganizer)
   }
@@ -148,7 +143,7 @@ const Organizers = ({ navigate, location }: any) => {
   }, [])
 
   const handleDelete = useCallback((rowData: { [key: string]: any }) => {
-    const { id } = rowData //get categoryId
+    const { id } = rowData //get organizerId
 
     Swal.fire({
       title: 'Are you sure?',

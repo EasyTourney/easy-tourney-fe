@@ -53,14 +53,15 @@ const Category = ({ navigate, location }: any) => {
   const pageURL = Number(params.get('page'))
   const [categoryName, setCategoryName] = useState('')
 
-  // get all organizer from DB
+  // get all category from DB
   const getAll = async (param: ParamApi) => {
     const getCategories = (await getAllCategories(param)) as APIRes
     if (getCategories) {
     dispatch(setCategories([...getCategories?.data]))
     setTotalCurrentPage(getCategories?.total)
-    setTotalCategories(getCategories.additionalData.totalCategories)
+    setTotalCategories(getCategories?.additionalData?.totalCategories)
   }}
+
   const pageSearch = (value: number) => {
     setCurrentPage((prev) => (prev = value))
   }
@@ -78,19 +79,20 @@ const Category = ({ navigate, location }: any) => {
   }, [pageURL])
 
   useEffect(() => {
-    if (debouceSearch && sortType) {
+    if (debouceSearch) {
       navigate({
         pathname: location.pathname,
         search: createSearchParams({ keyword: value, sortType: sortType, page: String(currentPage) }).toString()
       })
-    } else if (sortType) {
+    } else if (sortType !== '' ) {
       navigate({
         pathname: location.pathname,
         search: createSearchParams({ sortType: sortType, page: String(currentPage) }).toString()
       })
     } else {
       navigate({
-        pathname: location.pathname
+        pathname: location.pathname,
+        search: createSearchParams({ page: String(currentPage) }).toString()
       })
     }
 
@@ -107,14 +109,8 @@ const Category = ({ navigate, location }: any) => {
   useEffect(() => {
     if (totalCategories === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
-    } else {
-      const param: ParamApi = {
-        sortType: sortType,
-        page: currentPage,
-        keyword: value
-      }
-
-      getAll({ ...param })
+    } else if (debouceSearch) {
+      setCurrentPage((prevPage) => (prevPage = 1))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCategories])
@@ -198,5 +194,6 @@ const Category = ({ navigate, location }: any) => {
     </Box>
   )
 }
+
 
 export default withBaseLogic(Category)
