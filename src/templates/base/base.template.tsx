@@ -3,9 +3,8 @@ import { Outlet } from 'react-router-dom'
 import Sidebar from '../../components/Sidebar/admin'
 import { Header } from '../../components/Header'
 import {  useState, useEffect } from 'react'
-import CustomizedBreadcrumbs from '../../components/Navigation'
 import React from 'react'
-import CustomizedBreadcrumbsOganizer from '../../components/Navigation/oganizer'
+import withTokenCheck from '../../hoc/withTokenCheck'
 
 function BaseTemplate() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -16,7 +15,7 @@ function BaseTemplate() {
     if (storedUserRole) {
       setUserRole(storedUserRole)
     }
-  }, [])
+  }, [userRole])
 
   const handleSidebarToggle = () => {
     setSidebarCollapsed(!sidebarCollapsed)
@@ -47,10 +46,6 @@ function BaseTemplate() {
         >
           <Box>
             <Header />
-            <Box sx={{ marginTop: '20px' }}>
-              {userRole === 'ADMIN' && <CustomizedBreadcrumbs />}
-              {userRole === 'ORGANIZER' && <CustomizedBreadcrumbsOganizer />}
-            </Box>
             <Box sx={{ marginRight: '15px' }}>
               <Outlet />
             </Box>
@@ -61,4 +56,4 @@ function BaseTemplate() {
   )
 }
 
-export default BaseTemplate
+export default withTokenCheck(BaseTemplate) 

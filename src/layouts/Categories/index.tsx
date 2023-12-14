@@ -56,11 +56,11 @@ const Category = ({ navigate, location }: any) => {
   // get all organizer from DB
   const getAll = async (param: ParamApi) => {
     const getCategories = (await getAllCategories(param)) as APIRes
-
-    dispatch(setCategories([...getCategories.data]))
+    if (getCategories) {
+    dispatch(setCategories([...getCategories?.data]))
     setTotalCurrentPage(getCategories?.total)
     setTotalCategories(getCategories.additionalData.totalCategories)
-  }
+  }}
   const pageSearch = (value: number) => {
     setCurrentPage((prev) => (prev = value))
   }

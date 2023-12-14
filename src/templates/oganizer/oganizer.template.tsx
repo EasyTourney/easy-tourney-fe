@@ -1,11 +1,11 @@
 import { Box, Grid } from '@mui/material'
 import { Outlet } from 'react-router-dom'
 import { Header } from '../../components/Header'
-import { Suspense, useState } from 'react'
+import { useState } from 'react'
 import React from 'react'
-import Loader from '../../components/Loader'
 import SidebarOganizer from '../../components/Sidebar/oganizer'
 import CustomizedBreadcrumbsOganizer from '../../components/Navigation/oganizer'
+import withTokenCheck from '../../hoc/withTokenCheck'
 
 function OrganizerTemplate() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -43,15 +43,7 @@ function OrganizerTemplate() {
               <CustomizedBreadcrumbsOganizer />
             </Box>
             <Box sx={{ marginRight: '15px' }}>
-              <Suspense
-                fallback={
-                  <>
-                    <Loader />
-                  </>
-                }
-              >
-                <Outlet />
-              </Suspense>
+              <Outlet />
             </Box>
           </Box>
         </Grid>
@@ -60,4 +52,4 @@ function OrganizerTemplate() {
   )
 }
 
-export default OrganizerTemplate
+export default withTokenCheck(OrganizerTemplate)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { Formik, Field, Form, ErrorMessage, FormikProps } from 'formik'
 import { LoginSchema } from '../../services/validator/auth.validator'
 import { Alert, Box, Button, IconButton, InputAdornment, Stack, TextField } from '@mui/material'
@@ -9,7 +9,6 @@ import { loginRequest } from '../../apis/axios/auth/login'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '../../redux/reducers/auth/auth.reducer'
-import { VscLoading } from 'react-icons/vsc'
 import { setLocalStorage } from '../../utils/localStorage'
 
 const Login: React.FC = () => {
@@ -17,7 +16,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate()
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(true)
+
 
   const handleSubmitForm = async (values: LoginForm, { resetForm }: { resetForm: () => void }) => {
     const [res] = await Promise.all([loginRequest(values)])
@@ -46,17 +45,7 @@ const Login: React.FC = () => {
     setShowPassword((showPassword) => !showPassword)
   }
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      navigate('/', { replace: true })
-    } else {
-      setIsLoading(false)
-    }
-  }, [navigate])
-
-  if (isLoading) {
-    return <VscLoading />
-  }
+ 
 
   return (
     <Box className={styles['login-container']}>

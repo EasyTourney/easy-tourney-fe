@@ -5,37 +5,28 @@ import React from 'react'
 import OrganizerTemplate from '../templates/oganizer/oganizer.template'
 import ProtectedRoute from './ProtectedRoute'
 const General = lazy(() => import('../layouts/General'))
-const Schedule = lazy(() => import('../layouts/Schedule'));
-const Result = lazy(() => import('../layouts/Result'));
-const Participants = lazy(() => import('../layouts/Participants'));
-const Categories = lazy(() => import('../layouts/Categories'));
-const Login = lazy(() => import('../pages/Login/Login'));
-const NotFound = lazy(() => import('../pages/NotFound'));
-const Tournament = lazy(() => import('../layouts/Tournament'));
-const Organizer = lazy(() => import('../layouts/Organizers'));
+const Schedule = lazy(() => import('../layouts/Schedule'))
+const Result = lazy(() => import('../layouts/Result'))
+const Participants = lazy(() => import('../layouts/Participants'))
+const Categories = lazy(() => import('../layouts/Categories'))
+const Login = lazy(() => import('../pages/Login/Login'))
+const NotFound = lazy(() => import('../pages/NotFound'))
+const Tournament = lazy(() => import('../layouts/Tournament'))
+const Organizer = lazy(() => import('../layouts/Organizers'))
 
-const isLogin = () => {
-  const token = localStorage.getItem('token');
-  if (token ) {
-    return true; 
-  } else {
-    return false; 
-  }
-};
 
 const getDefaultRedirectPath = () => {
-  const storedRole = localStorage.getItem('useRole'); 
-  const isAdmin = storedRole === 'ADMIN';
-  const isOrganizer = storedRole === 'ORGANIZER';
-
+  const storedRole = localStorage.getItem('userRole')
+  const isAdmin = storedRole === 'ADMIN'
+  const isOrganizer = storedRole === 'ORGANIZER'
   if (isAdmin) {
-    return '/category';
+    return '/category'
   } else if (isOrganizer) {
-    return '/tournament';
+    return '/tournament'
   } else {
-    return '/'; 
+    return '/login'
   }
-};
+}
 
 export const router = createBrowserRouter([
   {
@@ -44,11 +35,7 @@ export const router = createBrowserRouter([
       {
         index: true,
         path: '/',
-        element: isLogin() ? (
-          <Navigate to={getDefaultRedirectPath()} replace={true} />
-        ) : (
-          <Navigate to="/login" replace={true} />
-        )
+        element: <Navigate to={getDefaultRedirectPath()} replace={true} />
       },
       {
         path: 'category',
