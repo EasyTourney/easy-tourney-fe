@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { Categories } from './category'
-import { Organizer } from './organizer'
+import { Organizer, OrganizerRecord } from './organizer'
 
 export interface APIRes extends AxiosResponse {
   success: boolean
@@ -14,7 +14,7 @@ export interface APIRes extends AxiosResponse {
 }
 export interface OrganizerAPIRes extends AxiosResponse {
   success: boolean
-  data: Organizer[]
+  data: OrganizerRecord[]
   total: number
   additionalData: {
     totalOrganizer: number

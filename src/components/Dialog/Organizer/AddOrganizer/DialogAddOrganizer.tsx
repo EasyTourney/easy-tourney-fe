@@ -17,10 +17,21 @@ import styles from './DialogAddOrganizer.module.css'
 import { Email, Phone } from '@mui/icons-material'
 import { OrganizerSchema } from '../../../../services/validator/organizer.validator'
 import { DatePicker } from '@mui/x-date-pickers'
+import { useDispatch, useSelector } from 'react-redux'
+import { Organizer } from '../../../../types/organizer'
+import { setOrganizer } from '../../../../redux/reducers/organizers/organizers.reducer'
+import { RootState } from '../../../../redux/store'
+import moment from 'moment'
 
-const DialogAddOrganizer = () => {
+interface DialogAddOrganizerProps {
+  addOrganizer: (data: Organizer) => Promise<any>
+}
+
+const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
+  const organizer = useSelector((state: RootState) => state.organizer.organizers)
+  const dispatch = useDispatch()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -41,14 +52,36 @@ const DialogAddOrganizer = () => {
     },
     validationSchema: OrganizerSchema,
     validateOnChange: false,
-    onSubmit: async () => {
+    onSubmit: async (values) => {
       try {
         setIsSaving(true)
-        alert(JSON.stringify(formik.values))
-        toast.success('An organizer is created successfully!')
+        const organizerData = {
+          id: 0,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          phoneNumber: values.phoneNumber,
+          dateOfBirth: values?.dateOfBirth !== '' ? values.dateOfBirth : undefined
+        }
+        const response = await addOrganizer(organizerData)
+
+        if (response.success) {
+          const newOrganizer = {
+            ...response.data,
+            totalTournament: 0,
+            fullName: response.data.firstName + ' ' + response.data.lastName,
+            dateOfBirth: moment(response.data.dateOfBirth).format('DD/MM/YYYY'),
+            createdAt: moment(response.data.createdAt).format('DD/MM/YYYY HH:mm A')
+          }
+          const updatedOrganizers = [newOrganizer, ...organizer].slice(0, 10)
+          dispatch(setOrganizer(updatedOrganizers))
+          toast.success('An organizer is created successfully!')
+        } else {
+          toast.error('An error occurred while adding new organizer!')
+        }
         formik.resetForm()
       } catch (error) {
-        toast.error('An error occurred while adding new organiser!')
+        toast.error('An error occurred while adding new organizer!')
       } finally {
         setIsSaving(false)
         handleClose()
@@ -66,7 +99,7 @@ const DialogAddOrganizer = () => {
 
   return (
     <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
-      <Button variant="contained" onClick={handleClickOpen}>
+      <Button variant="contained" onClick={handleClickOpen} className={styles['add-organizer-btn']}>
         Add new organizer
       </Button>
       <Dialog

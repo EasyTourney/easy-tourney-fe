@@ -69,7 +69,6 @@ export function DialogAddCategory({ addCategory }: DialogAddCategoryProps) {
     }
   }
 
-
   return (
     <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
       <Button

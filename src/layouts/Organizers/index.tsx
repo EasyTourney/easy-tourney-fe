@@ -7,11 +7,13 @@ import { useEffect } from 'react'
 import { OrganizerAPIRes, ParamApi } from '../../types/commom'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
 import useDebounce from '../../hooks/useDebounce'
-import { apiDeleteOrganizer, getAllOrganizer } from '../../apis/axios/organizers/organizer'
-import { Organizer } from '../../types/organizer'
+import { addOrganizer, apiDeleteOrganizer, getAllOrganizer } from '../../apis/axios/organizers/organizer'
 import moment from 'moment'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import { DialogAddOrganizer } from '../../components/Dialog/Organizer/AddOrganizer'
+import { useDispatch, useSelector } from 'react-redux'
+import { setOrganizer } from '../../redux/reducers/organizers/organizers.reducer'
 
 const Organizers = ({ navigate, location }: any) => {
   const columns = [
@@ -97,7 +99,8 @@ const Organizers = ({ navigate, location }: any) => {
   const [value, setValue] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
   const [sortValue, setSortValue] = useState<string | ''>('')
-  const [organizers, setOrganizers] = useState<Organizer[] | []>([])
+  // const [organizers, setOrganizers] = useState<OrganizerRecord[] | []>([])
+  const organizers = useSelector((state: any) => state.organizer.organizers)
   const [totalOrganizer, setTotalOrganizer] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
@@ -105,24 +108,29 @@ const Organizers = ({ navigate, location }: any) => {
   const [update, setUpdate] = useState<boolean>(false)
   const [params] = useSearchParams()
   const pageURL = Number(params.get('page'))
+  const dispatch = useDispatch()
 
   // get all organizer from DB
   const getAll = async (param: ParamApi) => {
     const getOrganizers = (await getAllOrganizer(param)) as OrganizerAPIRes
     if (getOrganizers?.data.length !== 0) {
-
       const formattedData = getOrganizers?.data.map((e) => {
         if (e.dateOfBirth === null) {
-          return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A'), dateOfBirth: "--" }
+          return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A'), dateOfBirth: '--' }
         }
-        return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A'), dateOfBirth: moment(e.dateOfBirth).format('DD/MM/YYYY') }
+        return {
+          ...e,
+          createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A'),
+          dateOfBirth: moment(e.dateOfBirth).format('DD/MM/YYYY')
+        }
       })
-      setOrganizers(formattedData)
+      dispatch(setOrganizer([...formattedData]))
     } else {
-      setOrganizers(getOrganizers?.data)
+      dispatch(setOrganizer([...getOrganizers.data]))
     }
-    setTotalOrganizer(getOrganizers?.additionalData?.totalOrganizer)
+    console.log('rerun')
     setTotalCurrentPage(getOrganizers?.total)
+    setTotalOrganizer(getOrganizers?.additionalData?.totalOrganizer)
   }
 
   const pageSearch = (value: number) => {
@@ -140,7 +148,6 @@ const Organizers = ({ navigate, location }: any) => {
   }, [])
 
   const handleDelete = useCallback((rowData: { [key: string]: any }) => {
-    console.log(rowData)
     const { id } = rowData //get categoryId
 
     Swal.fire({
@@ -157,7 +164,7 @@ const Organizers = ({ navigate, location }: any) => {
         const res = (await apiDeleteOrganizer(id)) as OrganizerAPIRes
         console.log(res)
         if (res.success) {
-          toast.success('An organizer was deleted successfully !!!')
+          toast.success('An organizer is deleted successfully!')
           setUpdate((prev) => !prev)
         } else {
           toast.error(res.message)
@@ -230,7 +237,9 @@ const Organizers = ({ navigate, location }: any) => {
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>{/* Add new organizer button here */}</Box>
+        <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
+          <DialogAddOrganizer addOrganizer={addOrganizer} />
+        </Box>
         <Box sx={{ alignSelf: 'flex-end' }}>
           <Input
             label="Search"

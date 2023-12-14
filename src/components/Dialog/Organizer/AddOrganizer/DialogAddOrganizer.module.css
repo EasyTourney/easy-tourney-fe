@@ -16,3 +16,7 @@
   width: 100%;
   justify-content: flex-end;
 }
+.add-organizer-btn,
+.add-organizer-btn:hover {
+  background-color: rgb(36, 41, 46);
+}
