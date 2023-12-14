@@ -10,15 +10,16 @@ import useDebounce from '../../hooks/useDebounce'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCategories } from '../../redux/reducers/categories/categories.reducer'
-import { DialogAddCategory } from '../../components/DialogAddCategory'
+import { DialogAddCategory } from '../../components/Dialog/Category/DialogAddCategory'
+import { setCategories, setSelectedCategory } from '../../redux/reducers/categories/categories.reducer'
+import { DialogEditCategory } from '../../components/Dialog/Category/EditCategory/DialogEditCategory'
 
 const Category = ({ navigate, location }: any) => {
   const columns = [
     {
       id: 'Id',
       sortTable: false,
-      label: 'No.',
+      label: 'Id',
       left: false,
       style: {
         filed: 'Id',
@@ -47,8 +48,10 @@ const Category = ({ navigate, location }: any) => {
   const [update, setUpdate] = useState<boolean>(false)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [params] = useSearchParams()
   const pageURL = Number(params.get('page'))
+  const [categoryName, setCategoryName] = useState('')
 
   // get all organizer from DB
   const getAll = async (param: ParamApi) => {
@@ -58,7 +61,6 @@ const Category = ({ navigate, location }: any) => {
     setTotalCurrentPage(getCategories?.total)
     setTotalCategories(getCategories.additionalData.totalCategories)
   }
-
   const pageSearch = (value: number) => {
     setCurrentPage((prev) => (prev = value))
   }
@@ -81,10 +83,14 @@ const Category = ({ navigate, location }: any) => {
         pathname: location.pathname,
         search: createSearchParams({ keyword: value, sortType: sortType, page: String(currentPage) }).toString()
       })
-    } else {
+    } else if (sortType) {
       navigate({
         pathname: location.pathname,
         search: createSearchParams({ sortType: sortType, page: String(currentPage) }).toString()
+      })
+    } else {
+      navigate({
+        pathname: location.pathname
       })
     }
 
@@ -93,26 +99,34 @@ const Category = ({ navigate, location }: any) => {
       page: currentPage,
       keyword: value
     }
-
     getAll({ ...param })
     setLoading(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortType, currentPage, debouceSearch, update])
 
   useEffect(() => {
-
     if (totalCategories === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
-    } else if (debouceSearch) {
-      setCurrentPage((prevPage) => (prevPage = 1))
-    }
+    } else {
+      const param: ParamApi = {
+        sortType: sortType,
+        page: currentPage,
+        keyword: value
+      }
 
+      getAll({ ...param })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCategories])
 
-  const handleEdit = useCallback((rowData: { [key: string]: any }) => {
-    // call api here
-  }, [])
+  const handleEdit = useCallback(
+    (rowData: { [key: string]: any }) => {
+      dispatch(setSelectedCategory(rowData))
+      setCategoryName(rowData.categoryName)
+      setIsEditDialogOpen(true)
+    },
+    [dispatch]
+  )
 
   const handleDelete = useCallback(async (rowData: { [key: string]: any }) => {
     const { categoryId } = rowData //get categoryId
@@ -130,7 +144,7 @@ const Category = ({ navigate, location }: any) => {
       if (result.isConfirmed) {
         const res = (await apiDeleteCategory(categoryId)) as APIRes
         if (res.success) {
-          toast.success('A category was deleted successfully !!!')
+          toast.success(res.message)
           setUpdate((prev) => !prev)
         } else {
           toast.error(res.message)
@@ -149,6 +163,13 @@ const Category = ({ navigate, location }: any) => {
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
           <DialogAddCategory addCategory={addCategory} />
         </Box>
+        <DialogEditCategory
+          categories={categories}
+          onOpen={isEditDialogOpen}
+          onClose={() => setIsEditDialogOpen(false)}
+          categoryName={categoryName}
+        />
+
         <Box sx={{ alignSelf: 'flex-end' }}>
           <Input
             label="Search"

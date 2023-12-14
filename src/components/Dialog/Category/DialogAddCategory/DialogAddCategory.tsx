@@ -2,16 +2,16 @@ import { useState } from 'react'
 import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
-import { CategorySchema } from '../../services/validator/category.validator'
-import { CategoryName } from '../../types/category'
+import { CategorySchema } from '../../../../services/validator/category.validator'
+import { CategoryName } from '../../../../types/category'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCategories } from '../../redux/reducers/categories/categories.reducer'
-import styles from "./DialogAddCategory.module.css"
+import { setCategories } from '../../../../redux/reducers/categories/categories.reducer'
+import styles from './DialogAddCategory.module.css'
 interface DialogAddCategoryProps {
   addCategory: (data: CategoryName) => Promise<any>
 }
 
-export function DialogAddCategory({  addCategory }: DialogAddCategoryProps) {
+export function DialogAddCategory({ addCategory }: DialogAddCategoryProps) {
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
   const category = useSelector((state: any) => state.category.categories)
@@ -45,7 +45,7 @@ export function DialogAddCategory({  addCategory }: DialogAddCategoryProps) {
         if (response.success) {
           const newCategory = response.data
           const updatedCategories = [newCategory, ...category].slice(0, 10)
-          dispatch(setCategories(updatedCategories));
+          dispatch(setCategories(updatedCategories))
           toast.success('A category is created successfully!')
         } else {
           toast.error('Category name has already existed.')
@@ -68,9 +68,16 @@ export function DialogAddCategory({  addCategory }: DialogAddCategoryProps) {
       }
     }
   }
+
+
   return (
     <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
-      <Button className={styles["btn-add"]} variant="contained" style={{ backgroundColor: '#24292e' }} onClick={handleClickOpen}>
+      <Button
+        className={styles['btn-add']}
+        variant="contained"
+        style={{ backgroundColor: '#24292e' }}
+        onClick={handleClickOpen}
+      >
         Add New
       </Button>
       <Dialog

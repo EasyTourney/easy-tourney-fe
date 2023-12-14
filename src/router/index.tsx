@@ -1,18 +1,18 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { lazy } from 'react';
-import BaseTemplate from '../templates/base/base.template';
-import React from 'react';
-import OrganizerTemplate from '../templates/oganizer/oganizer.template';
-import ProtectedRoute from './ProtectedRoute';
+import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { lazy } from 'react'
+import BaseTemplate from '../templates/base/base.template'
+import React from 'react'
+import OrganizerTemplate from '../templates/oganizer/oganizer.template'
+import ProtectedRoute from './ProtectedRoute'
 const General = lazy(() => import('../layouts/General'))
-const Schedule = lazy(() => import('../layouts/Schedule'));
-const Result = lazy(() => import('../layouts/Result'));
-const Participant = lazy(() => import('../layouts/Participant'));
-const Categories = lazy(() => import('../layouts/Categories'));
-const Login = lazy(() => import('../pages/Login/Login'));
-const NotFound = lazy(() => import('../pages/NotFound'));
-const Tournament = lazy(() => import('../layouts/Tournament'));
-const Organizer = lazy(() => import('../layouts/Organizers'));
+const Schedule = lazy(() => import('../layouts/Schedule'))
+const Result = lazy(() => import('../layouts/Result'))
+const Participant = lazy(() => import('../layouts/Participant'))
+const Categories = lazy(() => import('../layouts/Categories'))
+const Login = lazy(() => import('../pages/Login/Login'))
+const NotFound = lazy(() => import('../pages/NotFound'))
+const Tournament = lazy(() => import('../layouts/Tournament'))
+const Organizer = lazy(() => import('../layouts/Organizers'))
 
 const isLogin = () => {
   const token = localStorage.getItem('token');
@@ -26,9 +26,7 @@ const isLogin = () => {
 const getDefaultRedirectPath = () => {
   const storedRole = localStorage.getItem('useRole'); 
   const isAdmin = storedRole === 'ADMIN';
-  console.log(isAdmin)
   const isOrganizer = storedRole === 'ORGANIZER';
-  console.log(isOrganizer)
 
   if (isAdmin) {
     return '/category';
@@ -99,4 +97,4 @@ export const router = createBrowserRouter([
     path: '*',
     element: <NotFound />
   }
-]);
+])

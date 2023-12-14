@@ -29,7 +29,7 @@ const authSlice = createSlice({
       localStorage.setItem('token', action.payload.token)
       state.isLoggedIn = true
       state.accessToken = action.payload.token
-      state.userInfo = action.payload.userInfo
+      state.userInfo = action.payload.userInfo.role
     },
   }
 })

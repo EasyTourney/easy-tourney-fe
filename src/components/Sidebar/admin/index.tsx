@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import List from '@mui/material/List'
@@ -14,7 +14,6 @@ import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { IconButton } from '@mui/material'
 import styles from './Sidebar.module.css'
-import React from 'react'
 
 type SidebarProps = {
   onToggleCollapse: () => void
@@ -24,16 +23,36 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
   const [userRole, setUserRole] = useState('')
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
   useEffect(() => {
-    const role = localStorage.getItem('userRole');
-    setUserRole(role || '');
-  }, []); 
-  
+    const role = localStorage.getItem('userRole')
+    setUserRole(role || '')
+
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (windowWidth < 610) {
+      setCollapsed(true)
+    } else {
+      setCollapsed(false)
+    }
+  }, [windowWidth])
 
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed)
     onToggleCollapse()
   }
+
   return (
     <Box className={`${styles.sidebar} ${collapsed && styles['sidebar-collapsed']}`}>
       <Box className={`${styles['sidebar-header']} ${collapsed && styles['sidebar-collapsed']}`}>
@@ -68,8 +87,11 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
             color: '#fff'
           }}
         >
-          {userRole !== 'ORGANIZER' && ( 
-            <Link style={{ color: 'white', textDecoration: 'none' }} to="/category">
+          {userRole !== 'ORGANIZER' && (
+            <Link
+              style={{ color: 'white', textDecoration: 'none' }}
+              to={{ pathname: '/category', search: '?sortType=&page=1' }}
+            >
               <ListItem
                 button
                 selected={location.pathname === '/category'}
@@ -82,8 +104,8 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
               </ListItem>
             </Link>
           )}
-          {userRole !== 'ORGANIZER' && ( 
-            <Link style={{ color: 'white' }} to="/organizer">
+          {userRole !== 'ORGANIZER' && (
+            <Link style={{ color: 'white' }} to={{ pathname: '/organizer', search: '?page=1' }}>
               <ListItem
                 button
                 selected={location.pathname === '/organizer'}

@@ -1,0 +1,1 @@
+export const testSelector = (state: any) => state.user.todoList

@@ -65,14 +65,24 @@
         margin-left: 70px;
     }
 }
-
-@media screen and (min-width: 1200px) and (max-width: 1300px) {
+@media screen and (min-width: 1200px) and (max-width: 1284px) {
+    .sidebar {
+        width: 225px;
+    }
+    .customTypography {
+        padding-left: 0px !important;
+    }
+    .sidebar-collapsed {
+        width: 60px;
+    }
+} 
+@media screen and (min-width: 1284px) and (max-width: 1320px) {
     .logo-container {
         margin-left: 0px;
     }
 
     .sidebar {
-        width: 235px;
+        width: 245px;
     }
 
     .sidebar-collapsed {
@@ -92,4 +102,7 @@
     .sidebar-collapsed {
         width: 60px;
     }
+}
+.customTypography {
+    padding-left: 30px;
 }

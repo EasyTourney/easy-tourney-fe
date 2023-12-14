@@ -11,3 +11,7 @@ export interface CategoryName {
   deletedAt: string | null
   updatedAt: string | null
 }
+export interface UpdatedCategory {
+  categoryId: string; 
+
+}

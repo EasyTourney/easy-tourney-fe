@@ -25,7 +25,9 @@ const Header: React.FC = () => {
 
   React.useEffect(() => {
     const storedUserInfo = getLocalStorage('user')
-    setUserInfo(storedUserInfo)
+    if (storedUserInfo) {
+      setUserInfo(storedUserInfo)
+    }
   }, [])
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
