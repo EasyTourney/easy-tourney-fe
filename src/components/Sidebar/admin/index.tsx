@@ -60,7 +60,7 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
           {!collapsed && (
             <>
               <Box className={styles['logo-container']}>
-                <Typography sx={{ color: 'white', fontSize: '25px', fontWeight: '600', paddingLeft: '30px' }}>
+                <Typography className={styles['customTypography']} sx={{ color: 'white', fontSize: '25px', fontWeight: '600' }}>
                   EasyTourney
                 </Typography>
                 <Box sx={{ marginLeft: '10px' }}>

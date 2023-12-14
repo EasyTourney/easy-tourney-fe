@@ -21,20 +21,20 @@ function OrganizerTemplate() {
           sx={{ height: '100vh', transition: 'all 0.3s ease' }}
           item
           xs={sidebarCollapsed ? 2 : 2.2}
-          sm={sidebarCollapsed ? 1 : 4}
+          sm={sidebarCollapsed ? 1 : 4.7}
           md={sidebarCollapsed ? 1 : 3.4}
           lg={sidebarCollapsed ? 0.7 : 2.3}
-          xl={sidebarCollapsed ? 0.4 : 2}
+          xl={sidebarCollapsed ? 0.6 : 2}
         >
           <SidebarOganizer onToggleCollapse={handleSidebarToggle} />
         </Grid>
         <Grid
           item
           xs={sidebarCollapsed ? 10 : 9.8}
-          sm={sidebarCollapsed ? 11 : 8}
+          sm={sidebarCollapsed ? 11 : 7.3}
           md={sidebarCollapsed ? 11 : 8.6}
           lg={sidebarCollapsed ? 11.3 : 9.7}
-          xl={sidebarCollapsed ? 11.6 : 10}
+          xl={sidebarCollapsed ? 11.4 : 10}
           style={{ transition: 'all 0.3s ease' }}
         >
           <Box>

@@ -35,3 +35,12 @@ export async function getAllCategory() {
   })
   return res
 }
+
+export async function apiEditCategory(id: number, data: any) {
+  const res = await axios({
+    url: `/category/${id}`,
+    method: 'PUT',
+    data
+  })
+  return res
+}

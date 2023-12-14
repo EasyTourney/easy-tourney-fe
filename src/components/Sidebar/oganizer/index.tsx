@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import List from '@mui/material/List'
@@ -24,6 +24,27 @@ type SidebarProps = {
 function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (windowWidth < 610) {
+      setCollapsed(true)
+    } else {
+      setCollapsed(false)
+    }
+  }, [windowWidth])
 
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed)
@@ -36,7 +57,7 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
           {!collapsed && (
             <>
               <Box className={styles['logo-container']}>
-                <Typography sx={{ color: 'white', fontSize: '25px', fontWeight: '600', paddingLeft: '30px' }}>
+                <Typography className={styles['customTypography']} sx={{ color: 'white', fontSize: '25px', fontWeight: '600' }}>
                   EasyTourney
                 </Typography>
                 <Box sx={{ marginLeft: '10px' }}>

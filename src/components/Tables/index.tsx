@@ -225,7 +225,8 @@ const TableReused = ({
                       sx={{
                         textAlign: `${column.left ? 'left' : 'center'}`,
                         borderRight: ' 1px solid rgba(224, 224, 224, 1)',
-                        borderCollapse: 'collapse'
+                        borderCollapse: 'collapse',
+                        whiteSpace: 'pre-wrap'
                       }}
                     >
                       {totalIndex && Object.values(column).indexOf('Id') > -1

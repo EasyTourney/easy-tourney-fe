@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import {  Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
 import { CategorySchema } from '../../../../services/validator/category.validator'
 import { Categories } from '../../../../types/category'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateCategory } from '../../../../redux/reducers/categories/categories.reducer'
-
+import { setCategories } from '../../../../redux/reducers/categories/categories.reducer'
+import { apiEditCategory } from '../../../../apis/axios/categories/category'
 interface EditCategoryProps {
   categories: Categories[]
   onOpen: boolean
@@ -19,6 +19,7 @@ export function DialogEditCategory({ categories, onOpen, onClose, categoryName }
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const selectedCategory = useSelector((state: any) => state.category.seletedCategory)
+  const category = useSelector((state: any) => state.category.categories)
 
   const formik = useFormik({
     initialValues: {
@@ -27,15 +28,22 @@ export function DialogEditCategory({ categories, onOpen, onClose, categoryName }
     validationSchema: CategorySchema,
     onSubmit: async () => {
       try {
-        setIsSaving(true)
-        formik.resetForm()
-        dispatch(updateCategory({ ...selectedCategory, categoryName: formik.values.categoryName }))
-        toast.success('Category name is updated successfully!')
+        setIsSaving(true);
+        const updatedCategoryName = {
+          categoryName: formik.values.categoryName
+        };
+        const response = await apiEditCategory(selectedCategory.categoryId, updatedCategoryName);
+        const updatedCategory = response.data;
+        const updatedCategories = category.map((item: { categoryId: any }) =>
+          item.categoryId === updatedCategory.categoryId ? updatedCategory : item
+        );
+        dispatch(setCategories(updatedCategories));
+        toast.success('A category is updated successfully!');
       } catch (error) {
-        toast.error('An error occurred while updating the category!')
+        toast.error('Category name has already existed!');
       } finally {
-        setIsSaving(false)
-        handleClose()
+        setIsSaving(false);
+        handleClose();
       }
     }
   })
@@ -44,7 +52,7 @@ export function DialogEditCategory({ categories, onOpen, onClose, categoryName }
     formik.setValues({
       categoryName: categoryName
     })
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryName, isOpen])
 
   const handleClose = () => {
