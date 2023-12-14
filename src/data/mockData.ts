@@ -156,27 +156,28 @@ export const mockDataOrganizers = [
 
 
 export const mockDataTeams=
-[
-  [{name:"Bradford McKenzie",id:1},
-  {name:"Lana Spinka",id:2},
-  {name:"Lynn Upton IV",id:3},
-  {name:"Maryann Ebert",id:4},
-  {name:"Stacy Dickens",id:5},
-  {name:"Ricardo Bartoletti",id:6},
-  {name:"Courtney Kiehn",id:7},
-  {name:"Ms. Marion Morar",id:8},
-  {name:"Elsa Grimes",id:9},
-  {name:"Ms. Joann Lehner",id:10},
-  {name:"Gretchen Ondricka",id:11},
-  {name:"Mrs. Ismael Weber",id:12},
-  {name:"Santiago Hegmann",id:13},
-  {name:"Abel Braun",id:14},
-  {name:"Valerie Pollich",id:15},
-  {name:"Antonio Reichel",id:16},
-  {name:"Ashley Littel Jr.",id:17},
-  {name:"Valerie Lebsack MD",id:18},
-  {name:"Olivia Heidenreich IV",id:19},
-  {name:"Jared Maggio III",id:20},
-  {name:"Desiree King MD",id:21},
-  {name:"Sheri Bahringer",id:22}]
+
+  [{teamName:"Bradford McKenzie",id:1},
+  {teamName:"Lana Spinka",id:2},
+  {teamName:"Lynn Upton IV",id:3},
+  {teamName:"Maryann Ebert",id:4},
+  {teamName:"Stacy Dickens",id:5},
+  {teamName:"Ricardo Bartoletti",id:6},
+  {teamName:"Courtney Kiehn",id:7},
+  {teamName:"Ms. Marion Morar",id:8},
+  {teamName:"Elsa Grimes",id:9},
+  {teamName:"Ms. Joann Lehner",id:10},
+  {teamName:"Gretchen Ondricka",id:11},
+  {teamName:"Mrs. Ismael Weber",id:12},
+  {teamName:"Santiago Hegmann",id:13},
+  {teamName:"Abel Braun",id:14},
+  {teamName:"Valerie Pollich",id:15},
+  {teamName:"Antonio Reichel",id:16},
+  {teamName:"Ashley Littel Jr.",id:17},
+  {teamName:"Valerie Lebsack MD",id:18},
+  {teamName:"Olivia Heidenreich IV",id:19},
+  {teamName:"Jared Maggio III",id:20},
+  {teamName:"Desiree King MD",id:21},
+  {teamName:"Sheri Bahringer",id:22}
 ]
+

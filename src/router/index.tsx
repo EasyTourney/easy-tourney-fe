@@ -5,14 +5,14 @@ import React from 'react'
 import OrganizerTemplate from '../templates/oganizer/oganizer.template'
 import ProtectedRoute from './ProtectedRoute'
 const General = lazy(() => import('../layouts/General'))
-const Schedule = lazy(() => import('../layouts/Schedule'))
-const Result = lazy(() => import('../layouts/Result'))
-const Participant = lazy(() => import('../layouts/Participant'))
-const Categories = lazy(() => import('../layouts/Categories'))
-const Login = lazy(() => import('../pages/Login/Login'))
-const NotFound = lazy(() => import('../pages/NotFound'))
-const Tournament = lazy(() => import('../layouts/Tournament'))
-const Organizer = lazy(() => import('../layouts/Organizers'))
+const Schedule = lazy(() => import('../layouts/Schedule'));
+const Result = lazy(() => import('../layouts/Result'));
+const Participants = lazy(() => import('../layouts/Participants'));
+const Categories = lazy(() => import('../layouts/Categories'));
+const Login = lazy(() => import('../pages/Login/Login'));
+const NotFound = lazy(() => import('../pages/NotFound'));
+const Tournament = lazy(() => import('../layouts/Tournament'));
+const Organizer = lazy(() => import('../layouts/Organizers'));
 
 const isLogin = () => {
   const token = localStorage.getItem('token');
@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'tournament/participant',
-        element: <ProtectedRoute element={<Participant />} allowedRoles={['ADMIN', 'ORGANIZER']} />
+        element: <ProtectedRoute element={<Participants />} allowedRoles={['ADMIN', 'ORGANIZER']} />
       },
       {
         path: '/tournament/schedule',

@@ -23,7 +23,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'Id',
-        width: '10%'
+        width: '5%'
       }
     },
     {
@@ -56,7 +56,18 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'phoneNumber',
-        width: '20%'
+        width: '10%'
+      }
+    },
+    {
+      id: 'dateOfBirth',
+      sortTable: false,
+      label: 'Date of birth',
+      sortBy: 'dateOfBirth',
+      left: false,
+      style: {
+        filed: 'dateOfBirth',
+        width: '15%'
       }
     },
     {
@@ -99,8 +110,12 @@ const Organizers = ({ navigate, location }: any) => {
   const getAll = async (param: ParamApi) => {
     const getOrganizers = (await getAllOrganizer(param)) as OrganizerAPIRes
     if (getOrganizers?.data.length !== 0) {
+
       const formattedData = getOrganizers?.data.map((e) => {
-        return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A') }
+        if (e.dateOfBirth === null) {
+          return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A'), dateOfBirth: "--" }
+        }
+        return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY HH:mm A'), dateOfBirth: moment(e.dateOfBirth).format('DD/MM/YYYY') }
       })
       setOrganizers(formattedData)
     } else {
@@ -198,13 +213,13 @@ const Organizers = ({ navigate, location }: any) => {
     setLoading(true)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouceSearch, sortType, currentPage, update,sortValue])
+  }, [debouceSearch, sortType, currentPage, update, sortValue])
 
   useEffect(() => {
     // update the current page when delete the last organizer on the current page
     if (totalOrganizer === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
-    // update the current page when starting a search
+      // update the current page when starting a search
     } else if (debouceSearch) {
       setCurrentPage((prevPage) => (prevPage = 1))
     }

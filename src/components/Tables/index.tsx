@@ -5,7 +5,8 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { Box, Button, Skeleton } from '@mui/material'
+import { Badge, Box, Button, Skeleton } from '@mui/material'
+import PersonIcon from '@mui/icons-material/Person';
 import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
 import { TiArrowSortedDown } from 'react-icons/ti'
@@ -47,6 +48,7 @@ const TableReused = ({
     Object.fromEntries(columns.map((column) => [column.id, '']))
   )
 
+  
   const [params] = useSearchParams()
   const myPage = params.get('page')
   const totalIndex = totalCurrentPage < 10 ? totalCurrentPage - totalCurrentPage + 10 : totalCurrentPage
@@ -229,6 +231,15 @@ const TableReused = ({
                       {totalIndex && Object.values(column).indexOf('Id') > -1
                         ? (Number(myPage) > 1 ? Number(myPage) - 1 : 0) * totalIndex + rowIndex + 1
                         : row[column.id]}
+                      {
+                        Object.values(column).indexOf('players') > -1 ?
+                          <Badge badgeContent={12}
+                            color="default" max={9}
+                          >
+                            <PersonIcon />
+                          </Badge>
+                          : ""
+                      }
                     </TableCell>
                   ))}
                   {showActions && (
