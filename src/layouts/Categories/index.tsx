@@ -57,10 +57,11 @@ const Category = ({ navigate, location }: any) => {
   const getAll = async (param: ParamApi) => {
     const getCategories = (await getAllCategories(param)) as APIRes
     if (getCategories) {
-    dispatch(setCategories([...getCategories?.data]))
-    setTotalCurrentPage(getCategories?.total)
-    setTotalCategories(getCategories?.additionalData?.totalCategories)
-  }}
+      dispatch(setCategories([...getCategories?.data]))
+      setTotalCurrentPage(getCategories?.total)
+      setTotalCategories(getCategories?.additionalData?.totalCategories)
+    }
+  }
 
   const pageSearch = (value: number) => {
     setCurrentPage((prev) => (prev = value))
@@ -84,7 +85,7 @@ const Category = ({ navigate, location }: any) => {
         pathname: location.pathname,
         search: createSearchParams({ keyword: value, sortType: sortType, page: String(currentPage) }).toString()
       })
-    } else if (sortType !== '' ) {
+    } else if (sortType !== '') {
       navigate({
         pathname: location.pathname,
         search: createSearchParams({ sortType: sortType, page: String(currentPage) }).toString()
@@ -194,6 +195,5 @@ const Category = ({ navigate, location }: any) => {
     </Box>
   )
 }
-
 
 export default withBaseLogic(Category)

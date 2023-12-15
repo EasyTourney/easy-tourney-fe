@@ -28,22 +28,22 @@ export function DialogEditCategory({ categories, onOpen, onClose, categoryName }
     validationSchema: CategorySchema,
     onSubmit: async () => {
       try {
-        setIsSaving(true);
+        setIsSaving(true)
         const updatedCategoryName = {
           categoryName: formik.values.categoryName
-        };
-        const response = await apiEditCategory(selectedCategory.categoryId, updatedCategoryName);
-        const updatedCategory = response.data;
+        }
+        const response = await apiEditCategory(selectedCategory.categoryId, updatedCategoryName)
+        const updatedCategory = response.data
         const updatedCategories = category.map((item: { categoryId: any }) =>
           item.categoryId === updatedCategory.categoryId ? updatedCategory : item
-        );
-        dispatch(setCategories(updatedCategories));
-        toast.success('A category is updated successfully!');
+        )
+        dispatch(setCategories(updatedCategories))
+        toast.success('A category is updated successfully!')
       } catch (error) {
-        toast.error('Category name has already existed!');
+        toast.error('Category name has already existed!')
       } finally {
-        setIsSaving(false);
-        handleClose();
+        setIsSaving(false)
+        handleClose()
       }
     }
   })

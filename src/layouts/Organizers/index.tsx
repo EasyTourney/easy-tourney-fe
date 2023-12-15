@@ -113,12 +113,15 @@ const Organizers = ({ navigate, location }: any) => {
   const getAll = async (param: ParamApi) => {
     const getOrganizers = (await getAllOrganizer(param)) as OrganizerAPIRes
     if (getOrganizers?.data.length !== 0) {
-
       const formattedData = getOrganizers?.data.map((e) => {
         if (e.dateOfBirth === null) {
-          return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY'), dateOfBirth: "--" }
+          return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY'), dateOfBirth: '--' }
         }
-        return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY'), dateOfBirth: moment(e.dateOfBirth).format('DD/MM/YYYY') }
+        return {
+          ...e,
+          createdAt: moment(e.createdAt).format('DD/MM/YYYY'),
+          dateOfBirth: moment(e.dateOfBirth).format('DD/MM/YYYY')
+        }
       })
       dispatch(setOrganizer([...formattedData]))
     } else {

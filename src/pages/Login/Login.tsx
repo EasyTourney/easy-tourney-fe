@@ -1,4 +1,4 @@
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import { Formik, Field, Form, ErrorMessage, FormikProps } from 'formik'
 import { LoginSchema } from '../../services/validator/auth.validator'
 import { Alert, Box, Button, IconButton, InputAdornment, Stack, TextField } from '@mui/material'
@@ -17,14 +17,13 @@ const Login: React.FC = () => {
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
 
-
   const handleSubmitForm = async (values: LoginForm, { resetForm }: { resetForm: () => void }) => {
     const [res] = await Promise.all([loginRequest(values)])
 
     if (res && res.data && res.data.token) {
       const { userInfo } = res.data
       dispatch(login(res.data))
-      setLocalStorage('user', JSON.stringify(userInfo));
+      setLocalStorage('user', JSON.stringify(userInfo))
       setLocalStorage('userRole', userInfo.role)
       if (userInfo.role === 'ADMIN') {
         navigate('/category', { replace: true })
@@ -44,8 +43,6 @@ const Login: React.FC = () => {
   const handleTogglePasswordVisibility = () => {
     setShowPassword((showPassword) => !showPassword)
   }
-
- 
 
   return (
     <Box className={styles['login-container']}>
@@ -125,12 +122,7 @@ const Login: React.FC = () => {
                   <ErrorMessage name="password" />
                 </span>
               </Stack>
-              <Button
-                className={styles['submit-login-btn']}
-                size="large"
-                type="submit"
-                variant="contained"
-              >
+              <Button className={styles['submit-login-btn']} size="large" type="submit" variant="contained">
                 Login
               </Button>
             </Form>

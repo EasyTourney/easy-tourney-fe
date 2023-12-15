@@ -1,13 +1,11 @@
-import  {ReactNode,Fragment} from 'react';
-import "./GlobalStyle.css"
+import { ReactNode, Fragment } from 'react'
+import './GlobalStyle.css'
 
-type Props ={
-    children: ReactNode
+type Props = {
+  children: ReactNode
 }
 
-export function GlobalStyle(props:Props){
-    const {children} = props;
-    return(
-        <Fragment>{children}</Fragment>
-    )
+export function GlobalStyle(props: Props) {
+  const { children } = props
+  return <Fragment>{children}</Fragment>
 }

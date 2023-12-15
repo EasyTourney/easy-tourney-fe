@@ -1,4 +1,4 @@
 export interface Participant {
-    id: number,
-    teamName: string
+  id: number
+  teamName: string
 }

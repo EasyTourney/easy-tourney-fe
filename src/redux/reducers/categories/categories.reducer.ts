@@ -27,14 +27,14 @@ const categoriesSlice = createSlice({
       state.seletedCategory = action.payload
     },
     updateCategory: (state, action) => {
-      const updatedCategory = action.payload;
-      const index = state.categories.findIndex((category) => category.id === updatedCategory.id);
+      const updatedCategory = action.payload
+      const index = state.categories.findIndex((category) => category.id === updatedCategory.id)
       if (index !== -1) {
-        state.categories[index] = updatedCategory;
+        state.categories[index] = updatedCategory
       }
     }
   },
-  
+
   extraReducers: (builder) => {
     builder.addCase(getCategories.pending, (state, action) => {
       state.isLoading = true
@@ -52,6 +52,6 @@ const categoriesSlice = createSlice({
   }
 })
 
-export const {setCategories,setSelectedCategory,updateCategory} = categoriesSlice.actions
+export const { setCategories, setSelectedCategory, updateCategory } = categoriesSlice.actions
 
 export default categoriesSlice.reducer

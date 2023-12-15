@@ -8,9 +8,9 @@ type ProtectedRouteProps = {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, allowedRoles }) => {
   const userRole = localStorage.getItem('userRole')
-  const isLoggedIn = !!localStorage.getItem('token');
+  const isLoggedIn = !!localStorage.getItem('token')
   if (!isLoggedIn) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" />
   }
 
   if (allowedRoles.includes(userRole || '')) {

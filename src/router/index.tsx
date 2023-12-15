@@ -14,7 +14,6 @@ const NotFound = lazy(() => import('../pages/NotFound'))
 const Tournament = lazy(() => import('../layouts/Tournament'))
 const Organizer = lazy(() => import('../layouts/Organizers'))
 
-
 const getDefaultRedirectPath = () => {
   const storedRole = localStorage.getItem('userRole')
   const isAdmin = storedRole === 'ADMIN'

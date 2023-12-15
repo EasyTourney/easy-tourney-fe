@@ -7,10 +7,10 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ReorderIcon from '@mui/icons-material/Reorder'
 import SortIcon from '@mui/icons-material/Sort'
-import WysiwygIcon from '@mui/icons-material/Wysiwyg';
-import GroupsIcon from '@mui/icons-material/Groups';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import WysiwygIcon from '@mui/icons-material/Wysiwyg'
+import GroupsIcon from '@mui/icons-material/Groups'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { IconButton } from '@mui/material'
@@ -57,7 +57,10 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
           {!collapsed && (
             <>
               <Box className={styles['logo-container']}>
-                <Typography className={styles['customTypography']} sx={{ color: 'white', fontSize: '25px', fontWeight: '600' }}>
+                <Typography
+                  className={styles['customTypography']}
+                  sx={{ color: 'white', fontSize: '25px', fontWeight: '600' }}
+                >
                   EasyTourney
                 </Typography>
                 <Box sx={{ marginLeft: '10px' }}>
@@ -71,7 +74,7 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
           {collapsed && (
             <Box>
               <IconButton onClick={handleToggleCollapse}>
-                <SortIcon sx={{ fontSize: "35px", color: 'white', marginReft: '10px' }} />
+                <SortIcon sx={{ fontSize: '35px', color: 'white', marginReft: '10px' }} />
               </IconButton>
             </Box>
           )}
@@ -88,48 +91,48 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
             <ListItem
               button
               selected={location.pathname === '/tournament/general'}
-              sx={{ '&.Mui-selected': { backgroundColor: 'gray',borderRadius:'10px' } }}
+              sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
                 <WysiwygIcon />
               </ListItemIcon>
-              {!collapsed && <ListItemText className={styles["text-menu"]} primary="General" />}
+              {!collapsed && <ListItemText className={styles['text-menu']} primary="General" />}
             </ListItem>
           </Link>
           <Link style={{ color: 'white' }} to="/tournament/participant">
             <ListItem
               button
               selected={location.pathname === '/tournament/participant'}
-              sx={{ '&.Mui-selected': { backgroundColor: 'gray',borderRadius:'10px' } }}
+              sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
                 <GroupsIcon />
               </ListItemIcon>
-              {!collapsed && <ListItemText className={styles["text-menu"]}  primary="Participant" />}
+              {!collapsed && <ListItemText className={styles['text-menu']} primary="Participant" />}
             </ListItem>
           </Link>
           <Link style={{ color: 'white' }} to="/tournament/schedule">
             <ListItem
               button
               selected={location.pathname === '/tournament/schedule'}
-              sx={{ '&.Mui-selected': { backgroundColor: 'gray',borderRadius:'10px' } }}
+              sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
                 <CalendarMonthIcon />
               </ListItemIcon>
-              {!collapsed && <ListItemText className={styles["text-menu"]}  primary="Schedule" />}
+              {!collapsed && <ListItemText className={styles['text-menu']} primary="Schedule" />}
             </ListItem>
           </Link>
           <Link style={{ color: 'white' }} to="/tournament/result">
             <ListItem
               button
               selected={location.pathname === '/tournament/result'}
-              sx={{ '&.Mui-selected': { backgroundColor: 'gray',borderRadius:'10px' } }}
+              sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
                 <ContentPasteIcon />
               </ListItemIcon>
-              {!collapsed && <ListItemText className={styles["text-menu"]}  primary="Result" />}
+              {!collapsed && <ListItemText className={styles['text-menu']} primary="Result" />}
             </ListItem>
           </Link>
         </List>

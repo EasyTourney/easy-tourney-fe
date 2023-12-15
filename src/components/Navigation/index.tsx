@@ -26,11 +26,9 @@ const capitalizeFirstLetter = (str: any) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-
-
 const CustomizedBreadcrumbs = () => {
-  const location = useLocation();
-  const pathSegments = location.pathname.split('/').filter((segment) => segment !== '');
+  const location = useLocation()
+  const pathSegments = location.pathname.split('/').filter((segment) => segment !== '')
 
   return (
     <div role="presentation">
@@ -38,8 +36,8 @@ const CustomizedBreadcrumbs = () => {
         <StyledBreadcrumb component={Link} to="/" label="Home" icon={<HomeIcon fontSize="small" />} />
 
         {pathSegments.map((segment, index) => {
-          const isLastSegment = index === pathSegments.length - 1;
-          const to = `/${pathSegments.slice(0, index + 1).join('/')}`;
+          const isLastSegment = index === pathSegments.length - 1
+          const to = `/${pathSegments.slice(0, index + 1).join('/')}`
 
           return (
             <StyledBreadcrumb
@@ -49,11 +47,11 @@ const CustomizedBreadcrumbs = () => {
               label={isLastSegment ? capitalizeFirstLetter(segment) : undefined}
               icon={isLastSegment ? undefined : <ExpandMoreIcon />}
             />
-          );
+          )
         })}
       </Breadcrumbs>
     </div>
-  );
-};
+  )
+}
 
-export default CustomizedBreadcrumbs;
+export default CustomizedBreadcrumbs

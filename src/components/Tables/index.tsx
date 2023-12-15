@@ -6,7 +6,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { Badge, Box, Button, Skeleton } from '@mui/material'
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from '@mui/icons-material/Person'
 import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
 import { TiArrowSortedDown } from 'react-icons/ti'
@@ -17,7 +17,6 @@ import Paginations from '../Paginations'
 import { ColumnTypes } from '../../types/commom'
 import { useSearchParams } from 'react-router-dom'
 import noItem from '../../assets/noItem.png'
-
 
 interface ReusedTableProps {
   columns: ColumnTypes[]
@@ -47,7 +46,6 @@ const TableReused = ({
   const [sortStates, setSortStates] = useState<{ [key: string]: 'asc' | 'desc' | '' }>(
     Object.fromEntries(columns.map((column) => [column.id, '']))
   )
-
 
   const [params] = useSearchParams()
   const myPage = params.get('page')
@@ -95,8 +93,6 @@ const TableReused = ({
     handlePageSearch(pageNumber)
     setPage(pageNumber)
   }
-
-
 
   // Loading skeleton
   const TableRowsLoader = ({ rowsNum }: any) => {
@@ -162,8 +158,7 @@ const TableReused = ({
                       justifyContent: 'center',
                       alignItems: 'center',
                       gap: '3px',
-                      cursor: `${column.sortTable && 'pointer'}`,
-
+                      cursor: `${column.sortTable && 'pointer'}`
                     }}
                     onClick={() => {
                       if (column.sortTable && column.id === column.sortBy) {
@@ -171,12 +166,8 @@ const TableReused = ({
                       }
                     }}
                   >
-                    <Box>
-                      {column.label}
-                    </Box>
-                    <Box>
-                      {column.sortTable && getColumnSortIcon(column.id)}
-                    </Box>
+                    <Box>{column.label}</Box>
+                    <Box>{column.sortTable && getColumnSortIcon(column.id)}</Box>
                   </Box>
                 </TableCell>
               ))}
@@ -206,7 +197,7 @@ const TableReused = ({
                       component="img"
                       src={noItem}
                       alt="no-item"
-                      sx={{ width: '100%', height: '250px', objectFit: 'contain', }}
+                      sx={{ width: '100%', height: '250px', objectFit: 'contain' }}
                     />
                   </Box>
                 </TableCell>
@@ -236,15 +227,13 @@ const TableReused = ({
                       {totalIndex && Object.values(column).indexOf('Id') > -1
                         ? (Number(myPage) > 1 ? Number(myPage) - 1 : 0) * totalIndex + rowIndex + 1
                         : row[column.id]}
-                      {
-                        Object.values(column).indexOf('players') > -1 ?
-                          <Badge badgeContent={12}
-                            color="default" max={9}
-                          >
-                            <PersonIcon />
-                          </Badge>
-                          : ""
-                      }
+                      {Object.values(column).indexOf('players') > -1 ? (
+                        <Badge badgeContent={12} color="default" max={9}>
+                          <PersonIcon />
+                        </Badge>
+                      ) : (
+                        ''
+                      )}
                     </TableCell>
                   ))}
                   {showActions && (

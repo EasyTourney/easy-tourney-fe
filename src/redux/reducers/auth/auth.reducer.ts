@@ -5,12 +5,12 @@ export type AuthState = {
   isLoggedIn: boolean
   accessToken?: string
   userInfo?: IUserData
-  userRole : string | null
+  userRole: string | null
 }
 
 const initialState: AuthState = {
   isLoggedIn: false,
-  userRole : null
+  userRole: null
 }
 
 const authSlice = createSlice({
@@ -30,7 +30,7 @@ const authSlice = createSlice({
       state.isLoggedIn = true
       state.accessToken = action.payload.token
       state.userInfo = action.payload.userInfo.role
-    },
+    }
   }
 })
 

@@ -45,7 +45,6 @@ const Participants = ({ navigate, location }: any) => {
     }
   ]
 
-
   const [value, setValue] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
   const [participants, setParticipants] = useState<Participant[] | []>([])
@@ -58,28 +57,29 @@ const Participants = ({ navigate, location }: any) => {
 
   // get all team from DB
   const getAll = async (param: ParamApi) => {
-    const start = (10 * (currentPage - 1))
-    const end = (start + 10)
-    let getParticipants: Participant[] | [] = [];
-    if (param.keyword !== "") {
+    const start = 10 * (currentPage - 1)
+    const end = start + 10
+    let getParticipants: Participant[] | [] = []
+    if (param.keyword !== '') {
       getParticipants = mockDataTeams.filter((team: Participant) =>
-        team.teamName.toLowerCase().includes(value.toLowerCase()))
+        team.teamName.toLowerCase().includes(value.toLowerCase())
+      )
     } else {
       getParticipants = mockDataTeams
     }
 
-    setParticipants(getParticipants.slice(start, end).sort((a: Participant, b: Participant) => {
-      if (param.sortType === 'asc' && a.teamName < b.teamName) return -1
-      if (param.sortType === 'desc' && a.teamName > b.teamName) return 1
-      if (param.sortType === '' && a.id > b.id) return -1
-      return 0
-    }))
+    setParticipants(
+      getParticipants.slice(start, end).sort((a: Participant, b: Participant) => {
+        if (param.sortType === 'asc' && a.teamName < b.teamName) return -1
+        if (param.sortType === 'desc' && a.teamName > b.teamName) return 1
+        if (param.sortType === '' && a.id > b.id) return -1
+        return 0
+      })
+    )
 
-    setTotalCurrentPage(prev => prev = Math.ceil(getParticipants.length / 10))
+    setTotalCurrentPage((prev) => (prev = Math.ceil(getParticipants.length / 10)))
     setTotalParticipants(getParticipants.length)
-
   }
-
 
   const pageSearch = (value: number) => {
     setCurrentPage((prev) => (prev = value))
@@ -110,7 +110,6 @@ const Participants = ({ navigate, location }: any) => {
       })
     }
 
-
     const param: ParamApi = {
       sortType: sortType,
       page: currentPage,
@@ -121,7 +120,6 @@ const Participants = ({ navigate, location }: any) => {
     setLoading(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortType, currentPage, debouceSearch])
-
 
   useEffect(() => {
     if (totalParticipants === undefined && currentPage > 1) {
@@ -148,9 +146,7 @@ const Participants = ({ navigate, location }: any) => {
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          {/* Add new participant button here */}
-        </Box>
+        <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>{/* Add new participant button here */}</Box>
         <Box sx={{ alignSelf: 'flex-end' }}>
           <Input
             label="Search"

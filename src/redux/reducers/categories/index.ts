@@ -1,1 +1,1 @@
-export {default as categoriesSlice } from './categories.reducer'
+export { default as categoriesSlice } from './categories.reducer'
