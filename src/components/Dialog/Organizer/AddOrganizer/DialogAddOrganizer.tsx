@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Organizer } from '../../../../types/organizer'
 import { setOrganizer } from '../../../../redux/reducers/organizers/organizers.reducer'
 import { RootState } from '../../../../redux/store'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 interface DialogAddOrganizerProps {
   addOrganizer: (data: Organizer) => Promise<any>
@@ -30,6 +30,7 @@ interface DialogAddOrganizerProps {
 const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
+
   const organizer = useSelector((state: RootState) => state.organizer.organizers)
   const dispatch = useDispatch()
 
@@ -48,7 +49,7 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
       lastName: '',
       email: '',
       phoneNumber: '',
-      dateOfBirth: ''
+      dateOfBirth: null
     },
     validationSchema: OrganizerSchema,
     validateOnChange: false,
@@ -61,7 +62,7 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
           lastName: values.lastName,
           email: values.email,
           phoneNumber: values.phoneNumber,
-          dateOfBirth: values?.dateOfBirth !== '' ? values.dateOfBirth : undefined
+          dateOfBirth: values.dateOfBirth ? dayjs(values.dateOfBirth).format('YYYY-MM-DD') : undefined
         }
         const response = await addOrganizer(organizerData)
 
@@ -70,8 +71,8 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
             ...response.data,
             totalTournament: 0,
             fullName: response.data.firstName + ' ' + response.data.lastName,
-            dateOfBirth: moment(response.data.dateOfBirth).format('DD/MM/YYYY'),
-            createdAt: moment(response.data.createdAt).format('DD/MM/YYYY HH:mm A')
+            dateOfBirth: response.data.dateOfBirth ? dayjs(response.data.dateOfBirth).format('DD/MM/YYYY') : '--',
+            createdAt: dayjs(response.data.createdAt).format('DD/MM/YYYY HH:mm A')
           }
           const updatedOrganizers = [newOrganizer, ...organizer].slice(0, 10)
           dispatch(setOrganizer(updatedOrganizers))
@@ -100,7 +101,7 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
   return (
     <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
       <Button variant="contained" onClick={handleClickOpen} className={styles['add-organizer-btn']}>
-        Add new organizer
+        Add new
       </Button>
       <Dialog
         onClick={handleClickOutside}
@@ -183,8 +184,17 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 label="Date of birth"
                 format="DD/MM/YYYY"
                 disableFuture
-                value={formik.values.dateOfBirth || undefined}
-                onChange={(date) => formik.setFieldValue('dateOfBirth', date)}
+                value={formik.values.dateOfBirth || null}
+                onChange={(date: any) => {
+                  formik.setFieldValue('dateOfBirth', date)
+                }}
+                slotProps={{
+                  textField: {
+                    error: !!formik.errors.dateOfBirth,
+                    helperText: formik.errors.dateOfBirth,
+                    onBlur: formik.handleBlur
+                  }
+                }}
               />
             </Stack>
             <DialogActions className={styles['group-btn']}>
@@ -192,7 +202,7 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 Cancel
               </Button>
               <Button variant="contained" type="submit" disabled={isSaving}>
-                Add
+                Save
               </Button>
             </DialogActions>
           </form>

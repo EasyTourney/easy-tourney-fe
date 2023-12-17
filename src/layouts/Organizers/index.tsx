@@ -8,12 +8,12 @@ import { OrganizerAPIRes, ParamApi } from '../../types/commom'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
 import useDebounce from '../../hooks/useDebounce'
 import { addOrganizer, apiDeleteOrganizer, getAllOrganizer } from '../../apis/axios/organizers/organizer'
-import moment from 'moment'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { DialogAddOrganizer } from '../../components/Dialog/Organizer/AddOrganizer'
 import { useDispatch, useSelector } from 'react-redux'
 import { setOrganizer } from '../../redux/reducers/organizers/organizers.reducer'
+import dayjs from 'dayjs'
 
 const Organizers = ({ navigate, location }: any) => {
   const columns = [
@@ -114,13 +114,10 @@ const Organizers = ({ navigate, location }: any) => {
     const getOrganizers = (await getAllOrganizer(param)) as OrganizerAPIRes
     if (getOrganizers?.data.length !== 0) {
       const formattedData = getOrganizers?.data.map((e) => {
-        if (e.dateOfBirth === null) {
-          return { ...e, createdAt: moment(e.createdAt).format('DD/MM/YYYY'), dateOfBirth: '--' }
-        }
         return {
           ...e,
-          createdAt: moment(e.createdAt).format('DD/MM/YYYY'),
-          dateOfBirth: moment(e.dateOfBirth).format('DD/MM/YYYY')
+          createdAt: dayjs(e.createdAt).format('DD/MM/YYYY HH:mm:ss A'),
+          dateOfBirth: e.dateOfBirth ? dayjs(e.dateOfBirth).format('DD/MM/YYYY') : '--'
         }
       })
       dispatch(setOrganizer([...formattedData]))
