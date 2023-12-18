@@ -2,14 +2,14 @@ import { createSlice } from '@reduxjs/toolkit'
 import { Categories, CategoryName } from '../../../types/category'
 import { getCategories } from './categories.slice'
 
-interface UserState {
+interface CategoryState {
   categories: Categories[]
   isLoading: boolean
   listCategory: CategoryName[]
   seletedCategory: any | null
 }
 
-const initialState: UserState = {
+const initialState: CategoryState = {
   categories: [],
   seletedCategory: null,
   isLoading: false,

@@ -35,3 +35,20 @@ export async function getAllOrganizers() {
   })
   return res
 }
+
+export async function getOrganizerById(id: number) {
+  const res = await axios({
+    url: `/organizer/${id}`,
+    method: 'GET'
+  })
+  return res
+}
+
+export async function putOrganizerById(data: Organizer) {
+  const res = await axios({
+    url: `/organizer/${data.id}`,
+    method: 'PUT',
+    data: data
+  })
+  return res
+}

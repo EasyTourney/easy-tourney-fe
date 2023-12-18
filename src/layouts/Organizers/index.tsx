@@ -4,16 +4,23 @@ import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
 import { useCallback, useState } from 'react'
 import { useEffect } from 'react'
-import { OrganizerAPIRes, ParamApi } from '../../types/commom'
+import { OrganizerAPIRes, OrganizerByIdAPIRes, ParamApi } from '../../types/commom'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
 import useDebounce from '../../hooks/useDebounce'
-import { addOrganizer, apiDeleteOrganizer, getAllOrganizer } from '../../apis/axios/organizers/organizer'
+import {
+  addOrganizer,
+  apiDeleteOrganizer,
+  getAllOrganizer,
+  getOrganizerById,
+  putOrganizerById
+} from '../../apis/axios/organizers/organizer'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { DialogAddOrganizer } from '../../components/Dialog/Organizer/AddOrganizer'
 import { useDispatch, useSelector } from 'react-redux'
-import { setOrganizer } from '../../redux/reducers/organizers/organizers.reducer'
+import { setOrganizer, setSelectedOrganizer } from '../../redux/reducers/organizers/organizers.reducer'
 import dayjs from 'dayjs'
+import { DialogEditOrganizer } from '../../components/Dialog/Organizer/EditOrganizer'
 
 const Organizers = ({ navigate, location }: any) => {
   const columns = [
@@ -106,6 +113,7 @@ const Organizers = ({ navigate, location }: any) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [update, setUpdate] = useState<boolean>(false)
   const [params] = useSearchParams()
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const pageURL = Number(params.get('page'))
   const dispatch = useDispatch()
 
@@ -116,7 +124,7 @@ const Organizers = ({ navigate, location }: any) => {
       const formattedData = getOrganizers?.data.map((e) => {
         return {
           ...e,
-          createdAt: dayjs(e.createdAt).format('DD/MM/YYYY HH:mm:ss A'),
+          createdAt: dayjs(e.createdAt).format('DD/MM/YYYY hh:mm:ss A'),
           dateOfBirth: e.dateOfBirth ? dayjs(e.dateOfBirth).format('DD/MM/YYYY') : '--'
         }
       })
@@ -138,9 +146,18 @@ const Organizers = ({ navigate, location }: any) => {
     ms: 800
   })
 
-  const handleEdit = useCallback((rowData: { [key: string]: any }) => {
-    //call api here
-  }, [])
+  const handleEdit = useCallback(
+    async (rowData: { [key: string]: any }) => {
+      try {
+        const selectedOrganizer = (await getOrganizerById(rowData.id)) as OrganizerByIdAPIRes
+        dispatch(setSelectedOrganizer(selectedOrganizer.data))
+        setIsEditDialogOpen(true)
+      } catch (err) {
+        console.error('Error fetching organizer', err)
+      }
+    },
+    [dispatch]
+  )
 
   const handleDelete = useCallback((rowData: { [key: string]: any }) => {
     const { id } = rowData //get organizerId
@@ -157,7 +174,6 @@ const Organizers = ({ navigate, location }: any) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = (await apiDeleteOrganizer(id)) as OrganizerAPIRes
-        console.log(res)
         if (res.success) {
           toast.success('An organizer is deleted successfully!')
           setUpdate((prev) => !prev)
@@ -248,7 +264,13 @@ const Organizers = ({ navigate, location }: any) => {
           />
         </Box>
       </Box>
-
+      <DialogEditOrganizer
+        editOrganizer={putOrganizerById}
+        onOpen={isEditDialogOpen}
+        onClose={() => {
+          setIsEditDialogOpen(false)
+        }}
+      />
       <TableReused
         columns={columns}
         rows={organizers}

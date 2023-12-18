@@ -72,13 +72,13 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
             totalTournament: 0,
             fullName: response.data.firstName + ' ' + response.data.lastName,
             dateOfBirth: response.data.dateOfBirth ? dayjs(response.data.dateOfBirth).format('DD/MM/YYYY') : '--',
-            createdAt: dayjs(response.data.createdAt).format('DD/MM/YYYY HH:mm A')
+            createdAt: dayjs(response.data.createdAt).format('DD/MM/YYYY hh:mm:ss A')
           }
           const updatedOrganizers = [newOrganizer, ...organizer].slice(0, 10)
           dispatch(setOrganizer(updatedOrganizers))
           toast.success('An organizer is created successfully!')
         } else {
-          toast.error('An error occurred while adding new organizer!')
+          toast.error(response.errorMessage['Invalid Error'])
         }
         formik.resetForm()
       } catch (error) {
@@ -109,10 +109,10 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
         open={open}
         PaperProps={{ sx: { borderRadius: '1rem' } }}
       >
-        <DialogTitle className={styles['dialog-title']}>ADD ORGANIZER</DialogTitle>
+        <DialogTitle className={styles['dialog-title']}>CREATE ORGANIZER</DialogTitle>
         <Divider />
         <DialogContent>
-          <form onSubmit={formik.handleSubmit} className={styles['organiser-form']}>
+          <form onSubmit={formik.handleSubmit} className={styles['organizer-form']}>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
               <TextField
                 error={formik.touched.firstName && Boolean(formik.errors.firstName)}

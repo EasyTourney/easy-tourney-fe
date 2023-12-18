@@ -21,7 +21,11 @@ export interface OrganizerAPIRes extends AxiosResponse {
   }
   message: string
 }
-
+export interface OrganizerByIdAPIRes extends AxiosResponse {
+  success: boolean
+  data: Organizer
+  message: string
+}
 export interface ColumnTypes {
   id: string
   sortTable?: boolean
@@ -33,7 +37,6 @@ export interface ColumnTypes {
     width: string
   }
 }
-
 export interface ParamApi {
   sortType?: string
   page?: number

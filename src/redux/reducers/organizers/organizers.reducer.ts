@@ -1,17 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { CategoryName } from '../../../types/category'
-import { Organizer } from '../../../types/organizer'
+import { Organizer, OrganizerRecord } from '../../../types/organizer'
 
-interface UserState {
-  organizers: Organizer[]
+interface OrganizerState {
+  organizers: OrganizerRecord[]
   isLoading: boolean
-  listOrganizer: CategoryName[]
+  selectedOrganizer: Organizer | null
 }
 
-const initialState: UserState = {
+const initialState: OrganizerState = {
   organizers: [],
   isLoading: false,
-  listOrganizer: []
+  selectedOrganizer: null
 }
 
 const organizersSlice = createSlice({
@@ -20,10 +19,23 @@ const organizersSlice = createSlice({
   reducers: {
     setOrganizer: (state, action) => {
       state.organizers = [...action.payload]
+    },
+    setSelectedOrganizer: (state, action) => {
+      state.selectedOrganizer = action.payload
+    },
+    updateOrganizer: (state, action) => {
+      const updatedOrganizer = action.payload
+      const index = state.organizers.findIndex((organizer) => organizer.id === updatedOrganizer.id)
+      if (index !== -1) {
+        state.organizers[index].fullName = updatedOrganizer.fullName
+        state.organizers[index].email = updatedOrganizer.email
+        state.organizers[index].phoneNumber = updatedOrganizer.phoneNumber
+        state.organizers[index].dateOfBirth = updatedOrganizer.dateOfBirth
+      }
     }
   }
 })
 
-export const { setOrganizer } = organizersSlice.actions
+export const { setOrganizer, setSelectedOrganizer, updateOrganizer } = organizersSlice.actions
 
 export default organizersSlice.reducer
