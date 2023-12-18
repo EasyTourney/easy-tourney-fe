@@ -7,3 +7,4 @@ export const SPACE_END_REGEX = /\s$/u
 export const PHONE_NUMBER_START_REGEX = /^0\d*$/
 export const PHONE_NUMBER_REGEX = /^\d*$/
 export const MULTIPLE_SPACE_REGEX = /\s{2,}/
+export const PHONE_NUMBER_VALID_REGEX = /^0(?!0+$)[0-9]{9,10}$/

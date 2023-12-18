@@ -7,7 +7,8 @@ import {
   PHONE_NUMBER_REGEX,
   CHARACTERS_ONLY_REGEX,
   PHONE_NUMBER_START_REGEX,
-  MULTIPLE_SPACE_REGEX
+  MULTIPLE_SPACE_REGEX,
+  PHONE_NUMBER_VALID_REGEX
 } from '../../constants/regex'
 import dayjs from 'dayjs'
 
@@ -85,6 +86,7 @@ const lastName = Yup.string()
 const phoneNumber = Yup.string()
   .required('Phone number is required')
   .matches(PHONE_NUMBER_REGEX, 'Phone number must not contain special characters')
+  .matches(PHONE_NUMBER_VALID_REGEX, 'Phone number must be valid')
   .matches(PHONE_NUMBER_START_REGEX, 'Phone number must start with 0')
   .min(10, 'Phone number cannot be less than 10 digits')
   .max(11, 'Phone number cannot be more than 11 digits')

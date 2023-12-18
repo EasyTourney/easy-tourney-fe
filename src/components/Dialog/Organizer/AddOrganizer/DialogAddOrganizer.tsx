@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Dialog,
@@ -6,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  InputAdornment,
   Stack,
   TextField
 } from '@mui/material'
@@ -14,7 +14,6 @@ import { useFormik } from 'formik'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import styles from './DialogAddOrganizer.module.css'
-import { Email, Phone } from '@mui/icons-material'
 import { OrganizerSchema } from '../../../../services/validator/organizer.validator'
 import { DatePicker } from '@mui/x-date-pickers'
 import { useDispatch, useSelector } from 'react-redux'
@@ -30,7 +29,8 @@ interface DialogAddOrganizerProps {
 const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
-
+  const [error, setError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const organizer = useSelector((state: RootState) => state.organizer.organizers)
   const dispatch = useDispatch()
 
@@ -77,15 +77,22 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
           const updatedOrganizers = [newOrganizer, ...organizer].slice(0, 10)
           dispatch(setOrganizer(updatedOrganizers))
           toast.success('An organizer is created successfully!')
+          setError(false)
+          setErrorMessage('')
+          setIsSaving(false)
+          handleClose()
         } else {
-          toast.error(response.errorMessage['Invalid Error'])
+          setError(true)
+          setErrorMessage(response.errorMessage['Invalid Error'])
+          setIsSaving(false)
         }
-        formik.resetForm()
       } catch (error) {
         toast.error('An error occurred while adding new organizer!')
-      } finally {
+        setError(false)
+        setErrorMessage('')
         setIsSaving(false)
-        handleClose()
+        formik.resetForm()
+      } finally {
       }
     }
   })
@@ -113,75 +120,85 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
         <Divider />
         <DialogContent>
           <form onSubmit={formik.handleSubmit} className={styles['organizer-form']}>
+            {error && (
+              <Alert className={styles['alert-message']} severity="error">
+                {errorMessage}
+              </Alert>
+            )}
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
+              <Box component="label" sx={{ fontWeight: 'bold' }}>
+                First name
+              </Box>
               <TextField
                 error={formik.touched.firstName && Boolean(formik.errors.firstName)}
                 fullWidth
                 helperText={formik.touched.firstName && formik.errors.firstName}
                 id="firstName"
-                label="First name"
                 name="firstName"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
+                placeholder="First name"
+                sx={{ marginTop: '0.25rem !important' }}
                 value={formik.values.firstName}
               />
             </Stack>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
+              <Box component="label" sx={{ fontWeight: 'bold' }}>
+                Last name
+              </Box>
               <TextField
                 error={formik.touched.lastName && Boolean(formik.errors.lastName)}
                 fullWidth
                 helperText={formik.touched.lastName && formik.errors.lastName}
                 id="lastName"
-                label="Last name"
                 name="lastName"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
+                placeholder="Last name"
+                sx={{ marginTop: '0.25rem !important' }}
                 value={formik.values.lastName}
               />
             </Stack>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
+              <Box component="label" sx={{ fontWeight: 'bold' }}>
+                Email
+              </Box>
               <TextField
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
                 id="email"
-                label="Email"
                 name="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
+                placeholder="Email"
+                sx={{ marginTop: '0.25rem !important' }}
                 value={formik.values.email}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Email />
-                    </InputAdornment>
-                  )
-                }}
               />
             </Stack>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
+              <Box component="label" sx={{ fontWeight: 'bold' }}>
+                Phone number
+              </Box>
               <TextField
+                sx={{ marginTop: '0.25rem !important' }}
                 error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                 fullWidth
                 helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
                 id="phoneNumber"
-                label="Phone number"
                 name="phoneNumber"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.phoneNumber}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Phone />
-                    </InputAdornment>
-                  )
-                }}
+                placeholder="Phone number"
               />
             </Stack>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
+              <Box component="label" sx={{ fontWeight: 'bold' }}>
+                Date of birth
+              </Box>
               <DatePicker
-                label="Date of birth"
+                sx={{ marginTop: '0.25rem !important' }}
                 format="DD/MM/YYYY"
                 disableFuture
                 value={formik.values.dateOfBirth || null}
