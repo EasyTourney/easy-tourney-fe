@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Alert } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
 import { CategorySchema } from '../../../../services/validator/category.validator'
@@ -14,10 +14,12 @@ interface EditCategoryProps {
   categoryName: string
 }
 
-export function DialogEditCategory({ categories, onOpen, onClose, categoryName }: EditCategoryProps) {
+export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCategoryProps) {
   const dispatch = useDispatch()
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [error, setError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const selectedCategory = useSelector((state: any) => state.category.seletedCategory)
   const category = useSelector((state: any) => state.category.categories)
 
@@ -33,17 +35,27 @@ export function DialogEditCategory({ categories, onOpen, onClose, categoryName }
           categoryName: formik.values.categoryName
         }
         const response = await apiEditCategory(selectedCategory.categoryId, updatedCategoryName)
-        const updatedCategory = response.data
-        const updatedCategories = category.map((item: { categoryId: any }) =>
-          item.categoryId === updatedCategory.categoryId ? updatedCategory : item
-        )
-        dispatch(setCategories(updatedCategories))
-        toast.success('A category is updated successfully!')
+        if (response.status === 200 && response.data.success) {
+          const updatedCategory = response.data.data
+          const updatedCategories = category.map((item: { categoryId: any }) =>
+            item.categoryId === updatedCategory.categoryId ? updatedCategory : item
+          )
+          dispatch(setCategories(updatedCategories))
+          toast.success('A category is updated successfully!')
+          formik.resetForm()
+          setError(false)
+          setErrorMessage('')
+          handleClose()
+          setIsSaving(false)
+          handleClose()
+        } else {
+          setError(true)
+          setErrorMessage('Category name has already exist')
+          setIsSaving(false)
+        }
       } catch (error) {
-        toast.error('Category name has already existed!')
+        toast.error('A catalog failed to update!')
       } finally {
-        setIsSaving(false)
-        handleClose()
       }
     }
   })
@@ -59,6 +71,8 @@ export function DialogEditCategory({ categories, onOpen, onClose, categoryName }
     onClose()
     setIsOpen(false)
     formik.resetForm()
+    setError(false)
+    setErrorMessage('')
   }
 
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -83,6 +97,7 @@ export function DialogEditCategory({ categories, onOpen, onClose, categoryName }
       <DialogTitle>Edit Category</DialogTitle>
       <form onSubmit={formik.handleSubmit}>
         <DialogContent>
+          {error && <Alert severity="error">{errorMessage}</Alert>}
           <TextField
             label="Category name"
             fullWidth
