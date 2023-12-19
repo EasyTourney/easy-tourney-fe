@@ -1,15 +1,4 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Stack,
-  TextField
-} from '@mui/material'
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
@@ -117,7 +106,6 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
         PaperProps={{ sx: { borderRadius: '1rem' } }}
       >
         <DialogTitle className={styles['dialog-title']}>CREATE ORGANIZER</DialogTitle>
-        <Divider />
         <DialogContent>
           <form onSubmit={formik.handleSubmit} className={styles['organizer-form']}>
             {error && (
@@ -127,7 +115,7 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
             )}
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
               <Box component="label" sx={{ fontWeight: 'bold' }}>
-                First name
+                First name <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
                 error={formik.touched.firstName && Boolean(formik.errors.firstName)}
@@ -137,14 +125,13 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 name="firstName"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                placeholder="First name"
                 sx={{ marginTop: '0.25rem !important' }}
                 value={formik.values.firstName}
               />
             </Stack>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
               <Box component="label" sx={{ fontWeight: 'bold' }}>
-                Last name
+                Last name <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
                 error={formik.touched.lastName && Boolean(formik.errors.lastName)}
@@ -154,14 +141,13 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 name="lastName"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                placeholder="Last name"
                 sx={{ marginTop: '0.25rem !important' }}
                 value={formik.values.lastName}
               />
             </Stack>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
               <Box component="label" sx={{ fontWeight: 'bold' }}>
-                Email
+                Email <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
                 error={formik.touched.email && Boolean(formik.errors.email)}
@@ -171,14 +157,13 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 name="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                placeholder="Email"
                 sx={{ marginTop: '0.25rem !important' }}
                 value={formik.values.email}
               />
             </Stack>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
               <Box component="label" sx={{ fontWeight: 'bold' }}>
-                Phone number
+                Phone number <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
                 sx={{ marginTop: '0.25rem !important' }}
@@ -190,7 +175,6 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values.phoneNumber}
-                placeholder="Phone number"
               />
             </Stack>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>

@@ -15,6 +15,7 @@
 .group-btn {
   width: 100%;
   justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .add-organizer-btn,
@@ -26,4 +27,8 @@
   font-weight: 700 !important;
   width: 100%;
   margin-top: -1.5rem;
+}
+
+.required-marked {
+  color: red;
 }
