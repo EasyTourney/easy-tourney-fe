@@ -3,7 +3,7 @@ import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
 import { useCallback, useState } from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { OrganizerAPIRes, OrganizerByIdAPIRes, ParamApi } from '../../types/commom'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
 import useDebounce from '../../hooks/useDebounce'
@@ -137,7 +137,7 @@ const Organizers = ({ navigate, location }: any) => {
   }
 
   const pageSearch = (value: number) => {
-    setCurrentPage((prev) => (prev = value))
+    setCurrentPage(() => value)
   }
 
   //delaying the execution of function search
@@ -239,7 +239,7 @@ const Organizers = ({ navigate, location }: any) => {
       setCurrentPage((prevPage) => prevPage - 1)
       // update the current page when starting a search
     } else if (debouceSearch) {
-      setCurrentPage((prevPage) => (prevPage = 1))
+      setCurrentPage(() => 1)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

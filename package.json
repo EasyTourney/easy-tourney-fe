@@ -21,6 +21,7 @@
     "axios": "^1.6.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
+    "eslint-plugin-react": "^7.33.2",
     "formik": "^2.4.5",
     "moment": "^2.29.4",
     "react": "^18.2.0",
@@ -41,8 +42,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint",
-    "format": "prettier --write \"src/**/*.tsx\" \"src/**/*.ts\""
+    "lint": "eslint --fix .",
+    "format:prettier": "prettier --write \"src/**/*.tsx\" \"src/**/*.ts\"",
+    "format:lint": "npm run lint",
+    "format": "npm run format:prettier && npm run format:lint"
   },
   "eslintConfig": {
     "extends": [
@@ -64,8 +67,12 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "4.3.8",
-    "prettier": "3.1.1"
+    "prettier": "3.1.1",
+    "react-hooks": "^1.0.1"
   },
   "husky": {
     "hooks": {

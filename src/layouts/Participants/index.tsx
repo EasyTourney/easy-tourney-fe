@@ -1,3 +1,4 @@
+import React from 'react'
 import Box from '@mui/material/Box'
 import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
@@ -77,12 +78,12 @@ const Participants = ({ navigate, location }: any) => {
       })
     )
 
-    setTotalCurrentPage((prev) => (prev = Math.ceil(getParticipants.length / 10)))
+    setTotalCurrentPage(Math.ceil(getParticipants.length / 10))
     setTotalParticipants(getParticipants.length)
   }
 
   const pageSearch = (value: number) => {
-    setCurrentPage((prev) => (prev = value))
+    setCurrentPage(() => value)
   }
 
   //delaying the execution of function search
@@ -125,18 +126,18 @@ const Participants = ({ navigate, location }: any) => {
     if (totalParticipants === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
     } else if (debouceSearch) {
-      setCurrentPage((prevPage) => (prevPage = 1))
+      setCurrentPage(() => 1)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalParticipants])
 
   const handleEdit = useCallback((rowData: { [key: string]: any }) => {
-    // call api here
+    alert(rowData)
   }, [])
 
   const handleDelete = useCallback(async (rowData: { [key: string]: any }) => {
-    //call api here
+    alert(rowData)
   }, [])
 
   const handleColumnSort = useCallback((idColumm: any, sortType: 'asc' | 'desc' | '') => {

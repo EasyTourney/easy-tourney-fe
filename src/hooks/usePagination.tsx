@@ -1,3 +1,4 @@
+import React from 'react'
 import { useMemo } from 'react'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { generateRange } from '../utils/function'

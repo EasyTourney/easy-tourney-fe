@@ -81,7 +81,6 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
         setErrorMessage('')
         setIsSaving(false)
         formik.resetForm()
-      } finally {
       }
     }
   })

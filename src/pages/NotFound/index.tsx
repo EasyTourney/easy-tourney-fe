@@ -9,7 +9,7 @@ function Not() {
       </Box>
 
       <Box className={styles.contet}>
-        <h2 className={styles.text}>Whoops, we couldn't find the page you were looking for!</h2>
+        <h2 className={styles.text}>Whoops, we could not find the page you were looking for!</h2>
       </Box>
     </Box>
   )

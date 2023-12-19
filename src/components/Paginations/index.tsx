@@ -20,7 +20,7 @@ const Paginations: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, onPa
 
   const totalPages: number = Math.ceil(totalItems / itemsPerPage)
 
-  const siblingsToShow: number = 2
+  const siblingsToShow = 2
   let start: number, end: number
   if (totalPages <= 5) {
     start = 1
@@ -44,9 +44,10 @@ const Paginations: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, onPa
   }
 
   useEffect(() => {
-    setCurrentPage((prev) => (prev = pageURL))
+    setCurrentPage(() => pageURL)
   }, [totalItems, pageURL])
 
+  // eslint-disable-next-line
   const pages: JSX.Element[] = []
   if (currentPage >= 1 && !isNaN(totalPages) && totalItems > 0) {
     pages.push(

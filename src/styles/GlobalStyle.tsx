@@ -1,4 +1,4 @@
-import { ReactNode, Fragment } from 'react'
+import React, { ReactNode, Fragment } from 'react'
 import './GlobalStyle.css'
 
 type Props = {

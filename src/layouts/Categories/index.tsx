@@ -1,3 +1,4 @@
+import React from 'react'
 import Box from '@mui/material/Box'
 import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
@@ -57,14 +58,14 @@ const Category = ({ navigate, location }: any) => {
   const getAll = async (param: ParamApi) => {
     const getCategories = (await getAllCategories(param)) as APIRes
     if (getCategories) {
-      dispatch(setCategories([...getCategories?.data]))
+      dispatch(setCategories([...getCategories.data]))
       setTotalCurrentPage(getCategories?.total)
       setTotalCategories(getCategories?.additionalData?.totalCategories)
     }
   }
 
   const pageSearch = (value: number) => {
-    setCurrentPage((prev) => (prev = value))
+    setCurrentPage(() => value)
   }
 
   //delaying the execution of function search
@@ -111,7 +112,7 @@ const Category = ({ navigate, location }: any) => {
     if (totalCategories === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
     } else if (debouceSearch) {
-      setCurrentPage((prevPage) => (prevPage = 1))
+      setCurrentPage(() => 1)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCategories])

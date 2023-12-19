@@ -3,7 +3,7 @@ import { checkToken } from '../apis/axios/auth/login'
 import { useNavigate } from 'react-router-dom'
 
 const withTokenCheck = (WrappedComponent: React.ComponentType) => {
-  return () => {
+  const WithTokenCheck: React.FC = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -17,10 +17,9 @@ const withTokenCheck = (WrappedComponent: React.ComponentType) => {
           if (response.data === undefined) {
             localStorage.removeItem('token')
             navigate('/login')
-            return
           }
         } catch (error) {
-          console.error('Error fetching data:', error)
+          console.warn('Error fetching data:', error)
         }
       }
       fetchData()
@@ -28,6 +27,8 @@ const withTokenCheck = (WrappedComponent: React.ComponentType) => {
 
     return <WrappedComponent />
   }
+
+  return WithTokenCheck
 }
 
 export default withTokenCheck

@@ -10,7 +10,7 @@ export interface APIRes extends AxiosResponse {
     totalCategories: number
   }
   message: string
-  errorMessage?: {}
+  errorMessage?: unknown
 }
 export interface OrganizerAPIRes extends AxiosResponse {
   success: boolean

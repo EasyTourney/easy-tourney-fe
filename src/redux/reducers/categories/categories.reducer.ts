@@ -36,7 +36,7 @@ const categoriesSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    builder.addCase(getCategories.pending, (state, action) => {
+    builder.addCase(getCategories.pending, (state) => {
       state.isLoading = true
     })
 
@@ -45,7 +45,7 @@ const categoriesSlice = createSlice({
       state.listCategory = action.payload as unknown as CategoryName[]
     })
 
-    builder.addCase(getCategories.rejected, (state, action) => {
+    builder.addCase(getCategories.rejected, (state) => {
       state.isLoading = false
       state.listCategory = []
     })

@@ -55,7 +55,6 @@ export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCatego
         }
       } catch (error) {
         toast.error('A catalog failed to update!')
-      } finally {
       }
     }
   })
