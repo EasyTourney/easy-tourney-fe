@@ -7,6 +7,8 @@ import { Categories } from '../../../../types/category'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCategories } from '../../../../redux/reducers/categories/categories.reducer'
 import { apiEditCategory } from '../../../../apis/axios/categories/category'
+import styles from './DialogEditCategory.module.css'
+
 interface EditCategoryProps {
   categories: Categories[]
   onOpen: boolean
@@ -35,19 +37,20 @@ export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCatego
           categoryName: formik.values.categoryName
         }
         const response = await apiEditCategory(selectedCategory.categoryId, updatedCategoryName)
-        if (response.status === 200 && response.data.success) {
-          const updatedCategory = response.data.data
+        console.log(response)
+        if (response.data !== '') {
+          const updatedCategory = response.data
           const updatedCategories = category.map((item: { categoryId: any }) =>
             item.categoryId === updatedCategory.categoryId ? updatedCategory : item
           )
           dispatch(setCategories(updatedCategories))
-          toast.success('A category is updated successfully!')
           formik.resetForm()
           setError(false)
           setErrorMessage('')
           handleClose()
           setIsSaving(false)
           handleClose()
+          toast.success('A category is updated successfully!')
         } else {
           setError(true)
           setErrorMessage('Category name has already exist')
@@ -96,7 +99,11 @@ export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCatego
       <DialogTitle>Edit Category</DialogTitle>
       <form onSubmit={formik.handleSubmit}>
         <DialogContent>
-          {error && <Alert severity="error">{errorMessage}</Alert>}
+          {error && (
+            <Alert className={styles['alert-message']} severity="error">
+              {errorMessage}
+            </Alert>
+          )}
           <TextField
             label="Category name"
             fullWidth
