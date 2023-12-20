@@ -9,3 +9,11 @@ export async function getAllTournaments(param: ParamApi) {
   })
   return res
 }
+
+export async function deleteTournament(id: number) {
+  const res = await axios({
+    url: `/tournament/${id}`,
+    method: 'DELETE'
+  })
+  return res
+}

@@ -4,9 +4,8 @@ import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
 import { ChangeEvent, useCallback, useState } from 'react'
 import React, { useEffect } from 'react'
-import { APIRes, ParamApi, TournamentAPIRes } from '../../types/commom'
+import { ParamApi, TournamentAPIRes } from '../../types/commom'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
-import { apiDeleteCategory } from '../../apis/axios/categories/category'
 import useDebounce from '../../hooks/useDebounce'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
@@ -15,7 +14,7 @@ import { TournamentRecord } from '../../types/tournament'
 import { MenuItem, TextField } from '@mui/material'
 import { tournamentStatuses } from '../../constants/status'
 import DialogAddTournament from '../../components/Dialog/Tournament/DialogAddTournament'
-import { getAllTournaments } from '../../apis/axios/tournaments/tournament'
+import { deleteTournament, getAllTournaments } from '../../apis/axios/tournaments/tournament'
 import { removeEmptyFields } from '../../utils/function'
 import { convertTournament } from '../../utils/tournament'
 import { useDispatch, useSelector } from 'react-redux'
@@ -116,8 +115,8 @@ const TournamentTable = ({ navigate, location }: any) => {
   const [tournaments, setTournaments] = useState<TournamentRecord[] | []>([])
   const [totalTournaments, setTotalTournaments] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const [update, setUpdate] = useState<boolean>(false)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
+  const [update, setUpdate] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [params] = useSearchParams()
   const pageURL = Number(params.get('page'))
@@ -146,7 +145,7 @@ const TournamentTable = ({ navigate, location }: any) => {
     setCurrentPage(() => value)
   }
 
-  const debouceSearch = useDebounce({
+  const debounceSearch = useDebounce({
     value: value,
     ms: 800
   })
@@ -167,13 +166,12 @@ const TournamentTable = ({ navigate, location }: any) => {
       filterCategory: filterCategory
     }
     removeEmptyFields(currentParams)
-
     navigate({
       pathname: location.pathname,
       search: createSearchParams(currentParams).toString()
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouceSearch, sortType, sortValue, currentPage, navigate, location.pathname, filterStatus, filterCategory])
+  }, [debounceSearch, sortType, sortValue, currentPage, navigate, location.pathname, filterStatus, filterCategory])
 
   useEffect(() => {
     const param: ParamApi = {
@@ -184,12 +182,11 @@ const TournamentTable = ({ navigate, location }: any) => {
       filterStatus: filterStatus !== 'All' ? filterStatus : '',
       filterCategory: filterCategory
     }
-
     removeEmptyFields(param)
     getAll({ ...param })
     setLoading(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortType, currentPage, debouceSearch, update, filterStatus, filterCategory])
+  }, [sortType, currentPage, debounceSearch, update, filterStatus, filterCategory])
 
   useEffect(() => {
     if (totalTournaments === undefined && currentPage > 1) {
@@ -197,18 +194,15 @@ const TournamentTable = ({ navigate, location }: any) => {
     } else {
       setCurrentPage(() => 1)
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalTournaments])
 
   const handleEdit = useCallback((rowData: { [key: string]: any }) => {
     navigate(`/tournament/${rowData.id}/general`)
-
-    // call api here
   }, [])
 
   const handleDelete = useCallback(async (rowData: { [key: string]: any }) => {
-    const { categoryId } = rowData //get categoryId
+    const { id } = rowData
 
     Swal.fire({
       title: 'Are you sure?',
@@ -221,9 +215,9 @@ const TournamentTable = ({ navigate, location }: any) => {
       allowOutsideClick: false
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = (await apiDeleteCategory(categoryId)) as APIRes
+        const res = (await deleteTournament(id)) as TournamentAPIRes
         if (res.success) {
-          toast.success(res.message)
+          toast.success('A tournament is deleted successfully!')
           setUpdate((prev) => !prev)
         } else {
           toast.error(res.message)

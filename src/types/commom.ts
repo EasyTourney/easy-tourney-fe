@@ -38,6 +38,7 @@ export interface TournamentAPIRes extends AxiosResponse {
     totalTournament: number
   }
   message: string
+  errorMessage?: unknown
 }
 
 export interface ColumnTypes {
