@@ -3,4 +3,7 @@ export interface EventDate {
   tournamentId: number
   startAt: string
   endAt: string
+  date: string
+  startTime: string
+  endTime: string
 }

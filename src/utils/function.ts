@@ -72,3 +72,19 @@ export const colorChip = (data: string) => {
   }
   return color
 }
+
+export const convertFormatTime = (inputTime: string) => {
+  const [hours, minutes, seconds] = inputTime.split(':')
+
+  const dateObj = new Date()
+  dateObj.setHours(parseInt(hours, 10))
+  dateObj.setMinutes(parseInt(minutes, 10))
+  dateObj.setSeconds(parseInt(seconds, 10))
+
+  const ampmTime = dateObj.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  })
+  return ampmTime
+}
