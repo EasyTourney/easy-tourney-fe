@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { Badge, Box, Button, Skeleton } from '@mui/material'
+import { Badge, Box, Button, Chip, Skeleton } from '@mui/material'
 import PersonIcon from '@mui/icons-material/Person'
 import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
@@ -18,6 +18,7 @@ import Paginations from '../Paginations'
 import { ColumnTypes } from '../../types/commom'
 import { useSearchParams } from 'react-router-dom'
 import noItem from '../../assets/noItem.png'
+import { colorChip, isMultipleLine, isStatus } from '../../utils/function'
 
 interface ReusedTableProps {
   columns: ColumnTypes[]
@@ -225,15 +226,26 @@ const TableReused = ({
                         wordWrap: 'break-word'
                       }}
                     >
-                      {totalIndex && Object.values(column).indexOf('Id') > -1
-                        ? (Number(myPage) > 1 ? Number(myPage) - 1 : 0) * totalIndex + rowIndex + 1
-                        : row[column.id]}
-                      {Object.values(column).indexOf('players') > -1 ? (
-                        <Badge badgeContent={12} color="default" max={9}>
+                      {totalIndex && Object.values(column).indexOf('Id') > -1 ? (
+                        (Number(myPage) > 1 ? Number(myPage) - 1 : 0) * totalIndex + rowIndex + 1
+                      ) : isStatus(row[column.id]) ? (
+                        <Chip
+                          label={row[column.id].replace('_', ' ')}
+                          sx={{ width: '100%', fontWeight: 600, backgroundColor: colorChip(row[column.id]) }}
+                        ></Chip>
+                      ) : isMultipleLine(row[column.id]) ? (
+                        <ul style={{ maxHeight: '300px', overflow: 'auto' }}>
+                          {row[column.id].split(';').map((element: string, index: number) => (
+                            <li key={index}>{element}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        row[column.id]
+                      )}
+                      {Object.values(column).indexOf('players') > -1 && (
+                        <Badge badgeContent={12} color="default" max={99}>
                           <PersonIcon />
                         </Badge>
-                      ) : (
-                        ''
                       )}
                     </TableCell>
                   ))}

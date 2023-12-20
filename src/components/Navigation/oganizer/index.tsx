@@ -40,18 +40,14 @@ const CustomStyledBreadcrumb: React.FC<CustomStyledBreadcrumbProps> = ({ to, ...
 
 const CustomizedBreadcrumbsOganizer: React.FC = () => {
   const location = useLocation()
-  const pathSegments = location.pathname.split('/').filter((segment) => segment !== '')
-  console.log(pathSegments)
+  const pathSegments = location.pathname.split('/').filter((segment) => segment !== '' && !Number(segment))
+
   return (
     <div role="presentation">
       <Breadcrumbs aria-label="breadcrumb">
         {pathSegments.map((segment, index) => {
           const isLastSegment = index === pathSegments.length - 1
-          const to = isLastSegment
-            ? `/${pathSegments.slice(0, index + 1).join('/')}`
-            : `/${pathSegments.slice(0, index + 1).join('/')}`
-
-          console.log(to)
+          const to = isLastSegment ? location.pathname : `/${pathSegments.slice(0, index + 1).join('/')}`
 
           return (
             <CustomStyledBreadcrumb

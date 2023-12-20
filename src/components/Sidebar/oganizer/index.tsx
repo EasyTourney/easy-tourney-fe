@@ -25,7 +25,10 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-
+  const [tournamentId, setTournamentId] = useState('')
+  useEffect(() => {
+    setTournamentId(location.pathname.split('/')[2])
+  }, [])
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth)
@@ -87,10 +90,10 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
             color: '#fff'
           }}
         >
-          <Link style={{ color: 'white', textDecoration: 'none' }} to="/tournament/general">
+          <Link style={{ color: 'white', textDecoration: 'none' }} to={`/tournament/${tournamentId}/general`}>
             <ListItem
               button
-              selected={location.pathname === '/tournament/general'}
+              selected={location.pathname === `/tournament/${tournamentId}/general`}
               sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
@@ -99,10 +102,10 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
               {!collapsed && <ListItemText className={styles['text-menu']} primary="General" />}
             </ListItem>
           </Link>
-          <Link style={{ color: 'white' }} to="/tournament/participant">
+          <Link style={{ color: 'white' }} to={`/tournament/${tournamentId}/participant`}>
             <ListItem
               button
-              selected={location.pathname === '/tournament/participant'}
+              selected={location.pathname === `/tournament/${tournamentId}/participant`}
               sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
@@ -111,10 +114,10 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
               {!collapsed && <ListItemText className={styles['text-menu']} primary="Participant" />}
             </ListItem>
           </Link>
-          <Link style={{ color: 'white' }} to="/tournament/schedule">
+          <Link style={{ color: 'white' }} to={`/tournament/${tournamentId}/schedule`}>
             <ListItem
               button
-              selected={location.pathname === '/tournament/schedule'}
+              selected={location.pathname === `/tournament/${tournamentId}/schedule`}
               sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
@@ -123,10 +126,10 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
               {!collapsed && <ListItemText className={styles['text-menu']} primary="Schedule" />}
             </ListItem>
           </Link>
-          <Link style={{ color: 'white' }} to="/tournament/result">
+          <Link style={{ color: 'white' }} to={`/tournament/${tournamentId}/result`}>
             <ListItem
               button
-              selected={location.pathname === '/tournament/result'}
+              selected={location.pathname === `/tournament/${tournamentId}/result`}
               sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
             >
               <ListItemIcon sx={{ color: 'white' }}>

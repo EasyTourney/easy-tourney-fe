@@ -58,19 +58,19 @@ export const router = createBrowserRouter([
         element: <Navigate to="/tournament" replace={true} />
       },
       {
-        path: '/tournament/general',
+        path: '/tournament/:tournamentId/general',
         element: <ProtectedRoute element={<General />} allowedRoles={['ADMIN', 'ORGANIZER']} />
       },
       {
-        path: 'tournament/participant',
+        path: 'tournament/:tournamentId/participant',
         element: <ProtectedRoute element={<Participants />} allowedRoles={['ADMIN', 'ORGANIZER']} />
       },
       {
-        path: '/tournament/schedule',
+        path: '/tournament/:tournamentId/schedule',
         element: <ProtectedRoute element={<Schedule />} allowedRoles={['ADMIN', 'ORGANIZER']} />
       },
       {
-        path: '/tournament/result',
+        path: '/tournament/:tournamentId/result',
         element: <ProtectedRoute element={<Result />} allowedRoles={['ADMIN', 'ORGANIZER']} />
       }
     ]
