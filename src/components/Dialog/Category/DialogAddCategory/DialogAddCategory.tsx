@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material'
+import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Alert } from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
 import { CategorySchema } from '../../../../services/validator/category.validator'
@@ -13,16 +13,20 @@ interface DialogAddCategoryProps {
 
 export function DialogAddCategory({ addCategory }: DialogAddCategoryProps) {
   const [isSaving, setIsSaving] = useState<boolean>(false)
+  const [error, setError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const [open, setOpen] = useState<boolean>(false)
   const category = useSelector((state: any) => state.category.categories)
   const dispatch = useDispatch()
   const handleClickOpen = () => {
+    setError(false)
+    setErrorMessage('')
+    formik.resetForm()
     setOpen(true)
   }
 
   const handleClose = () => {
     setOpen(false)
-    formik.resetForm()
   }
   const formik = useFormik({
     initialValues: {
@@ -47,16 +51,17 @@ export function DialogAddCategory({ addCategory }: DialogAddCategoryProps) {
           const updatedCategories = [newCategory, ...category].slice(0, 10)
           dispatch(setCategories(updatedCategories))
           toast.success('A category is created successfully!')
+          handleClose()
         } else {
-          toast.error('Category name has already existed.')
+          setError(true)
+          setErrorMessage(response.errorMessage['Invalid Error'])
         }
-
-        formik.resetForm()
       } catch (error) {
         toast.error('An error occurred while creating the category!')
+        setError(false)
+        setErrorMessage('')
       } finally {
         setIsSaving(false)
-        handleClose()
       }
     }
   })
@@ -79,21 +84,19 @@ export function DialogAddCategory({ addCategory }: DialogAddCategoryProps) {
       >
         Add New
       </Button>
-      <Dialog
-        sx={{
-          '& .MuiDialog-paper': {
-            width: '400px'
-          }
-        }}
-        open={open}
-        onClose={handleClose}
-        onClick={handleClickOutside}
-      >
+      <Dialog open={open} onClose={handleClose} onClick={handleClickOutside}>
         <DialogTitle>Create Category</DialogTitle>
+        {error && (
+          <Alert className={styles['alert-message']} severity="error">
+            {errorMessage}
+          </Alert>
+        )}
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
+            <Box component="label" sx={{ fontWeight: 'bold' }}>
+              Category Name <span className={styles['required-marked']}>*</span>
+            </Box>
             <TextField
-              label="Category name"
               fullWidth
               id="categoryName"
               name="categoryName"
@@ -105,7 +108,9 @@ export function DialogAddCategory({ addCategory }: DialogAddCategoryProps) {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
             <Button variant="contained" type="submit" disabled={isSaving}>
               Save
             </Button>

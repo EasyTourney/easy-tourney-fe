@@ -1,6 +1,6 @@
 export interface Categories {
-  id: number
-  name: string
+  categoryId: number
+  categoryName: string
 }
 
 export interface CategoryName {

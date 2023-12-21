@@ -14,14 +14,14 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { IconButton } from '@mui/material'
-import styles from './SibarOganizer.module.css'
+import styles from './SibarOrganizer.module.css'
 import React from 'react'
 
 type SidebarProps = {
   onToggleCollapse: () => void
 }
 
-function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
+function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
@@ -144,4 +144,4 @@ function SidebarOganizer({ onToggleCollapse }: SidebarProps) {
   )
 }
 
-export default SidebarOganizer
+export default SidebarOrganizer

@@ -263,13 +263,18 @@ const TournamentTable = ({ navigate, location }: any) => {
             select
             size="small"
             sx={{
-              mb: 1,
-              width: '200px'
+              width: '200px',
+              '& .MuiInputBase-input': {
+                padding: '8.5px 14px !important'
+              },
+              '&.MuiTextField-root': {
+                marginTop: '0 !important'
+              }
             }}
             onChange={handleChangeFilterCategory}
           >
             <MenuItem value="">None</MenuItem>
-            {listCategory.map((option: any) => (
+            {listCategory?.map((option: any) => (
               <MenuItem key={option.categoryId} value={option.categoryId}>
                 {option.categoryName}
               </MenuItem>
@@ -283,8 +288,13 @@ const TournamentTable = ({ navigate, location }: any) => {
             select
             size="small"
             sx={{
-              mb: 1,
-              minWidth: '200px'
+              width: '200px',
+              '& .MuiInputBase-input': {
+                padding: '8.5px 14px !important'
+              },
+              '&.MuiTextField-root': {
+                marginTop: '0 !important'
+              }
             }}
             onChange={handleChangeFilterStatus}
           >

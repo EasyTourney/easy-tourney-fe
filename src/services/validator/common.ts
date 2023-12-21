@@ -19,7 +19,7 @@ const email = Yup.string()
 const password = Yup.string().trim().required('Password is required.').min(6, 'Password must be at least 6 characters')
 
 const categoryName = Yup.string()
-  .required('Please enter category name')
+  .required('Category name is required.')
   .test('no-leading-whitespace', 'Category name must not contain leading whitespace', function (value) {
     if (value && SPACE_START_REGEX.test(value)) {
       return false
@@ -91,6 +91,10 @@ const phoneNumber = Yup.string()
   .max(11, 'Phone number cannot be more than 11 digits')
 
 const dateOfBirth = Yup.date()
+  .test('not-today', 'Date of birth cannot be today', (value) => {
+    if (value === null) return true
+    return !dayjs(value).isSame(dayjs().startOf('day'), 'day')
+  })
   .max(dayjs().startOf('day'), 'Date of birth cannot be a future date')
   .test('isValid', (value) => {
     if (value === null) return true

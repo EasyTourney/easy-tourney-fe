@@ -31,7 +31,7 @@ const Input = ({
     <FormControl sx={{ mb: 1 }} variant="outlined">
       <InputLabel
         sx={{
-          fontSize: '15px',
+          fontSize: '1rem',
           top: '-6px',
           '&.Mui-focused': {
             top: '0px'

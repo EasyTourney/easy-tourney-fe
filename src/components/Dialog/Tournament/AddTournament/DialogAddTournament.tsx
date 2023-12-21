@@ -111,178 +111,144 @@ const DialogAddTournament = ({ open, setOpen }: TournamentProps) => {
     formik.setFieldValue('selectCategory', value && value?.trim())
   }
   return (
-    // eslint-disable-next-line react/react-in-jsx-scope
-    <>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        onClick={handleClickOutside}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title" className={styles['tournament-title']}>
-          {'CREATE TOURNAMENT'}
-        </DialogTitle>{' '}
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      onClick={handleClickOutside}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title" className={styles['tournament-title']}>
+        Create Tournament
+      </DialogTitle>
+      <DialogContent className={styles['tournament-content']}>
         <form onSubmit={handleSubmitTest}>
-          <DialogContent className={styles['tournament-content']}>
-            {/* Title */}
-            <FormControl
-              className={styles['tournament-form-container']}
-              fullWidth
-              sx={{
-                '& .MuiFormHelperText-root': {
-                  marginLeft: '2px'
-                }
-              }}
-            >
-              <Box component="label" className={styles['tournament-common-title']}>
-                Title
-                <Box component="span" className={styles['require']}>
-                  *
-                </Box>
-              </Box>
-              <TextField
-                id="title"
-                name="title"
-                value={formik.values.title}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.title && Boolean(formik.errors.title)}
-                helperText={formik.touched.title && formik.errors.title}
-                variant="outlined"
-                sx={{
-                  '& .MuiOutlinedInput-input': {
-                    padding: '9px 10px'
-                  },
-                  '& .MuiInputLabel-root': {
-                    top: '-5px'
-                  }
-                }}
-              />
-            </FormControl>
-            {/* Description */}
-            <FormControl fullWidth className={styles['tournament-form-container']}>
-              <Box component="label" className={styles['tournament-common-title']}>
-                Description
-              </Box>
-              <TextField
-                id="description"
-                name="description"
-                multiline
-                rows={3}
-                value={formik.values.description}
-                onChange={formik.handleChange}
-              />
-            </FormControl>
-            {/* Category */}
-            <FormControl fullWidth className={styles['tournament-form-category']}>
-              <Box component="label" className={styles['tournament-common-title']}>
-                Category
-                <Box component="span" className={styles['require']}>
-                  *
-                </Box>
-              </Box>
-              <Autocomplete
-                disableClearable={formik?.values?.selectCategory ? false : true}
-                options={listCategory?.map((option: CategoryName) => option.categoryName)}
-                onChange={(event, value) => formik.setFieldValue('selectCategory', value)}
-                value={isOptionExists ? selectedValue : null}
-                sx={{
-                  width: '100%',
-                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: `${errorCategory && '#d32f2f'}`
-                  },
-
-                  '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    borderColor: `${errorCategory && '#d32f2f'}`
-                  },
-
-                  '& .MuiOutlinedInput-root': {
-                    padding: '2px'
-                  }
-                }}
-                ListboxProps={{
-                  style: {
-                    maxHeight: '195px',
-                    whiteSpace: 'pre-wrap'
-                  }
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    id="selectCategory"
-                    onChange={(event) => {
-                      formik.handleChange(event)
-                      handleInputChange(event, event.target.value)
-                    }}
-                    onBlur={handleBlurCategory}
-                    error={
-                      (selectedValue === '' || selectedValue === null) &&
-                      errorCategory === false &&
-                      formik.touched.selectCategory &&
-                      Boolean(formik.errors.selectCategory)
-                    }
-                    helperText={
-                      (selectedValue === '' || selectedValue === null) &&
-                      errorCategory === false &&
-                      formik.touched.selectCategory &&
-                      formik.errors.selectCategory
-                    }
-                    variant="outlined"
-                    className={styles['tournament-select-category']}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        padding: '2px'
-                      },
-                      '& .MuiFormHelperText-root': {
-                        marginLeft: '2px'
-                      }
-                    }}
-                  />
-                )}
-              />
-              {errorCategory && (selectedValue === '' || selectedValue === null) ? (
-                <Box component="span" className={styles['tournament-error']}>
-                  Category is required
-                </Box>
-              ) : null}
-            </FormControl>
-            {/* Event dates */}
-            <Box className={styles['tournament-event-dates']}>
-              <Box component="label" className={styles['tournament-common-title']}>
-                Event dates
-                <Box component="span" className={styles['require']}>
-                  *
-                </Box>
+          {/* Title */}
+          <FormControl className={styles['tournament-form-container']} fullWidth>
+            <Box component="label" className={styles['tournament-common-title']}>
+              Title
+              <Box component="span" className={styles['require']}>
+                *
               </Box>
             </Box>
-            <DatePicker
-              value={dates}
-              onChange={handleChange}
-              multiple
-              sort
-              format="DD/MM/YYYY"
-              calendarPosition="top"
-              plugins={[<DatePanel />]}
-              minDate={moment(today).format('DD/MM/YYYY')}
-              placeholder="YYYY/MM/DD"
-              render={<CustomMultipleInput errorDatePicker={errorDatePicker} />}
+            <TextField
+              id="title"
+              name="title"
+              value={formik.values.title}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.title && Boolean(formik.errors.title)}
+              helperText={formik.touched.title && formik.errors.title}
+              variant="outlined"
             />
-            {errorDatePicker && dates?.length === 0 ? (
+          </FormControl>
+          {/* Description */}
+          <FormControl fullWidth className={styles['tournament-form-container']}>
+            <Box component="label" className={styles['tournament-common-title']}>
+              Description
+            </Box>
+            <TextField
+              id="description"
+              name="description"
+              multiline
+              rows={3}
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  padding: '0'
+                }
+              }}
+            />
+          </FormControl>
+          {/* Category */}
+          <FormControl fullWidth className={styles['tournament-form-category']}>
+            <Box component="label" className={styles['tournament-common-title']}>
+              Category
+              <Box component="span" className={styles['require']}>
+                *
+              </Box>
+            </Box>
+            <Autocomplete
+              disableClearable={formik?.values?.selectCategory ? false : true}
+              options={listCategory?.map((option: CategoryName) => option.categoryName)}
+              onChange={(event, value) => formik.setFieldValue('selectCategory', value)}
+              value={isOptionExists ? selectedValue : null}
+              ListboxProps={{
+                style: {
+                  maxHeight: '195px',
+                  whiteSpace: 'pre-wrap'
+                }
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  id="selectCategory"
+                  onChange={(event) => {
+                    formik.handleChange(event)
+                    handleInputChange(event, event.target.value)
+                  }}
+                  onBlur={handleBlurCategory}
+                  error={
+                    (selectedValue === '' || selectedValue === null) &&
+                    errorCategory === false &&
+                    formik.touched.selectCategory &&
+                    Boolean(formik.errors.selectCategory)
+                  }
+                  helperText={
+                    (selectedValue === '' || selectedValue === null) &&
+                    errorCategory === false &&
+                    formik.touched.selectCategory &&
+                    formik.errors.selectCategory
+                  }
+                  variant="outlined"
+                  className={styles['tournament-select-category']}
+                />
+              )}
+            />
+            {errorCategory && (selectedValue === '' || selectedValue === null) ? (
               <Box component="span" className={styles['tournament-error']}>
-                Event dates is required
+                Category is required
               </Box>
             ) : null}
-          </DialogContent>
+          </FormControl>
+          {/* Event dates */}
+          <Box className={styles['tournament-event-dates']}>
+            <Box component="label" className={styles['tournament-common-title']}>
+              Event dates
+              <Box component="span" className={styles['require']}>
+                *
+              </Box>
+            </Box>
+          </Box>
+          <DatePicker
+            value={dates}
+            onChange={handleChange}
+            multiple
+            sort
+            format="DD/MM/YYYY"
+            calendarPosition="top"
+            plugins={[<DatePanel />]}
+            minDate={moment(today).format('DD/MM/YYYY')}
+            placeholder="YYYY/MM/DD"
+            render={<CustomMultipleInput errorDatePicker={errorDatePicker} />}
+          />
+          {errorDatePicker && dates?.length === 0 ? (
+            <Box component="span" className={styles['tournament-error']}>
+              Event dates is required
+            </Box>
+          ) : null}
           <DialogActions className={styles['tournament-action']}>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
             <Button type="submit" variant="contained">
               Save
             </Button>
           </DialogActions>
         </form>
-      </Dialog>
-    </>
+      </DialogContent>
+    </Dialog>
   )
 }
 

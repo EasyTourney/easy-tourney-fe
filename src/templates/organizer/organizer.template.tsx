@@ -3,8 +3,8 @@ import { Outlet } from 'react-router-dom'
 import { Header } from '../../components/Header'
 import { useState } from 'react'
 import React from 'react'
-import SidebarOganizer from '../../components/Sidebar/oganizer'
-import CustomizedBreadcrumbsOganizer from '../../components/Navigation/oganizer'
+import SidebarOrganizer from '../../components/Sidebar/organizer'
+import CustomizedBreadcrumbsOrganizer from '../../components/Navigation/organizer'
 import withTokenCheck from '../../hoc/withTokenCheck'
 
 function OrganizerTemplate() {
@@ -26,7 +26,7 @@ function OrganizerTemplate() {
           lg={sidebarCollapsed ? 0.7 : 2.3}
           xl={sidebarCollapsed ? 0.6 : 2}
         >
-          <SidebarOganizer onToggleCollapse={handleSidebarToggle} />
+          <SidebarOrganizer onToggleCollapse={handleSidebarToggle} />
         </Grid>
         <Grid
           item
@@ -40,7 +40,7 @@ function OrganizerTemplate() {
           <Box>
             <Header />
             <Box sx={{ marginTop: '20px' }}>
-              <CustomizedBreadcrumbsOganizer />
+              <CustomizedBreadcrumbsOrganizer />
             </Box>
             <Box sx={{ marginRight: '15px' }}>
               <Outlet />

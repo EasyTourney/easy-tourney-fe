@@ -69,6 +69,7 @@ const Login: React.FC = () => {
                 )}
                 <Field
                   as={TextField}
+                  className="login-textfield"
                   color={formProps.touched.email && formProps.errors.email && 'error'}
                   error={formProps.touched.email && formProps.errors.email ? true : false}
                   fullWidth
@@ -93,6 +94,7 @@ const Login: React.FC = () => {
               <Stack spacing={2} width={'60vw'} maxWidth={450}>
                 <Field
                   as={TextField}
+                  className="login-textfield"
                   color={formProps.touched.password && formProps.errors.password && 'error'}
                   error={formProps.touched.password && formProps.errors.password ? true : false}
                   fullWidth

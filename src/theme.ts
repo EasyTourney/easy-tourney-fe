@@ -1,41 +1,72 @@
-import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
+import { createTheme } from '@mui/material/styles'
 
-const Theme = extendTheme({
-  colorSchemes: {
-    light: {},
-    dark: {}
+const Theme = createTheme({
+  palette: {
+    // Config global color here
   },
   components: {
-    MuiCssBaseline: {
+    MuiDialog: {
       styleOverrides: {
-        body: {
-          '*::-webkit-scrollbar': {
-            width: '8px',
-            height: '8px'
-          },
-          '*::-webkit-scrollbar-thumb': {
-            background: '#dcdde1',
-            borderRadius: '8px'
-          },
-          '*::-webkit-scrollbar-thumb:hover': {
-            background: 'white'
-          }
-        },
-        '.MuiDataGrid-cell:focus-within': {
-          border: 'none',
-          outline: 'none'
+        paper: {
+          borderRadius: '0.5rem',
+          width: '32vw !important',
+          maxWidth: '500px !important'
         }
       }
     },
-    MuiButton: {
+    MuiTextField: {
       styleOverrides: {
-        // Name of the slot
         root: {
-          // Some CSS
-          textTransform: 'none',
-          borderWidth: '0.5px',
-          '&:hover': {
-            borderWidth: '0.5px'
+          '&.MuiTextField-root': {
+            marginTop: '0.25rem !important'
+          },
+          '& .MuiInputBase-input': {
+            padding: '0.8rem 1rem'
+          },
+          '&.login-textfield .MuiInputBase-input': {
+            padding: '1rem 1rem'
+          }
+        }
+      }
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            padding: '0'
+          },
+          '& .MuiOutlinedInput-root .MuiAutocomplete-input': {
+            padding: '0.8rem 1rem'
+          }
+        }
+      }
+    },
+    MuiStack: {
+      styleOverrides: {
+        root: {
+          '&.MuiStack-root': {
+            spacing: '2',
+            width: '100% !important'
+          }
+        }
+      }
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          '&.MuiDialogTitle-root.MuiTypography-root': {
+            fontSize: '1.7rem !important',
+            textAlign: 'center',
+            fontWeight: 'bold'
+          }
+        }
+      }
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          '&.MuiDialogContent-root': {
+            padding: '0 24px 20px !important'
           }
         }
       }

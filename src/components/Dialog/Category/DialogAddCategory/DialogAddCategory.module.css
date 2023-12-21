@@ -1,6 +1,13 @@
-@media screen and (max-width: 450px)  {
+@media screen and (max-width: 450px) {
   .btn-add {
     font-size: 10px;
   }
 }
-
+.alert-message {
+  font-weight: 700 !important;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.required-marked {
+  color: red;
+}

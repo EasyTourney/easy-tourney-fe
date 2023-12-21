@@ -18,7 +18,7 @@ export const convertTournament = (original: Tournament): TournamentRecord => {
   return {
     id: original.id.toString(),
     title: original.title,
-    category: original.category.name,
+    category: original.category.categoryName,
     organizers: fullName.join('; '),
     eventDates: eventDateArray.join('; '),
     createdAt: dayjs(new Date(original.createdAt)).format('DD/MM/YYYY hh:mm:ss A'),

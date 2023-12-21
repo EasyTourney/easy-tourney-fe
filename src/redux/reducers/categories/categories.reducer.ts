@@ -21,16 +21,16 @@ const categoriesSlice = createSlice({
   initialState: initialState,
   reducers: {
     setCategories: (state, action) => {
-      state.categories = action.payload
+      state.categories = [...action.payload]
     },
     setSelectedCategory: (state, action) => {
       state.seletedCategory = action.payload
     },
     updateCategory: (state, action) => {
       const updatedCategory = action.payload
-      const index = state.categories.findIndex((category) => category.id === updatedCategory.id)
+      const index = state.categories.findIndex((category) => category.categoryId === updatedCategory.categoryId)
       if (index !== -1) {
-        state.categories[index] = updatedCategory
+        state.categories[index].categoryName = updatedCategory.categoryName
       }
     }
   },

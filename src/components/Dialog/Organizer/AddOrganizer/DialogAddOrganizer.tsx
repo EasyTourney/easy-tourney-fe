@@ -24,12 +24,14 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
   const dispatch = useDispatch()
 
   const handleClickOpen = () => {
+    setError(false)
+    setErrorMessage('')
+    formik.resetForm()
     setOpen(true)
   }
 
   const handleClose = () => {
     setOpen(false)
-    formik.resetForm()
   }
 
   const formik = useFormik({
@@ -60,27 +62,22 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
             ...response.data,
             totalTournament: 0,
             fullName: response.data.firstName + ' ' + response.data.lastName,
-            dateOfBirth: response.data.dateOfBirth ? dayjs(response.data.dateOfBirth).format('DD/MM/YYYY') : '--',
+            dateOfBirth: response.data.dateOfBirth ? dayjs(response.data.dateOfBirth).format('DD/MM/YYYY') : '',
             createdAt: dayjs(response.data.createdAt).format('DD/MM/YYYY hh:mm:ss A')
           }
           const updatedOrganizers = [newOrganizer, ...organizer].slice(0, 10)
           dispatch(setOrganizer(updatedOrganizers))
           toast.success('An organizer is created successfully!')
-          setError(false)
-          setErrorMessage('')
-          setIsSaving(false)
           handleClose()
         } else {
           setError(true)
           setErrorMessage(response.errorMessage['Invalid Error'])
-          setIsSaving(false)
         }
       } catch (error) {
         toast.error('An error occurred while adding new organizer!')
-        setError(false)
-        setErrorMessage('')
+        handleClose()
+      } finally {
         setIsSaving(false)
-        formik.resetForm()
       }
     }
   })
@@ -93,26 +90,25 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
     }
   }
 
+  const disableToday = (date: any) => {
+    return dayjs(date).isSame(dayjs().startOf('day'))
+  }
+
   return (
     <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
       <Button variant="contained" onClick={handleClickOpen} className={styles['add-organizer-btn']}>
         Add new
       </Button>
-      <Dialog
-        onClick={handleClickOutside}
-        onClose={handleClose}
-        open={open}
-        PaperProps={{ sx: { borderRadius: '1rem' } }}
-      >
-        <DialogTitle className={styles['dialog-title']}>CREATE ORGANIZER</DialogTitle>
+      <Dialog onClick={handleClickOutside} onClose={handleClose} open={open}>
+        <DialogTitle className={styles['dialog-title']}>Create Organizer</DialogTitle>
+        {error && (
+          <Alert className={styles['alert-message']} severity="error">
+            {errorMessage}
+          </Alert>
+        )}
         <DialogContent>
           <form onSubmit={formik.handleSubmit} className={styles['organizer-form']}>
-            {error && (
-              <Alert className={styles['alert-message']} severity="error">
-                {errorMessage}
-              </Alert>
-            )}
-            <Stack spacing={2} width={'60vw'} maxWidth={450}>
+            <Stack>
               <Box component="label" sx={{ fontWeight: 'bold' }}>
                 First name <span className={styles['required-marked']}>*</span>
               </Box>
@@ -124,11 +120,10 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 name="firstName"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                sx={{ marginTop: '0.25rem !important' }}
                 value={formik.values.firstName}
               />
             </Stack>
-            <Stack spacing={2} width={'60vw'} maxWidth={450}>
+            <Stack>
               <Box component="label" sx={{ fontWeight: 'bold' }}>
                 Last name <span className={styles['required-marked']}>*</span>
               </Box>
@@ -140,11 +135,10 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 name="lastName"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                sx={{ marginTop: '0.25rem !important' }}
                 value={formik.values.lastName}
               />
             </Stack>
-            <Stack spacing={2} width={'60vw'} maxWidth={450}>
+            <Stack>
               <Box component="label" sx={{ fontWeight: 'bold' }}>
                 Email <span className={styles['required-marked']}>*</span>
               </Box>
@@ -156,16 +150,14 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 name="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                sx={{ marginTop: '0.25rem !important' }}
                 value={formik.values.email}
               />
             </Stack>
-            <Stack spacing={2} width={'60vw'} maxWidth={450}>
+            <Stack>
               <Box component="label" sx={{ fontWeight: 'bold' }}>
                 Phone number <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
-                sx={{ marginTop: '0.25rem !important' }}
                 error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                 fullWidth
                 helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
@@ -176,14 +168,14 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
                 value={formik.values.phoneNumber}
               />
             </Stack>
-            <Stack spacing={2} width={'60vw'} maxWidth={450}>
+            <Stack>
               <Box component="label" sx={{ fontWeight: 'bold' }}>
                 Date of birth
               </Box>
               <DatePicker
-                sx={{ marginTop: '0.25rem !important' }}
                 format="DD/MM/YYYY"
                 disableFuture
+                shouldDisableDate={disableToday}
                 value={formik.values.dateOfBirth || null}
                 onChange={(date: any) => {
                   formik.setFieldValue('dateOfBirth', date)

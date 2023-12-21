@@ -1,55 +1,57 @@
-.tournament-title{
-    font-weight: bold;
-    text-align: center;
+.tournament-title {
+  font-weight: bold;
+  text-align: center;
 }
 
-.tournament-common-title{
-    font-weight: bold;
+.tournament-common-title {
+  font-weight: bold;
 }
 
-.tournament-content{
-    padding-top: 1rem !important;
-    width: 400px;
-    transition: height 0.3s ease-in-out;
-    height: auto;
-    overflow-y: hidden;
+.tournament-content {
+  padding-top: 1rem !important;
+  width: 100%;
+  transition: height 0.3s ease-in-out;
+  height: auto;
 }
-.require{
-    color:red
+.require {
+  color: red;
 }
-.tournament-event-dates{
-    display: flex; 
-    flex-direction: column;
-    gap: 0.5rem;
+.tournament-event-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.tournament-action{
-   margin-top: 1rem;
+.tournament-action {
+  margin-top: 1rem;
 }
-.tournament-event-dates-warning{
-    font-size: 0.75rem;
-    color: red;
-    font-weight: 400;
+.tournament-event-dates-warning {
+  font-size: 0.75rem;
+  color: red;
+  font-weight: 400;
 }
-.tournament-event-dates-title{
-    font-weight: bold;
+.tournament-event-dates-title {
+  font-weight: bold;
 }
-.tournament-form-container{
-    margin-bottom: 1rem;
+.tournament-form-container {
+  margin-bottom: 1rem;
 }
-.tournament-form-container .MuiFormHelperText-root{
-    margin-left: 2px;
+.tournament-form-container .MuiFormHelperText-root {
+  margin-left: 2px;
 }
-.tournament-form-category{
-    margin-bottom: 2rem;
+.tournament-form-category {
+  margin-bottom: 2rem;
 }
-.tournament-commom-title{
-    font-weight: bold;
-    padding-bottom: 0.2rem;
+.tournament-commom-title {
+  font-weight: bold;
+  padding-bottom: 0.2rem;
 }
-.tournament-error{
-    font-size: 0.75rem; 
-    color: #d32f2f; 
-    font-weight: 400; 
-    margin: 3px 0;
+.tournament-error {
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-size: 0.75rem;
+  color: #d32f2f;
+  font-weight: 400;
+  margin: 3px 14px;
+  line-height: 1.66;
+  letter-spacing: 0.03333em;
 }

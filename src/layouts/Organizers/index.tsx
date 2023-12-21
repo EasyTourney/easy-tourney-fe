@@ -127,7 +127,7 @@ const Organizers = ({ navigate, location }: any) => {
         return {
           ...e,
           createdAt: dayjs(e.createdAt).format('DD/MM/YYYY hh:mm:ss A'),
-          dateOfBirth: e.dateOfBirth ? dayjs(e.dateOfBirth).format('DD/MM/YYYY') : '--'
+          dateOfBirth: e.dateOfBirth ? dayjs(e.dateOfBirth).format('DD/MM/YYYY') : ''
         }
       })
       dispatch(setOrganizer([...formattedData]))
@@ -233,8 +233,6 @@ const Organizers = ({ navigate, location }: any) => {
 
     getAll(param)
     setLoading(true)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouceSearch, sortType, currentPage, update, sortValue])
 
   useEffect(() => {
@@ -245,8 +243,6 @@ const Organizers = ({ navigate, location }: any) => {
     } else if (debouceSearch) {
       setCurrentPage(() => 1)
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalOrganizer])
 
   return (

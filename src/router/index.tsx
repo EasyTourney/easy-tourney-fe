@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { lazy } from 'react'
 import BaseTemplate from '../templates/base/base.template'
 import React from 'react'
-import OrganizerTemplate from '../templates/oganizer/oganizer.template'
+import OrganizerTemplate from '../templates/organizer/organizer.template'
 import ProtectedRoute from './ProtectedRoute'
 const General = lazy(() => import('../layouts/Tournament/General'))
 const Schedule = lazy(() => import('../layouts/Schedule'))

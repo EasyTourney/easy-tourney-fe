@@ -1,75 +1,75 @@
-.general-container{
-    margin-top: 1rem;
+.general-container {
+  margin-top: 1rem;
 }
-.general-wrapper{
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    padding: 0 5rem 2rem 5rem;
-    max-width: 80%;
-    height: 85vh;
-    margin: 0 auto;
-    overflow-y: auto;
-    border-radius: 0.5rem;
+.general-wrapper {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 0 5rem 2rem 5rem;
+  max-width: 80%;
+  height: 85vh;
+  margin: 0 auto;
+  overflow-y: auto;
+  border-radius: 0.5rem;
 }
-.general-info{
-    text-transform: uppercase;
-    padding-bottom: 1rem
+.general-info {
+  text-transform: uppercase;
+  padding-bottom: 1rem;
 }
-.general-description-content{
-    max-width: 100%;
+.general-description-content {
+  max-width: 100%;
 }
-.general-wrapper-title{
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-}
-
-.general-title-common{
-    font-weight: bold;
-    display: flex;
-    align-items: center; 
-    gap: 0.4rem
-}
-.general-icon-common{
-    font-size: 1rem;
-    cursor: pointer;
-}
-.general-wrapper-common{
-    display: flex;
-    flex-direction: column; 
-    gap: 0.3rem;
-    margin-top: 1rem;
+.general-wrapper-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
-.general-btn-discard{
-    background: #ed6262;
-    color: white;
-    display: flex;
-    align-items: center;
+.general-title-common {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.general-icon-common {
+  font-size: 1rem;
+  cursor: pointer;
+}
+.general-wrapper-common {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 1rem;
 }
 
-.general-discard-text{
-   text-transform: math-auto; 
+.general-btn-discard {
+  background: #ed6262;
+  color: white;
+  display: flex;
+  align-items: center;
 }
 
-.general-btn-discard:hover{
-    background-color: #434b53
-}
-.general-text-warning{
-    font-style: italic; 
-    font-size: 0.9rem; 
-    color: red
+.general-discard-text {
+  text-transform: math-auto;
 }
 
-.general-wrapper-discard{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.general-btn-discard:hover {
+  background-color: #434b53;
+}
+.general-text-warning {
+  font-style: italic;
+  font-size: 0.9rem;
+  color: red;
 }
 
-.general-organizer-table{
-    width: 100%;
+.general-wrapper-discard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.general-discard-content{
-    font-weight: bold;
+.general-organizer-table {
+  width: 100%;
+}
+
+.general-discard-content {
+  font-weight: bold;
 }

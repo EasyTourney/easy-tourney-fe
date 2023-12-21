@@ -3,12 +3,13 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
 import { ToastContainer } from 'react-toastify'
 import { Suspense, useEffect } from 'react'
-import { Box } from '@mui/material'
+import { Box, ThemeProvider } from '@mui/material'
 import { GlobalStyle } from './styles/GlobalStyle'
 import { useDispatch } from 'react-redux'
 import { getCategories } from './redux/reducers/categories/categories.slice'
 import { ThunkDispatch } from '@reduxjs/toolkit'
 import 'react-toastify/dist/ReactToastify.css'
+import Theme from './theme'
 
 function App() {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
@@ -18,10 +19,12 @@ function App() {
   return (
     <Box>
       <Suspense fallback={<>Loading...</>}>
-        <GlobalStyle>
-          <ToastContainer style={{ fontSize: '15px' }} autoClose={1000} draggable />
-          <RouterProvider router={router}></RouterProvider>
-        </GlobalStyle>
+        <ThemeProvider theme={Theme}>
+          <GlobalStyle>
+            <ToastContainer style={{ fontSize: '15px' }} autoClose={1000} draggable />
+            <RouterProvider router={router}></RouterProvider>
+          </GlobalStyle>
+        </ThemeProvider>
       </Suspense>
     </Box>
   )

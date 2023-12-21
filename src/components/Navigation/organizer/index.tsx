@@ -38,7 +38,7 @@ const CustomStyledBreadcrumb: React.FC<CustomStyledBreadcrumbProps> = ({ to, ...
   return <StyledBreadcrumb component={Component} to={to} {...props} />
 }
 
-const CustomizedBreadcrumbsOganizer: React.FC = () => {
+const CustomizedBreadcrumbsOrganizer: React.FC = () => {
   const location = useLocation()
   const pathSegments = location.pathname.split('/').filter((segment) => segment !== '' && !Number(segment))
 
@@ -63,4 +63,4 @@ const CustomizedBreadcrumbsOganizer: React.FC = () => {
   )
 }
 
-export default CustomizedBreadcrumbsOganizer
+export default CustomizedBreadcrumbsOrganizer

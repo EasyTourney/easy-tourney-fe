@@ -1,19 +1,8 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  InputAdornment,
-  Stack,
-  TextField
-} from '@mui/material'
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import styles from './DialogEditOrganizer.module.css'
-import { Email, Phone } from '@mui/icons-material'
 import { OrganizerSchema } from '../../../../services/validator/organizer.validator'
 import { DatePicker } from '@mui/x-date-pickers'
 import { useDispatch, useSelector } from 'react-redux'
@@ -30,25 +19,10 @@ interface DialogEditOrganizerProps {
 
 const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrganizerProps) => {
   const [isSaving, setIsSaving] = useState<boolean>(false)
-  const organizers = useSelector((state: RootState) => state.organizer.organizers)
+  const [error, setError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const dispatch = useDispatch()
   const selectedOrganizer = useSelector((state: RootState) => state.organizer.selectedOrganizer)
-
-  useEffect(() => {
-    formik.setValues({
-      firstName: selectedOrganizer?.firstName || '',
-      lastName: selectedOrganizer?.lastName || '',
-      email: selectedOrganizer?.email || '',
-      phoneNumber: selectedOrganizer?.phoneNumber || '',
-      dateOfBirth: selectedOrganizer?.dateOfBirth ? dayjs(selectedOrganizer.dateOfBirth) : null
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [organizers, selectedOrganizer])
-
-  const handleClose = () => {
-    onClose()
-    formik.resetForm()
-  }
 
   const formik = useFormik({
     initialValues: {
@@ -59,7 +33,7 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
       dateOfBirth: null as Dayjs | null
     },
     validationSchema: OrganizerSchema,
-    validateOnChange: false,
+    validateOnChange: true,
     onSubmit: async (values) => {
       try {
         setIsSaving(true)
@@ -77,22 +51,42 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
           const updatedOrganizer = {
             ...response.data,
             fullName: response.data.firstName + ' ' + response.data.lastName,
-            dateOfBirth: response.data.dateOfBirth ? dayjs(response.data.dateOfBirth).format('DD/MM/YYYY') : '--'
+            dateOfBirth: response.data.dateOfBirth ? dayjs(response.data.dateOfBirth).format('DD/MM/YYYY') : ''
           }
           dispatch(updateOrganizer(updatedOrganizer))
           toast.success('An organizer is updated successfully!')
+          handleClose()
         } else {
-          toast.error(response.errorMessage['Invalid Error'])
+          setError(true)
+          setErrorMessage(response.errorMessage['Invalid Error'])
         }
-        formik.resetForm()
       } catch (error) {
         toast.error('An error occurred while updating organizer!')
+        handleClose()
       } finally {
         setIsSaving(false)
-        handleClose()
       }
     }
   })
+
+  useEffect(() => {
+    if (onOpen) {
+      setError(false)
+      setErrorMessage('')
+      formik.resetForm()
+      formik.setValues({
+        firstName: selectedOrganizer?.firstName || '',
+        lastName: selectedOrganizer?.lastName || '',
+        email: selectedOrganizer?.email || '',
+        phoneNumber: selectedOrganizer?.phoneNumber || '',
+        dateOfBirth: selectedOrganizer?.dateOfBirth ? dayjs(selectedOrganizer.dateOfBirth) : null
+      })
+    }
+  }, [onOpen])
+
+  const handleClose = () => {
+    onClose()
+  }
 
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
@@ -102,88 +96,88 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
     }
   }
 
+  const disableToday = (date: any) => {
+    return dayjs(date).isSame(dayjs().startOf('day'))
+  }
+
   return (
-    <Dialog
-      onClick={handleClickOutside}
-      onClose={handleClose}
-      open={onOpen}
-      PaperProps={{ sx: { borderRadius: '1rem' } }}
-    >
-      <DialogTitle className={styles['dialog-title']}>EDIT ORGANIZER</DialogTitle>
-      <Divider />
+    <Dialog onClick={handleClickOutside} onClose={handleClose} open={onOpen}>
+      <DialogTitle className={styles['dialog-title']}>Edit Organizer</DialogTitle>
+      {error && (
+        <Alert className={styles['alert-message']} severity="error">
+          {errorMessage}
+        </Alert>
+      )}
       <DialogContent>
         <form onSubmit={formik.handleSubmit} className={styles['organizer-form']}>
-          <Stack spacing={2} width={'60vw'} maxWidth={450}>
+          <Stack>
+            <Box component="label" sx={{ fontWeight: 'bold' }}>
+              First name <span className={styles['required-marked']}>*</span>
+            </Box>
             <TextField
               error={formik.touched.firstName && Boolean(formik.errors.firstName)}
               fullWidth
               helperText={formik.touched.firstName && formik.errors.firstName}
               id="firstName"
-              label="First name"
               name="firstName"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               value={formik.values.firstName}
             />
           </Stack>
-          <Stack spacing={2} width={'60vw'} maxWidth={450}>
+          <Stack>
+            <Box component="label" sx={{ fontWeight: 'bold' }}>
+              Last name <span className={styles['required-marked']}>*</span>
+            </Box>
             <TextField
               error={formik.touched.lastName && Boolean(formik.errors.lastName)}
               fullWidth
               helperText={formik.touched.lastName && formik.errors.lastName}
               id="lastName"
-              label="Last name"
               name="lastName"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               value={formik.values.lastName}
             />
           </Stack>
-          <Stack spacing={2} width={'60vw'} maxWidth={450}>
+          <Stack>
+            <Box component="label" sx={{ fontWeight: 'bold' }}>
+              Email <span className={styles['required-marked']}>*</span>
+            </Box>
             <TextField
               error={formik.touched.email && Boolean(formik.errors.email)}
               fullWidth
               helperText={formik.touched.email && formik.errors.email}
               id="email"
-              label="Email"
               name="email"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               value={formik.values.email}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Email />
-                  </InputAdornment>
-                )
-              }}
             />
           </Stack>
-          <Stack spacing={2} width={'60vw'} maxWidth={450}>
+          <Stack>
+            <Box component="label" sx={{ fontWeight: 'bold' }}>
+              Phone number <span className={styles['required-marked']}>*</span>
+            </Box>
             <TextField
               error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
               fullWidth
               helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
               id="phoneNumber"
-              label="Phone number"
               name="phoneNumber"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               value={formik.values.phoneNumber}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Phone />
-                  </InputAdornment>
-                )
-              }}
             />
           </Stack>
-          <Stack spacing={2} width={'60vw'} maxWidth={450}>
+          <Stack>
+            <Box component="label" sx={{ fontWeight: 'bold' }}>
+              Date of birth
+            </Box>
             <DatePicker
-              label="Date of birth"
               format="DD/MM/YYYY"
               disableFuture
+              shouldDisableDate={disableToday}
               value={formik.values.dateOfBirth || null}
               onChange={(date: any) => {
                 formik.setFieldValue('dateOfBirth', date)

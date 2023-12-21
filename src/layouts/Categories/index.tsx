@@ -108,7 +108,6 @@ const Category = ({ navigate, location }: any) => {
     }
     getAll({ ...param })
     setLoading(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortType, currentPage, debouceSearch, update])
 
   useEffect(() => {
@@ -117,7 +116,6 @@ const Category = ({ navigate, location }: any) => {
     } else if (debouceSearch) {
       setCurrentPage(() => 1)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCategories])
 
   const handleEdit = useCallback(
