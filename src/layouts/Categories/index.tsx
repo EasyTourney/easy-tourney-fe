@@ -142,7 +142,7 @@ const Category = ({ navigate, location }: any) => {
       if (result.isConfirmed) {
         const res = (await apiDeleteCategory(categoryId)) as APIRes
         if (res.success) {
-          toast.success(res.message)
+          toast.success('A category was successfully deleted !')
           setUpdate((prev) => !prev)
         } else {
           toast.error(res.message)

@@ -7,7 +7,6 @@ import {
   PHONE_NUMBER_REGEX,
   CHARACTERS_ONLY_REGEX,
   PHONE_NUMBER_START_REGEX,
-  MULTIPLE_SPACE_REGEX,
   PHONE_NUMBER_VALID_REGEX
 } from '../../constants/regex'
 import dayjs from 'dayjs'
@@ -101,7 +100,7 @@ const dateOfBirth = Yup.date()
   .nullable()
 
 const title = Yup.string()
-  .required('Please enter Title')
+  .required('Title is required')
   .test('no-leading-whitespace', 'Title must not contain leading whitespace', function (value) {
     if (value && SPACE_START_REGEX.test(value)) {
       return false
@@ -114,16 +113,6 @@ const title = Yup.string()
     }
     return true
   })
-  .test(
-    'no-multiple-whitespaces',
-    'Title must not contain multiple whitespaces in between two words',
-    function (value) {
-      if (value && MULTIPLE_SPACE_REGEX.test(value)) {
-        return false
-      }
-      return true
-    }
-  )
   .min(2, 'Title must be at least 2 characters')
   .max(30, 'Title must be less than 30 characters')
   .matches(CHARACTERS_REGEX, 'Title must not contain special characters')

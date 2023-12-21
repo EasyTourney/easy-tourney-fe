@@ -26,11 +26,12 @@ interface ReusedTableProps {
   showActions?: boolean
   onEdit?: (rowData: { [key: string]: any }) => void
   onDelete?: (rowData: { [key: string]: any }) => void
-  handleColumnSort: (id: any, status: 'asc' | 'desc' | '') => void
+  handleColumnSort?: (id: any, status: 'asc' | 'desc' | '') => void
   total: number
-  handlePageSearch: (page: number) => void
-  totalCurrentPage: number
-  loading: boolean
+  handlePageSearch?: (page: number) => void
+  totalCurrentPage?: number
+  loading?: boolean
+  hidePagination?: boolean
 }
 
 const TableReused = ({
@@ -43,7 +44,8 @@ const TableReused = ({
   total,
   handlePageSearch,
   totalCurrentPage,
-  loading
+  loading,
+  hidePagination = true
 }: ReusedTableProps) => {
   const [sortStates, setSortStates] = useState<{ [key: string]: 'asc' | 'desc' | '' }>(
     Object.fromEntries(columns.map((column) => [column.id, '']))
@@ -51,7 +53,11 @@ const TableReused = ({
 
   const [params] = useSearchParams()
   const myPage = params.get('page')
-  const totalIndex = totalCurrentPage < 10 ? totalCurrentPage - totalCurrentPage + 10 : totalCurrentPage
+  const totalIndex = totalCurrentPage
+    ? totalCurrentPage < 10
+      ? totalCurrentPage - totalCurrentPage + 10
+      : totalCurrentPage
+    : 0
 
   const handleSortTableClick = (id: any) => {
     const currentSortType = sortStates[id]
@@ -68,7 +74,7 @@ const TableReused = ({
 
     const updatedSortStates = { id, [id]: nextSortType }
     setSortStates(updatedSortStates)
-    handleColumnSort(id, nextSortType)
+    handleColumnSort?.(id, nextSortType)
   }
 
   const getColumnSortIcon = (id: any) => {
@@ -92,7 +98,7 @@ const TableReused = ({
   }, [page, rows])
 
   const handlePageChange = (pageNumber: number) => {
-    handlePageSearch(pageNumber)
+    handlePageSearch?.(pageNumber)
     setPage(pageNumber)
   }
 
@@ -278,9 +284,11 @@ const TableReused = ({
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{ mt: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
-        <Paginations totalItems={total} itemsPerPage={10} onPageChange={handlePageChange} />
-      </Box>
+      {hidePagination && (
+        <Box sx={{ mt: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+          <Paginations totalItems={total} itemsPerPage={10} onPageChange={handlePageChange} />
+        </Box>
+      )}
     </Box>
   )
 }

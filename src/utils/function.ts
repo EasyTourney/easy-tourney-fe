@@ -88,3 +88,10 @@ export const convertFormatTime = (inputTime: string) => {
   })
   return ampmTime
 }
+export const checkLengthDescription = (str: string, number: number) => {
+  if (str?.length > 295) {
+    return `${str.slice(0, number)} ...`
+  } else {
+    return str
+  }
+}

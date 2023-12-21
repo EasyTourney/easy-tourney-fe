@@ -4,7 +4,7 @@ import BaseTemplate from '../templates/base/base.template'
 import React from 'react'
 import OrganizerTemplate from '../templates/oganizer/oganizer.template'
 import ProtectedRoute from './ProtectedRoute'
-const General = lazy(() => import('../layouts/General'))
+const General = lazy(() => import('../layouts/Tournament/General'))
 const Schedule = lazy(() => import('../layouts/Schedule'))
 const Result = lazy(() => import('../layouts/Result'))
 const Participants = lazy(() => import('../layouts/Participants'))

@@ -25,28 +25,13 @@ h6 {
 ::-ms-reveal {
   display: none;
 }
-
-.rdp{margin: 0 !important;}
-.rdp-caption_start{
-  border-radius: 5px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-}
-.rdp-caption{
-  padding: 10px !important;
-  background: rgb(88 96 101);
-  color:#fff;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  width: 350px;
-}
-.rdp-table{
+.rmdp-container {
   width: 100%;
-  max-width: 370px !important;
 }
-.rdp-table .rdp-row{
-  border: none;
+.rmdp-input{
+  width: 100%;
+  padding: 19px 10px !important;
 }
-.rdp .rdp-day_today{
-  color:red
+.rmdp-top-class {
+  height: 300px;
 }
-

@@ -2,12 +2,19 @@ import React from 'react'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
 import { ToastContainer } from 'react-toastify'
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Box } from '@mui/material'
 import { GlobalStyle } from './styles/GlobalStyle'
+import { useDispatch } from 'react-redux'
+import { getCategories } from './redux/reducers/categories/categories.slice'
+import { ThunkDispatch } from '@reduxjs/toolkit'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
+  useEffect(() => {
+    dispatch(getCategories())
+  }, [dispatch])
   return (
     <Box>
       <Suspense fallback={<>Loading...</>}>

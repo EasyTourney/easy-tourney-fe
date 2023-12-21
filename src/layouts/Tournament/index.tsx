@@ -13,7 +13,6 @@ import { Button } from '@mui/material'
 import { TournamentRecord } from '../../types/tournament'
 import { MenuItem, TextField } from '@mui/material'
 import { tournamentStatuses } from '../../constants/status'
-import DialogAddTournament from '../../components/Dialog/Tournament/DialogAddTournament'
 import { deleteTournament, getAllTournaments } from '../../apis/axios/tournaments/tournament'
 import { removeEmptyFields } from '../../utils/function'
 import { convertTournament } from '../../utils/tournament'
@@ -21,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { categoriesSelector } from '../../redux/reducers/categories/categories.selectors'
 import { ThunkDispatch } from '@reduxjs/toolkit'
 import { getCategories } from '../../redux/reducers/categories/categories.slice'
+import DialogAddTournament from '../../components/Dialog/Tournament/AddTournament/DialogAddTournament'
 
 const TournamentTable = ({ navigate, location }: any) => {
   const columns = [

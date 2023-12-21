@@ -8,11 +8,11 @@ import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
 import { Divider, Typography } from '@mui/material'
 import { Logout } from '@mui/icons-material'
-import styles from './Header.module.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/reducers'
 import { getLocalStorage } from '../../utils/localStorage'
+import styles from './Header.module.css'
 
 const Header: React.FC = () => {
   const dispatch = useDispatch()

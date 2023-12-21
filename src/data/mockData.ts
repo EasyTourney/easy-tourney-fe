@@ -528,3 +528,97 @@ export const mockDataTeams = [
   { teamName: 'Desiree King MD', id: 21 },
   { teamName: 'Sheri Bahringer', id: 22 }
 ]
+export const mockDataOrganizerTournament = [
+  {
+    Id: 1,
+    fullName: 'Quang Minh',
+    email: 'bugCreator1@gmail.com'
+  },
+  {
+    Id: 2,
+    fullName: 'Yen Le',
+    email: 'bugCreator2@gmail.com'
+  },
+  {
+    Id: 3,
+    fullName: 'Van Viet',
+    email: 'bugCreator3@gmail.com'
+  },
+  {
+    Id: 4,
+    fullName: 'Long Bien',
+    email: 'bugCreator4@gmail.com'
+  },
+  {
+    Id: 5,
+    fullName: 'Duy(Bug creator)',
+    email: 'bugCreator5@gmail.com'
+  },
+  {
+    Id: 6,
+    fullName: 'Nguyen Van A',
+    email: 'nguyenvanA@gmail.com'
+  },
+  {
+    Id: 7,
+    fullName: 'Nguyen Van A',
+    email: 'nguyenvanA@gmail.com'
+  },
+  {
+    Id: 8,
+    fullName: 'Nguyen Van A',
+    email: 'nguyenvanA@gmail.com'
+  },
+  {
+    Id: 9,
+    fullName: 'Nguyen Van A',
+    email: 'nguyenvanA@gmail.com'
+  },
+  {
+    Id: 10,
+    fullName: 'Nguyen Van A',
+    email: 'nguyenvanA@gmail.com'
+  }
+]
+export const mockDataEvenDates = [
+  {
+    Id: 1,
+    event: 'Tuesday, 21 December 2023'
+  },
+  {
+    Id: 2,
+    event: 'Wednesday, 1 November 2023'
+  },
+  {
+    Id: 3,
+    event: 'FrIday, 20 October 2023'
+  },
+  {
+    Id: 4,
+    event: 'Tuesday, 29 December 2023'
+  },
+  {
+    Id: 5,
+    event: 'Wednesday, 22 December 2023'
+  },
+  {
+    Id: 6,
+    event: 'Wednesday, 24 December 2023'
+  },
+  {
+    Id: 7,
+    event: 'Wednesday, 26 December 2023'
+  },
+  {
+    Id: 8,
+    event: 'Wednesday, 29 December 2023'
+  },
+  {
+    Id: 9,
+    event: 'Wednesday, 12 December 2023'
+  },
+  {
+    Id: 10,
+    event: 'Wednesday, 1 December 2023'
+  }
+]
