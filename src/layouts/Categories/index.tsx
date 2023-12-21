@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { APIRes, ParamApi } from '../../types/commom'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
 import { apiDeleteCategory, getAllCategories, addCategory } from '../../apis/axios/categories/category'
@@ -20,7 +20,7 @@ const Category = ({ navigate, location }: any) => {
     {
       id: 'Id',
       sortTable: false,
-      label: 'Id',
+      label: 'No.',
       left: false,
       style: {
         filed: 'Id',
@@ -45,14 +45,16 @@ const Category = ({ navigate, location }: any) => {
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
   const categories = useSelector((state: any) => state.category.categories)
   const [totalCategories, setTotalCategories] = useState<number>(0)
-  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [params] = useSearchParams()
+  const pageURL = Number(params.get('page'))
+  const [currentPage, setCurrentPage] = useState<number>(pageURL | 1)
   const [update, setUpdate] = useState<boolean>(false)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [params] = useSearchParams()
-  const pageURL = Number(params.get('page'))
+
   const [categoryName, setCategoryName] = useState('')
+  const isSetPageURL = useRef(false)
 
   // get all category from DB
   const getAll = async (param: ParamApi) => {
@@ -75,8 +77,9 @@ const Category = ({ navigate, location }: any) => {
   })
 
   useEffect(() => {
-    if (pageURL > 0) {
+    if (pageURL > 0 && isSetPageURL.current === false) {
       setCurrentPage(pageURL)
+      isSetPageURL.current = true
     }
   }, [pageURL])
 

@@ -7,6 +7,7 @@ export interface OrganizerRecord {
   totalTournament: number
   createdAt: string
 }
+
 export interface Organizer {
   id: number
   firstName: string

@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import React, { useEffect } from 'react'
 import { OrganizerAPIRes, OrganizerByIdAPIRes, ParamApi } from '../../types/commom'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
@@ -32,7 +32,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'Id',
-        width: '5%'
+        width: '20px'
       }
     },
     {
@@ -43,7 +43,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'fullName',
-        width: '30%'
+        width: '150px'
       }
     },
     {
@@ -54,7 +54,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'email',
-        width: '25%'
+        width: '150px'
       }
     },
     {
@@ -65,7 +65,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'phoneNumber',
-        width: '10%'
+        width: '150px'
       }
     },
     {
@@ -76,7 +76,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'dateOfBirth',
-        width: '15%'
+        width: '140px'
       }
     },
     {
@@ -87,7 +87,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'totalTournament',
-        width: '5%'
+        width: '50px'
       }
     },
     {
@@ -98,24 +98,26 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'createdAt',
-        width: '10%'
+        width: '140px'
       }
     }
   ]
 
   const [value, setValue] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
+  const [params] = useSearchParams()
+  const pageURL = Number(params.get('page'))
   const [sortValue, setSortValue] = useState<string | ''>('')
   const organizers = useSelector((state: any) => state.organizer.organizers)
   const [totalOrganizer, setTotalOrganizer] = useState<number>(0)
-  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [currentPage, setCurrentPage] = useState<number>(pageURL | 1)
+
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
   const [update, setUpdate] = useState<boolean>(false)
-  const [params] = useSearchParams()
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
-  const pageURL = Number(params.get('page'))
   const dispatch = useDispatch()
+  const isSetPageURL = useRef(false)
 
   // get all organizer from DB
   const getAll = async (param: ParamApi) => {
@@ -138,6 +140,7 @@ const Organizers = ({ navigate, location }: any) => {
 
   const pageSearch = (value: number) => {
     setCurrentPage(() => value)
+    isSetPageURL.current = false
   }
 
   //delaying the execution of function search
@@ -196,8 +199,9 @@ const Organizers = ({ navigate, location }: any) => {
   }, [])
 
   useEffect(() => {
-    if (pageURL > 0) {
-      setCurrentPage(pageURL)
+    if (isSetPageURL.current === false) {
+      setCurrentPage(() => pageURL)
+      isSetPageURL.current = true
     }
   }, [pageURL])
 
@@ -227,7 +231,7 @@ const Organizers = ({ navigate, location }: any) => {
       sortValue: sortValue
     }
 
-    getAll({ ...param })
+    getAll(param)
     setLoading(true)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { Badge, Box, Button, Chip, Skeleton } from '@mui/material'
+import { Badge, Box, Button, Chip, Skeleton, Tooltip } from '@mui/material'
 import PersonIcon from '@mui/icons-material/Person'
 import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
@@ -19,6 +19,7 @@ import { ColumnTypes } from '../../types/commom'
 import { useSearchParams } from 'react-router-dom'
 import noItem from '../../assets/noItem.png'
 import { colorChip, isMultipleLine, isStatus } from '../../utils/function'
+import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp'
 
 interface ReusedTableProps {
   columns: ColumnTypes[]
@@ -229,10 +230,11 @@ const TableReused = ({
                         textAlign: `${column.left ? 'left' : 'center'}`,
                         borderRight: ' 1px solid rgba(224, 224, 224, 1)',
                         borderCollapse: 'collapse',
-                        wordWrap: 'break-word'
+                        maxWidth: '120px',
+                        minWidth: '100px'
                       }}
                     >
-                      {totalIndex && Object.values(column).indexOf('Id') > -1 ? (
+                      {Object.values(column).indexOf('Id') > -1 ? (
                         (Number(myPage) > 1 ? Number(myPage) - 1 : 0) * totalIndex + rowIndex + 1
                       ) : isStatus(row[column.id]) ? (
                         <Chip
@@ -245,13 +247,31 @@ const TableReused = ({
                             <li key={index}>{element}</li>
                           ))}
                         </ul>
+                      ) : column.id !== 'player_count' ? (
+                        <Tooltip title={`${row[column.id]}`}>
+                          <Chip
+                            sx={{
+                              backgroundColor: 'transparent',
+                              whiteSpace: 'nowrap'
+                            }}
+                            label={`${row[column.id]}`}
+                          />
+                        </Tooltip>
                       ) : (
-                        row[column.id]
+                        ''
                       )}
-                      {Object.values(column).indexOf('players') > -1 && (
-                        <Badge badgeContent={12} color="default" max={99}>
-                          <PersonIcon />
-                        </Badge>
+                      {Object.values(column).indexOf('player_count') > -1 && row[column.id] > 0 ? (
+                        <Button title="Players">
+                          <Badge badgeContent={row[column.id]} color="default" max={99}>
+                            <PersonIcon />
+                          </Badge>
+                        </Button>
+                      ) : Object.values(column).indexOf('player_count') > -1 ? (
+                        <Button title="Players">
+                          <PersonAddAltSharpIcon />
+                        </Button>
+                      ) : (
+                        ''
                       )}
                     </TableCell>
                   ))}

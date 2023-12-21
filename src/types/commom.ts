@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios'
 import { Categories } from './category'
 import { Organizer, OrganizerRecord } from './organizer'
 import { Tournament } from './tournament'
+import { Participant } from './participant'
 
 export interface APIRes extends AxiosResponse {
   success: boolean
@@ -41,6 +42,16 @@ export interface TournamentAPIRes extends AxiosResponse {
   errorMessage?: unknown
 }
 
+export interface ParticipantAPIRes extends AxiosResponse {
+  success: boolean
+  data: Participant[]
+  total: number
+  additionalData: {
+    totalTeamOfTournament: number
+  }
+  message: string
+}
+
 export interface ColumnTypes {
   id: string
   sortTable?: boolean
@@ -60,4 +71,5 @@ export interface ParamApi {
   sortValue?: string
   filterStatus?: string
   filterCategory?: string
+  id?: number
 }
