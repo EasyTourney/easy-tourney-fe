@@ -248,7 +248,7 @@ const TableReused = ({
                             <li key={index}>{element}</li>
                           ))}
                         </ul>
-                      ) : column.id !== 'player_count' ? (
+                      ) : column.id !== 'playerCount' ? (
                         <Tooltip title={`${row[column.id]}`}>
                           <Chip
                             sx={{
@@ -262,13 +262,13 @@ const TableReused = ({
                         ''
                       )}
                       {onOpenPlayerDialog &&
-                        (Object.values(column).indexOf('player_count') > -1 && row[column.id] > 0 ? (
+                        (Object.values(column).indexOf('playerCount') > -1 && row[column.id] > 0 ? (
                           <Button title="Players" onClick={() => onOpenPlayerDialog(row)}>
                             <Badge badgeContent={row[column.id]} color="default" max={99}>
                               <PersonIcon />
                             </Badge>
                           </Button>
-                        ) : Object.values(column).indexOf('player_count') > -1 ? (
+                        ) : Object.values(column).indexOf('playerCount') > -1 ? (
                           <Button title="Players" onClick={() => onOpenPlayerDialog(row)}>
                             <PersonAddAltSharpIcon />
                           </Button>

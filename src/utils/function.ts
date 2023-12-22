@@ -1,4 +1,6 @@
+import dayjs from 'dayjs'
 import { TOURNAMENT_STATUS } from '../constants/enum'
+import { EventDate } from '../types/eventDate'
 
 export const generateRange = (start: number, end: number) => {
   const length = end + 1 - start
@@ -94,4 +96,19 @@ export const checkLengthDescription = (str: string, number: number) => {
   } else {
     return str
   }
+}
+
+export const convertDateFormat = (dates: EventDate[]): EventDate[] => {
+  return dates.map((eventDate) => {
+    const { startTime, endTime, date } = eventDate
+    const [year, month, day] = date.split('-')
+
+    // Use dayjs to format the date without including the time and format start and end times
+    const formattedDate = dayjs(`${year}-${month}-${day}`).format('dddd, MMMM D, YYYY')
+    const formattedStartTime = dayjs(startTime, 'HH:mm:ss').format('HH:mm')
+    const formattedEndTime = dayjs(endTime, 'HH:mm:ss').format('HH:mm')
+
+    // Return a new EventDate object with the updated date property
+    return { ...eventDate, date: `${formattedDate} - from ${formattedStartTime} to ${formattedEndTime}` }
+  })
 }

@@ -24,24 +24,24 @@ const Participants = ({ navigate, location }: any) => {
       }
     },
     {
-      id: 'team_name',
+      id: 'teamName',
       sortTable: false,
       label: 'Name',
-      sortBy: 'team_name',
+      sortBy: 'teamName',
       left: false,
       style: {
-        filed: 'team_name',
+        filed: 'teamName',
         width: '60%'
       }
     },
     {
-      id: 'player_count',
+      id: 'playerCount',
       sortTable: false,
       label: 'Players',
-      sortBy: 'player_count',
+      sortBy: 'playerCount',
       left: false,
       style: {
-        filed: 'player_count',
+        filed: 'playerCount',
         width: '30%'
       }
     }
@@ -109,7 +109,7 @@ const Participants = ({ navigate, location }: any) => {
 
   const handleOpenPlayerDialog = useCallback((rowData: { [key: string]: any }) => {
     dispatch(setPlayers([]))
-    dispatch(setSelectedTeamId(rowData.team_id))
+    dispatch(setSelectedTeamId(rowData.teamId))
     setIsOpenPlayerDialog(true)
   }, [])
 

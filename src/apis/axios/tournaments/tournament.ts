@@ -17,3 +17,11 @@ export async function deleteTournament(id: number) {
   })
   return res
 }
+
+export async function getTournamentById(id: number) {
+  const res = await axios({
+    url: `/tournament/${id}`,
+    method: 'GET'
+  })
+  return res
+}
