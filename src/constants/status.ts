@@ -22,9 +22,5 @@ export const tournamentStatuses = [
   {
     value: 'DISCARDED',
     label: 'Discarded'
-  },
-  {
-    value: 'DELETED',
-    label: 'Deleted'
   }
 ]

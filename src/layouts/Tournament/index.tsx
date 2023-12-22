@@ -10,7 +10,6 @@ import useDebounce from '../../hooks/useDebounce'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { Button } from '@mui/material'
-import { TournamentRecord } from '../../types/tournament'
 import { MenuItem, TextField } from '@mui/material'
 import { tournamentStatuses } from '../../constants/status'
 import { deleteTournament, getAllTournaments } from '../../apis/axios/tournaments/tournament'
@@ -18,9 +17,8 @@ import { removeEmptyFields } from '../../utils/function'
 import { convertTournament } from '../../utils/tournament'
 import { useDispatch, useSelector } from 'react-redux'
 import { categoriesSelector } from '../../redux/reducers/categories/categories.selectors'
-import { ThunkDispatch } from '@reduxjs/toolkit'
-import { getCategories } from '../../redux/reducers/categories/categories.slice'
 import DialogAddTournament from '../../components/Dialog/Tournament/AddTournament/DialogAddTournament'
+import { setTournaments } from '../../redux/reducers/tournaments/tournaments.reducer'
 
 const TournamentTable = ({ navigate, location }: any) => {
   const columns = [
@@ -107,21 +105,21 @@ const TournamentTable = ({ navigate, location }: any) => {
     setOpen(true)
   }
 
+  const [params] = useSearchParams()
+  const pageURL = Number(params.get('page'))
   const [value, setValue] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
   const [sortValue, setSortValue] = useState<string | ''>('')
   const [filterStatus, setFilterStatus] = useState<string | ''>('')
   const [filterCategory, setFilterCategory] = useState<string | ''>('')
-  const [tournaments, setTournaments] = useState<TournamentRecord[] | []>([])
+  const tournaments = useSelector((state: any) => state.tournament.tournaments)
   const [totalTournaments, setTotalTournaments] = useState<number>(0)
-  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [currentPage, setCurrentPage] = useState<number>(pageURL | 1)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [update, setUpdate] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
-  const [params] = useSearchParams()
-  const pageURL = Number(params.get('page'))
   const { listCategory } = useSelector(categoriesSelector)
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
+  const dispatch = useDispatch()
 
   const getAll = useCallback(async (param: ParamApi) => {
     const getTournaments = (await getAllTournaments(param)) as TournamentAPIRes
@@ -131,11 +129,11 @@ const TournamentTable = ({ navigate, location }: any) => {
       for (const tournament of getTournaments.data) {
         convertedData.push(convertTournament(tournament))
       }
-      setTournaments(convertedData)
+      dispatch(setTournaments([...convertedData]))
       setTotalTournaments(getTournaments?.additionalData?.totalTournament)
       setTotalCurrentPage(convertedData.length)
     } else {
-      setTournaments([])
+      dispatch(setTournaments([]))
       setTotalTournaments(0)
       setTotalCurrentPage(0)
     }
@@ -238,10 +236,6 @@ const TournamentTable = ({ navigate, location }: any) => {
   const handleChangeFilterCategory = useCallback((event: ChangeEvent<{ value: string }>) => {
     setFilterCategory(event.target.value)
   }, [])
-
-  useEffect(() => {
-    dispatch(getCategories())
-  }, [dispatch])
 
   return (
     <Box>

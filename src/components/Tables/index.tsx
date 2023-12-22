@@ -25,6 +25,7 @@ interface ReusedTableProps {
   columns: ColumnTypes[]
   rows: { [key: string]: any }[]
   showActions?: boolean
+  onOpenPlayerDialog?: (rowData: { [key: string]: any }) => void
   onEdit?: (rowData: { [key: string]: any }) => void
   onDelete?: (rowData: { [key: string]: any }) => void
   handleColumnSort?: (id: any, status: 'asc' | 'desc' | '') => void
@@ -39,6 +40,7 @@ const TableReused = ({
   rows,
   columns,
   showActions = true,
+  onOpenPlayerDialog,
   onEdit,
   onDelete,
   handleColumnSort,
@@ -51,7 +53,6 @@ const TableReused = ({
   const [sortStates, setSortStates] = useState<{ [key: string]: 'asc' | 'desc' | '' }>(
     Object.fromEntries(columns.map((column) => [column.id, '']))
   )
-
   const [params] = useSearchParams()
   const myPage = params.get('page')
   const totalIndex = totalCurrentPage
@@ -260,19 +261,20 @@ const TableReused = ({
                       ) : (
                         ''
                       )}
-                      {Object.values(column).indexOf('player_count') > -1 && row[column.id] > 0 ? (
-                        <Button title="Players">
-                          <Badge badgeContent={row[column.id]} color="default" max={99}>
-                            <PersonIcon />
-                          </Badge>
-                        </Button>
-                      ) : Object.values(column).indexOf('player_count') > -1 ? (
-                        <Button title="Players">
-                          <PersonAddAltSharpIcon />
-                        </Button>
-                      ) : (
-                        ''
-                      )}
+                      {onOpenPlayerDialog &&
+                        (Object.values(column).indexOf('player_count') > -1 && row[column.id] > 0 ? (
+                          <Button title="Players" onClick={() => onOpenPlayerDialog(row)}>
+                            <Badge badgeContent={row[column.id]} color="default" max={99}>
+                              <PersonIcon />
+                            </Badge>
+                          </Button>
+                        ) : Object.values(column).indexOf('player_count') > -1 ? (
+                          <Button title="Players" onClick={() => onOpenPlayerDialog(row)}>
+                            <PersonAddAltSharpIcon />
+                          </Button>
+                        ) : (
+                          ''
+                        ))}
                     </TableCell>
                   ))}
                   {showActions && (

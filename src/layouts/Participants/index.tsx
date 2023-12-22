@@ -8,6 +8,8 @@ import { createSearchParams, useParams, useSearchParams } from 'react-router-dom
 import { getAllParticipant } from '../../apis/axios/participants/participant'
 import { useDispatch, useSelector } from 'react-redux'
 import { setParticipant } from '../../redux/reducers/participants/participants.reducer'
+import { setPlayers, setSelectedTeamId } from '../../redux/reducers/players/players.reducer'
+import DialogViewPlayerList from '../../components/Dialog/Player/ViewPlayer/DialogViewPlayerList'
 
 const Participants = ({ navigate, location }: any) => {
   const columns = [
@@ -47,6 +49,7 @@ const Participants = ({ navigate, location }: any) => {
 
   const participants = useSelector((state: any) => state.participant.participants)
 
+  const [isOpenPlayerDialog, setIsOpenPlayerDialog] = useState<boolean>(false)
   const [totalParticipants, setTotalParticipants] = useState<number>(0)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
@@ -54,7 +57,6 @@ const Participants = ({ navigate, location }: any) => {
   const pageURL = Number(params.get('page'))
   const [currentPage, setCurrentPage] = useState<number>(pageURL | 1)
   const { tournamentId } = useParams()
-
   const dispatch = useDispatch()
   const isSetPageURL = useRef(false)
 
@@ -94,7 +96,7 @@ const Participants = ({ navigate, location }: any) => {
     setLoading(true)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage])
+  }, [currentPage, isOpenPlayerDialog])
 
   useEffect(() => {
     if (totalParticipants === undefined && currentPage > 1) {
@@ -105,7 +107,11 @@ const Participants = ({ navigate, location }: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalParticipants])
 
-  console.log(currentPage)
+  const handleOpenPlayerDialog = useCallback((rowData: { [key: string]: any }) => {
+    dispatch(setPlayers([]))
+    dispatch(setSelectedTeamId(rowData.team_id))
+    setIsOpenPlayerDialog(true)
+  }, [])
 
   const handleEdit = useCallback((rowData: { [key: string]: any }) => {
     alert(rowData)
@@ -113,10 +119,6 @@ const Participants = ({ navigate, location }: any) => {
 
   const handleDelete = useCallback(async (rowData: { [key: string]: any }) => {
     alert(rowData)
-  }, [])
-
-  const handleColumnSort = useCallback((idColumm: any, sortType: 'asc' | 'desc' | '') => {
-    console.log(idColumm, sortType)
   }, [])
 
   return (
@@ -128,14 +130,17 @@ const Participants = ({ navigate, location }: any) => {
       <TableReused
         columns={columns}
         rows={participants}
+        onOpenPlayerDialog={handleOpenPlayerDialog}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        handleColumnSort={handleColumnSort}
         total={totalParticipants}
         handlePageSearch={pageSearch}
         totalCurrentPage={totalCurrentPage}
         loading={loading}
       />
+      {isOpenPlayerDialog && (
+        <DialogViewPlayerList onOpen={isOpenPlayerDialog} onClose={() => setIsOpenPlayerDialog(false)} />
+      )}
     </Box>
   )
 }

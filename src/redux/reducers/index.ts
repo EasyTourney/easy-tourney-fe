@@ -1,4 +1,6 @@
 export * from './auth'
 export * from './categories'
 export * from './organizers'
+export * from './tournaments'
+export * from './players'
 export * from './participants'

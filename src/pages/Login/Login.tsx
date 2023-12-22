@@ -61,7 +61,7 @@ const Login: React.FC = () => {
         >
           {(formProps: FormikProps<any>) => (
             <Form onSubmit={formProps.handleSubmit} className={styles['login-form']}>
-              <Stack spacing={2} width={'60vw'} maxWidth={450}>
+              <Stack spacing={2} width={'60vw'} minWidth={100} maxWidth={450}>
                 {error && (
                   <Alert className={styles['login-alert-message']} severity="error">
                     Login failed! Incorrect username or password
@@ -91,7 +91,7 @@ const Login: React.FC = () => {
                   <ErrorMessage name="email" />
                 </span>
               </Stack>
-              <Stack spacing={2} width={'60vw'} maxWidth={450}>
+              <Stack spacing={2} width={'60vw'} minWidth={100} maxWidth={450}>
                 <Field
                   as={TextField}
                   className="login-textfield"
@@ -124,9 +124,11 @@ const Login: React.FC = () => {
                   <ErrorMessage name="password" />
                 </span>
               </Stack>
-              <Button className={styles['submit-login-btn']} size="large" type="submit" variant="contained">
-                Login
-              </Button>
+              <Stack spacing={2} width={'60vw'} minWidth={100} maxWidth={450}>
+                <Button className={styles['submit-login-btn']} size="large" type="submit" variant="contained">
+                  Login
+                </Button>
+              </Stack>
             </Form>
           )}
         </Formik>
