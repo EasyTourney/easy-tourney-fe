@@ -33,7 +33,7 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
       dateOfBirth: null as Dayjs | null
     },
     validationSchema: OrganizerSchema,
-    validateOnChange: true,
+    validateOnChange: false,
     onSubmit: async (values) => {
       try {
         setIsSaving(true)
@@ -55,14 +55,14 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
           }
           dispatch(updateOrganizer(updatedOrganizer))
           toast.success('An organizer is updated successfully!')
-          handleClose()
+          onClose()
         } else {
           setError(true)
           setErrorMessage(response.errorMessage['Invalid Error'])
         }
       } catch (error) {
         toast.error('An error occurred while updating organizer!')
-        handleClose()
+        onClose()
       } finally {
         setIsSaving(false)
       }
@@ -84,14 +84,10 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
     }
   }, [onOpen])
 
-  const handleClose = () => {
-    onClose()
-  }
-
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
       if (formik.isValid) {
-        handleClose()
+        onClose()
       }
     }
   }
@@ -101,7 +97,7 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
   }
 
   return (
-    <Dialog onClick={handleClickOutside} onClose={handleClose} open={onOpen}>
+    <Dialog onClick={handleClickOutside} onClose={onClose} open={onOpen}>
       <DialogTitle className={styles['dialog-title']}>Edit Organizer</DialogTitle>
       {error && (
         <Alert className={styles['alert-message']} severity="error">
@@ -192,7 +188,7 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
             />
           </Stack>
           <DialogActions className={styles['group-btn']}>
-            <Button variant="outlined" onClick={handleClose}>
+            <Button variant="outlined" onClick={onClose}>
               Cancel
             </Button>
             <Button variant="contained" type="submit" disabled={isSaving}>

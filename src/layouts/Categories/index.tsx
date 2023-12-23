@@ -160,7 +160,12 @@ const Category = ({ navigate, location }: any) => {
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          <DialogAddCategory addCategory={addCategory} />
+          <DialogAddCategory
+            addCategory={addCategory}
+            onAdd={() => {
+              setUpdate((prev) => !prev)
+            }}
+          />
         </Box>
         <DialogEditCategory
           categories={categories}

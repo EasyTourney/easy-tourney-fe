@@ -123,4 +123,10 @@ const title = Yup.string()
 
 const selectCategory = Yup.string().required('Category is required.')
 
-export { email, password, categoryName, firstName, lastName, phoneNumber, dateOfBirth, title, selectCategory }
+const teamName = Yup.string()
+  .required('Team name is required.')
+  .min(2, 'Team name must be at least 2 characters')
+  .max(30, 'Team name must be less than 30 characters')
+  .matches(CHARACTERS_REGEX, 'Team name must not contain special characters')
+
+export { email, password, categoryName, firstName, lastName, phoneNumber, dateOfBirth, title, selectCategory, teamName }

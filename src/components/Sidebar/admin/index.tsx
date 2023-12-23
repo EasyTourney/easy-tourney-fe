@@ -121,7 +121,7 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
               </ListItem>
             </Link>
           )}
-          <Link style={{ color: 'white' }} to="/tournament">
+          <Link style={{ color: 'white' }} to={{ pathname: '/tournament', search: '?page=1' }}>
             <ListItem
               button
               selected={location.pathname === '/tournament'}

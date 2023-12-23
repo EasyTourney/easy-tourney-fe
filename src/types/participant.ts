@@ -1,5 +1,5 @@
 export interface Participant {
-  id: number
+  teamId: number
   teamName: string
   playerCount: number
 }

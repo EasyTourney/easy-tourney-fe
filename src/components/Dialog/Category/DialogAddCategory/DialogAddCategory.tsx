@@ -4,20 +4,17 @@ import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
 import { CategorySchema } from '../../../../services/validator/category.validator'
 import { CategoryName } from '../../../../types/category'
-import { useDispatch, useSelector } from 'react-redux'
-import { setCategories } from '../../../../redux/reducers/categories/categories.reducer'
 import styles from './DialogAddCategory.module.css'
 interface DialogAddCategoryProps {
   addCategory: (data: CategoryName) => Promise<any>
+  onAdd: () => void
 }
 
-export function DialogAddCategory({ addCategory }: DialogAddCategoryProps) {
+export function DialogAddCategory({ addCategory, onAdd }: DialogAddCategoryProps) {
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [open, setOpen] = useState<boolean>(false)
-  const category = useSelector((state: any) => state.category.categories)
-  const dispatch = useDispatch()
   const handleClickOpen = () => {
     setError(false)
     setErrorMessage('')
@@ -47,9 +44,7 @@ export function DialogAddCategory({ addCategory }: DialogAddCategoryProps) {
         const response = await addCategory(categoryData)
 
         if (response.success) {
-          const newCategory = response.data
-          const updatedCategories = [newCategory, ...category].slice(0, 10)
-          dispatch(setCategories(updatedCategories))
+          onAdd()
           toast.success('A category is created successfully!')
           handleClose()
         } else {

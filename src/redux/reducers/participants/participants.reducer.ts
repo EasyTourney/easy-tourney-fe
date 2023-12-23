@@ -3,22 +3,36 @@ import { Participant } from '../../../types/participant'
 
 interface ParticipantState {
   participants: Participant[]
+  isLoading: boolean
+  selectedParticipant: Participant | null
 }
 
 const initialState: ParticipantState = {
-  participants: []
+  participants: [],
+  isLoading: false,
+  selectedParticipant: null
 }
 
 const participantsSlice = createSlice({
   name: 'participants',
   initialState: initialState,
   reducers: {
-    setParticipant: (state, action) => {
+    setParticipants: (state, action) => {
       state.participants = [...action.payload]
+    },
+    setSelectedParticipant: (state, action) => {
+      state.selectedParticipant = action.payload
+    },
+    updateParticipants: (state, action) => {
+      const updatedParticipant = action.payload
+      const index = state.participants.findIndex((participant) => participant.teamId === updatedParticipant.teamId)
+      if (index !== -1) {
+        state.participants[index].teamName = updatedParticipant.teamName
+      }
     }
   }
 })
 
-export const { setParticipant } = participantsSlice.actions
+export const { setParticipants, setSelectedParticipant, updateParticipants } = participantsSlice.actions
 
 export default participantsSlice.reducer

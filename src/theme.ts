@@ -25,6 +25,12 @@ const Theme = createTheme({
           },
           '&.login-textfield .MuiInputBase-input': {
             padding: '1rem 1rem'
+          },
+          '& .MuiOutlinedInput-root': {
+            padding: '0'
+          },
+          '&.login-textfield .MuiOutlinedInput-root': {
+            padding: '0 14px'
           }
         }
       }

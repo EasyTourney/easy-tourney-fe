@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './NotFound.module.css'
 import { Box } from '@mui/material'
-function Not() {
+function NotFound() {
   return (
     <Box className={styles.container}>
       <Box>
@@ -15,4 +15,4 @@ function Not() {
   )
 }
 
-export default Not
+export default NotFound

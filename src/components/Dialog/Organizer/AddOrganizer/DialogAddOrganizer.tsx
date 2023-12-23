@@ -5,23 +5,19 @@ import { toast } from 'react-toastify'
 import styles from './DialogAddOrganizer.module.css'
 import { OrganizerSchema } from '../../../../services/validator/organizer.validator'
 import { DatePicker } from '@mui/x-date-pickers'
-import { useDispatch, useSelector } from 'react-redux'
 import { Organizer } from '../../../../types/organizer'
-import { setOrganizer } from '../../../../redux/reducers/organizers/organizers.reducer'
-import { RootState } from '../../../../redux/store'
 import dayjs from 'dayjs'
 
 interface DialogAddOrganizerProps {
   addOrganizer: (data: Organizer) => Promise<any>
+  onAdd: () => void
 }
 
-const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
+const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) => {
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const organizer = useSelector((state: RootState) => state.organizer.organizers)
-  const dispatch = useDispatch()
 
   const handleClickOpen = () => {
     setError(false)
@@ -58,15 +54,7 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
         const response = await addOrganizer(organizerData)
 
         if (response.success) {
-          const newOrganizer = {
-            ...response.data,
-            totalTournament: 0,
-            fullName: response.data.firstName + ' ' + response.data.lastName,
-            dateOfBirth: response.data.dateOfBirth ? dayjs(response.data.dateOfBirth).format('DD/MM/YYYY') : '',
-            createdAt: dayjs(response.data.createdAt).format('DD/MM/YYYY hh:mm:ss A')
-          }
-          const updatedOrganizers = [newOrganizer, ...organizer].slice(0, 10)
-          dispatch(setOrganizer(updatedOrganizers))
+          onAdd()
           toast.success('An organizer is created successfully!')
           handleClose()
         } else {
@@ -96,7 +84,7 @@ const DialogAddOrganizer = ({ addOrganizer }: DialogAddOrganizerProps) => {
 
   return (
     <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
-      <Button variant="contained" onClick={handleClickOpen} className={styles['add-organizer-btn']}>
+      <Button variant="contained" onClick={handleClickOpen} style={{ backgroundColor: '#24292e' }}>
         Add new
       </Button>
       <Dialog onClick={handleClickOutside} onClose={handleClose} open={open}>

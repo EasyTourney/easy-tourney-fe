@@ -11,7 +11,7 @@ export async function getAllOrganizer(param: ParamApi) {
   return res
 }
 
-export async function apiDeleteOrganizer(id: number) {
+export async function deleteOrganizer(id: number) {
   const res = await axios({
     url: `/organizer/${id}`,
     method: 'DELETE'

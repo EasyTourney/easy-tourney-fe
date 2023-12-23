@@ -17,8 +17,8 @@ import { removeEmptyFields } from '../../utils/function'
 import { convertTournament } from '../../utils/tournament'
 import { useDispatch, useSelector } from 'react-redux'
 import { categoriesSelector } from '../../redux/reducers/categories/categories.selectors'
-import DialogAddTournament from '../../components/Dialog/Tournament/AddTournament/DialogAddTournament'
 import { setTournaments } from '../../redux/reducers/tournaments/tournaments.reducer'
+import DialogAddTournament from '../../components/Dialog/Tournament/AddTournament/DialogAddTournament'
 
 const TournamentTable = ({ navigate, location }: any) => {
   const columns = [
@@ -241,8 +241,12 @@ const TournamentTable = ({ navigate, location }: any) => {
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          <Box sx={{ mt: '1rem' }}>
-            <Button onClick={handleClickOpen} style={{ backgroundColor: '#24292e', color: 'white' }}>
+          <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
+            <Button
+              variant="contained"
+              onClick={handleClickOpen}
+              style={{ backgroundColor: '#24292e', color: 'white' }}
+            >
               Add new
             </Button>
             {open && <DialogAddTournament open={open} setOpen={setOpen} />}

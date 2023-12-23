@@ -10,7 +10,7 @@
 
 .login-wrapper {
   position: absolute;
-  width: 25vw;
+  width: 30vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -18,7 +18,7 @@
   border-radius: 2rem;
   background-color: #f2f0f0;
   min-width: 250px;
-  max-width: 600px;
+  max-width: 550px;
 }
 
 .login-form {

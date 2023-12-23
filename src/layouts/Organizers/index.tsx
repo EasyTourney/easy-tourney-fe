@@ -9,7 +9,7 @@ import { createSearchParams, useSearchParams } from 'react-router-dom'
 import useDebounce from '../../hooks/useDebounce'
 import {
   addOrganizer,
-  apiDeleteOrganizer,
+  deleteOrganizer,
   getAllOrganizer,
   getOrganizerById,
   putOrganizerById
@@ -176,7 +176,7 @@ const Organizers = ({ navigate, location }: any) => {
       allowOutsideClick: false
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = (await apiDeleteOrganizer(id)) as OrganizerAPIRes
+        const res = (await deleteOrganizer(id)) as OrganizerAPIRes
         if (res.success) {
           toast.success('An organizer is deleted successfully!')
           setUpdate((prev) => !prev)
@@ -230,7 +230,6 @@ const Organizers = ({ navigate, location }: any) => {
       keyword: value,
       sortValue: sortValue
     }
-
     getAll(param)
     setLoading(true)
   }, [debouceSearch, sortType, currentPage, update, sortValue])
@@ -249,7 +248,12 @@ const Organizers = ({ navigate, location }: any) => {
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          <DialogAddOrganizer addOrganizer={addOrganizer} />
+          <DialogAddOrganizer
+            addOrganizer={addOrganizer}
+            onAdd={() => {
+              setUpdate((prev) => !prev)
+            }}
+          />
         </Box>
         <Box sx={{ alignSelf: 'flex-end' }}>
           <Input

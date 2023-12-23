@@ -61,6 +61,12 @@ export interface ParticipantAPIRes extends AxiosResponse {
   message: string
 }
 
+export interface ParticipantByIdAPIRes extends AxiosResponse {
+  success: boolean
+  data: Participant
+  message: string
+}
+
 export interface ColumnTypes {
   id: string
   sortTable?: boolean

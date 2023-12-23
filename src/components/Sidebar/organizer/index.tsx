@@ -102,7 +102,10 @@ function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
               {!collapsed && <ListItemText className={styles['text-menu']} primary="General" />}
             </ListItem>
           </Link>
-          <Link style={{ color: 'white' }} to={`/tournament/${tournamentId}/participant`}>
+          <Link
+            style={{ color: 'white' }}
+            to={{ pathname: `/tournament/${tournamentId}/participant`, search: '?page=1' }}
+          >
             <ListItem
               button
               selected={location.pathname === `/tournament/${tournamentId}/participant`}
@@ -114,7 +117,7 @@ function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
               {!collapsed && <ListItemText className={styles['text-menu']} primary="Participant" />}
             </ListItem>
           </Link>
-          <Link style={{ color: 'white' }} to={`/tournament/${tournamentId}/schedule`}>
+          <Link style={{ color: 'white' }} to={{ pathname: `/tournament/${tournamentId}/schedule`, search: '?page=1' }}>
             <ListItem
               button
               selected={location.pathname === `/tournament/${tournamentId}/schedule`}
@@ -126,7 +129,7 @@ function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
               {!collapsed && <ListItemText className={styles['text-menu']} primary="Schedule" />}
             </ListItem>
           </Link>
-          <Link style={{ color: 'white' }} to={`/tournament/${tournamentId}/result`}>
+          <Link style={{ color: 'white' }} to={{ pathname: `/tournament/${tournamentId}/result`, search: '?page=1' }}>
             <ListItem
               button
               selected={location.pathname === `/tournament/${tournamentId}/result`}
