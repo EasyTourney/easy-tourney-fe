@@ -25,3 +25,11 @@ export async function getTournamentById(id: number) {
   })
   return res
 }
+export async function createTournament(data: any) {
+  const res = await axios({
+    url: '/tournament',
+    method: 'POST',
+    data
+  })
+  return res
+}

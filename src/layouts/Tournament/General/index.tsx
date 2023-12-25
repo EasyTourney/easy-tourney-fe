@@ -90,6 +90,7 @@ const General = () => {
   if (!tournamentData) {
     return <div>Loading...</div>
   } else {
+    const isFinishedOrDiscarded = tournamentData.status === 'FINISHED' || tournamentData.status === 'DISCARDED'
     const eventDates = convertDateFormat(tournamentData.eventDates)
     return (
       <Box className={styles['general-container']}>
@@ -169,19 +170,21 @@ const General = () => {
             </Box>
           </Box>
           {/* Discard tournament */}
-          <Box className={styles['general-wrapper-common']}>
-            <Box className={styles['general-discard-content']}>Discard this tournament:</Box>
-            <Box className={styles['general-wrapper-discard']}>
-              <Typography className={styles['general-text-warning']}>
-                Once you discard this tournament, there is no going back. Please be certain.
-              </Typography>
-              <Button className={styles['general-btn-discard']}>
-                <Typography component="h2" className={styles['general-discard-text']}>
-                  Discard
+          {!isFinishedOrDiscarded && (
+            <Box className={styles['general-wrapper-common']}>
+              <Box className={styles['general-discard-content']}>Discard this tournament:</Box>
+              <Box className={styles['general-wrapper-discard']}>
+                <Typography className={styles['general-text-warning']}>
+                  Once you discard this tournament, there is no going back. Please be certain.
                 </Typography>
-              </Button>
+                <Button className={styles['general-btn-discard']}>
+                  <Typography component="h2" className={styles['general-discard-text']}>
+                    Discard
+                  </Typography>
+                </Button>
+              </Box>
             </Box>
-          </Box>
+          )}
         </Box>
       </Box>
     )

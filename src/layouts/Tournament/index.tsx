@@ -249,7 +249,15 @@ const TournamentTable = ({ navigate, location }: any) => {
             >
               Add new
             </Button>
-            {open && <DialogAddTournament open={open} setOpen={setOpen} />}
+            {open && (
+              <DialogAddTournament
+                open={open}
+                setOpen={setOpen}
+                onAdd={() => {
+                  setUpdate((prev) => !prev)
+                }}
+              />
+            )}
           </Box>
         </Box>
         <Box sx={{ display: 'flex', alignSelf: 'flex-end', gap: '0.5rem' }}>
