@@ -6,6 +6,7 @@ import styles from './DialogAddParticipant.module.css'
 import { Participant } from '../../../../types/participant'
 import { ParticipantSchema } from '../../../../services/validator/participant.validator'
 import { useParams } from 'react-router-dom'
+import { AddCircle } from '@mui/icons-material'
 
 interface DialogAddParticipantProps {
   addParticipant: (data: Participant, tournamentId: number) => Promise<any>
@@ -74,7 +75,16 @@ const DialogAddParticipant = ({ addParticipant, onAdd }: DialogAddParticipantPro
 
   return (
     <Box sx={{ textAlign: 'center', paddingTop: '10px' }}>
-      <Button variant="contained" onClick={handleClickOpen} style={{ backgroundColor: '#24292e' }}>
+      <Button
+        className={styles['btn-add']}
+        variant="contained"
+        style={{
+          background: 'linear-gradient(195deg, rgb(102, 187, 106), rgb(67, 160, 71))',
+          color: 'white'
+        }}
+        onClick={handleClickOpen}
+        endIcon={<AddCircle />}
+      >
         Add new
       </Button>
       <Dialog
@@ -92,7 +102,7 @@ const DialogAddParticipant = ({ addParticipant, onAdd }: DialogAddParticipantPro
         <DialogContent>
           <form onSubmit={formik.handleSubmit} className={styles['participant-form']}>
             <Stack spacing={2} width={'60vw'} maxWidth={450}>
-              <Box component="label" sx={{ fontWeight: 'bold' }}>
+              <Box component="label" sx={{ fontWeight: '500' }}>
                 Team name <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField

@@ -10,6 +10,7 @@ import { deletePlayer, getAllPlayersInTeam } from '../../../../apis/axios/player
 import { PlayerAPIRes } from '../../../../types/commom'
 import { useLocation } from 'react-router-dom'
 import { convertPlayer } from '../../../../utils/player'
+import { AddCircle } from '@mui/icons-material'
 
 interface DialogProps {
   onOpen: boolean
@@ -155,7 +156,15 @@ const DialogViewPlayerList = ({ onOpen, onClose }: DialogProps) => {
     >
       <DialogTitle className={styles['dialog-title']}>Players</DialogTitle>
       <DialogContent className={styles['dialog-container']}>
-        <Button variant="contained" className={styles['add-player-btn']}>
+        <Button
+          className={styles['add-player-btn']}
+          variant="contained"
+          style={{
+            background: 'linear-gradient(195deg, rgb(102, 187, 106), rgb(67, 160, 71))',
+            color: 'white'
+          }}
+          endIcon={<AddCircle />}
+        >
           Add new
         </Button>
         <TableReused

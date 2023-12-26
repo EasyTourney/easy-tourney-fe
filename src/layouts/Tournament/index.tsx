@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
-import { ChangeEvent, useCallback, useState } from 'react'
+import { ChangeEvent, useCallback, useRef, useState } from 'react'
 import React, { useEffect } from 'react'
 import { ParamApi, TournamentAPIRes } from '../../types/commom'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { categoriesSelector } from '../../redux/reducers/categories/categories.selectors'
 import { setTournaments } from '../../redux/reducers/tournaments/tournaments.reducer'
 import DialogAddTournament from '../../components/Dialog/Tournament/AddTournament/DialogAddTournament'
+import { AddCircle } from '@mui/icons-material'
 
 const TournamentTable = ({ navigate, location }: any) => {
   const columns = [
@@ -29,7 +30,7 @@ const TournamentTable = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'Id',
-        width: '100px'
+        width: '120px'
       }
     },
     {
@@ -37,10 +38,10 @@ const TournamentTable = ({ navigate, location }: any) => {
       sortTable: true,
       label: 'Title',
       sortBy: 'title',
-      left: true,
+      left: false,
       style: {
         filed: 'name',
-        width: '1000px'
+        width: '200px'
       }
     },
     {
@@ -48,10 +49,10 @@ const TournamentTable = ({ navigate, location }: any) => {
       sortTable: true,
       label: 'Category',
       sortBy: 'category',
-      left: true,
+      left: false,
       style: {
         filed: 'name',
-        width: '1000px'
+        width: '150px'
       }
     },
     {
@@ -59,10 +60,10 @@ const TournamentTable = ({ navigate, location }: any) => {
       sortTable: false,
       label: 'Organizers',
       sortBy: 'organizers',
-      left: true,
+      left: false,
       style: {
         filed: 'name',
-        width: '1000px'
+        width: '150px'
       }
     },
     {
@@ -70,10 +71,10 @@ const TournamentTable = ({ navigate, location }: any) => {
       sortTable: false,
       label: 'Event dates',
       sortBy: 'eventDates',
-      left: true,
+      left: false,
       style: {
         filed: 'name',
-        width: '1000px'
+        width: '150px'
       }
     },
     {
@@ -81,10 +82,10 @@ const TournamentTable = ({ navigate, location }: any) => {
       sortTable: true,
       label: 'Create at',
       sortBy: 'createdAt',
-      left: true,
+      left: false,
       style: {
         filed: 'name',
-        width: '1000px'
+        width: '150px'
       }
     },
     {
@@ -95,7 +96,7 @@ const TournamentTable = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'name',
-        width: '1000px'
+        width: '150px'
       }
     }
   ]
@@ -120,6 +121,7 @@ const TournamentTable = ({ navigate, location }: any) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { listCategory } = useSelector(categoriesSelector)
   const dispatch = useDispatch()
+  const isSetPageURL = useRef(false)
 
   const getAll = useCallback(async (param: ParamApi) => {
     const getTournaments = (await getAllTournaments(param)) as TournamentAPIRes
@@ -141,6 +143,7 @@ const TournamentTable = ({ navigate, location }: any) => {
 
   const pageSearch = (value: number) => {
     setCurrentPage(() => value)
+    isSetPageURL.current = false
   }
 
   const debounceSearch = useDebounce({
@@ -149,8 +152,9 @@ const TournamentTable = ({ navigate, location }: any) => {
   })
 
   useEffect(() => {
-    if (pageURL > 0) {
-      setCurrentPage(pageURL)
+    if (pageURL > 0 && isSetPageURL.current === false) {
+      setCurrentPage(() => pageURL)
+      isSetPageURL.current = true
     }
   }, [pageURL])
 
@@ -168,10 +172,6 @@ const TournamentTable = ({ navigate, location }: any) => {
       pathname: location.pathname,
       search: createSearchParams(currentParams).toString()
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounceSearch, sortType, sortValue, currentPage, navigate, location.pathname, filterStatus, filterCategory])
-
-  useEffect(() => {
     const param: ParamApi = {
       page: currentPage,
       keyword: value,
@@ -184,12 +184,22 @@ const TournamentTable = ({ navigate, location }: any) => {
     getAll({ ...param })
     setLoading(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortType, currentPage, debounceSearch, update, filterStatus, filterCategory])
+  }, [
+    debounceSearch,
+    sortType,
+    sortValue,
+    currentPage,
+    navigate,
+    location.pathname,
+    filterStatus,
+    filterCategory,
+    update
+  ])
 
   useEffect(() => {
     if (totalTournaments === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
-    } else {
+    } else if (debounceSearch || filterStatus || filterCategory) {
       setCurrentPage(() => 1)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -238,14 +248,25 @@ const TournamentTable = ({ navigate, location }: any) => {
   }, [])
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '1rem' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '0.25rem'
+        }}
+      >
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
+          <Box sx={{ textAlign: 'center', paddingTop: '1rem' }}>
             <Button
               variant="contained"
               onClick={handleClickOpen}
-              style={{ backgroundColor: '#24292e', color: 'white' }}
+              style={{
+                background: 'linear-gradient(195deg, rgb(102, 187, 106), rgb(67, 160, 71))',
+                color: 'white'
+              }}
+              endIcon={<AddCircle />}
             >
               Add new
             </Button>

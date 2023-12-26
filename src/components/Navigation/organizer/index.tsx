@@ -4,6 +4,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Chip from '@mui/material/Chip'
 import { useLocation } from 'react-router-dom'
 import { Link as RouterLink } from 'react-router-dom'
+
 interface CustomStyledBreadcrumbProps {
   to: string | null
   component?: React.ElementType
@@ -12,14 +13,15 @@ interface CustomStyledBreadcrumbProps {
 }
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-  const backgroundColor = theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[800]
+  const backgroundColor = theme.palette.mode === 'light' ? '#fff' : theme.palette.grey[800]
   return {
     backgroundColor,
     height: theme.spacing(3),
     color: theme.palette.text.primary,
     fontWeight: theme.typography.fontWeightRegular,
     '&:hover, &:focus': {
-      backgroundColor: emphasize(backgroundColor, 0.06)
+      backgroundColor: emphasize(backgroundColor, 0.06),
+      cursor: 'pointer'
     },
     '&:active': {
       boxShadow: theme.shadows[1],
@@ -43,7 +45,7 @@ const CustomizedBreadcrumbsOrganizer: React.FC = () => {
   const pathSegments = location.pathname.split('/').filter((segment) => segment !== '' && !Number(segment))
 
   return (
-    <div role="presentation">
+    <div role="presentation" style={{ backgroundColor: '#f0f2f5ad', padding: '0.25rem' }}>
       <Breadcrumbs aria-label="breadcrumb">
         {pathSegments.map((segment, index) => {
           const isLastSegment = index === pathSegments.length - 1

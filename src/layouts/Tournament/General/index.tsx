@@ -2,7 +2,6 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import BorderColorIcon from '@mui/icons-material/BorderColor'
 import { useEffect, useState } from 'react'
 import styles from './General.module.css'
 import { checkLengthDescription, convertDateFormat } from '../../../utils/function'
@@ -10,6 +9,7 @@ import TableReused from '../../../components/Tables'
 import { useParams } from 'react-router'
 import { getTournamentById } from '../../../apis/axios/tournaments/tournament'
 import { Tournament } from '../../../types/tournament'
+import { MdEditSquare } from 'react-icons/md'
 
 const General = () => {
   const [loading, setIsLoading] = useState<boolean>(false)
@@ -101,30 +101,51 @@ const General = () => {
           {/* title */}
           <Box className={styles['general-wrapper-title']}>
             <Box className={styles['general-title-common']}>
-              Title:
-              <Box component="span" title="Edit">
-                <BorderColorIcon className={styles['general-icon-common']} />
-              </Box>
+              Title
+              <Button
+                title="Edit"
+                sx={{
+                  backgroundColor: 'white',
+                  minWidth: '1rem',
+                  padding: '0.25rem'
+                }}
+              >
+                <MdEditSquare color="green" size={20} />
+              </Button>
             </Box>
             <Box component="span">{tournamentData.title}</Box>
           </Box>
           {/* category */}
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
-              Category:
-              <Box component="span" title="Edit">
-                <BorderColorIcon className={styles['general-icon-common']} />
-              </Box>
+              Category
+              <Button
+                title="Edit"
+                sx={{
+                  backgroundColor: 'white',
+                  minWidth: '1rem',
+                  padding: '0.25rem'
+                }}
+              >
+                <MdEditSquare color="green" size={20} />
+              </Button>
             </Box>
             <Box component="span">{tournamentData.category.categoryName}</Box>
           </Box>
           {/* Description */}
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
-              Description:
-              <Box component="span" title="Edit">
-                <BorderColorIcon className={styles['general-icon-common']} />
-              </Box>
+              Description
+              <Button
+                title="Edit"
+                sx={{
+                  backgroundColor: 'white',
+                  minWidth: '1rem',
+                  padding: '0.25rem'
+                }}
+              >
+                <MdEditSquare color="green" size={20} />
+              </Button>
             </Box>
             <Box component="span" className={styles['general-description-content']} title={tournamentData.description}>
               {checkLengthDescription(tournamentData.description, 500)}
@@ -133,10 +154,17 @@ const General = () => {
           {/* Organizer */}
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
-              Organizer:
-              <Box component="span" title="Edit">
-                <BorderColorIcon className={styles['general-icon-common']} />
-              </Box>
+              Organizer
+              <Button
+                title="Edit"
+                sx={{
+                  backgroundColor: 'white',
+                  minWidth: '1rem',
+                  padding: '0.25rem'
+                }}
+              >
+                <MdEditSquare color="green" size={20} />
+              </Button>
             </Box>
             <Box className={styles['general-organizer-table']}>
               <TableReused
@@ -153,10 +181,17 @@ const General = () => {
           {/* Event dates */}
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
-              Event dates:
-              <Box component="span" title="Edit">
-                <BorderColorIcon className={styles['general-icon-common']} />
-              </Box>
+              Event dates
+              <Button
+                title="Edit"
+                sx={{
+                  backgroundColor: 'white',
+                  minWidth: '1rem',
+                  padding: '0.25rem'
+                }}
+              >
+                <MdEditSquare color="green" size={20} />
+              </Button>
             </Box>
             <Box className={styles['general-eventdates-table']}>
               <TableReused
@@ -172,7 +207,7 @@ const General = () => {
           {/* Discard tournament */}
           {!isFinishedOrDiscarded && (
             <Box className={styles['general-wrapper-common']}>
-              <Box className={styles['general-discard-content']}>Discard this tournament:</Box>
+              <Box className={styles['general-discard-content']}>Discard this tournament</Box>
               <Box className={styles['general-wrapper-discard']}>
                 <Typography className={styles['general-text-warning']}>
                   Once you discard this tournament, there is no going back. Please be certain.

@@ -7,6 +7,7 @@ import { OrganizerSchema } from '../../../../services/validator/organizer.valida
 import { DatePicker } from '@mui/x-date-pickers'
 import { Organizer } from '../../../../types/organizer'
 import dayjs from 'dayjs'
+import { AddCircle } from '@mui/icons-material'
 
 interface DialogAddOrganizerProps {
   addOrganizer: (data: Organizer) => Promise<any>
@@ -83,8 +84,16 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
   }
 
   return (
-    <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
-      <Button variant="contained" onClick={handleClickOpen} style={{ backgroundColor: '#24292e' }}>
+    <Box sx={{ textAlign: 'center', paddingTop: '1rem' }}>
+      <Button
+        variant="contained"
+        onClick={handleClickOpen}
+        style={{
+          background: 'linear-gradient(195deg, rgb(102, 187, 106), rgb(67, 160, 71))',
+          color: 'white'
+        }}
+        endIcon={<AddCircle />}
+      >
         Add new
       </Button>
       <Dialog onClick={handleClickOutside} onClose={handleClose} open={open}>
@@ -97,7 +106,7 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
         <DialogContent>
           <form onSubmit={formik.handleSubmit} className={styles['organizer-form']}>
             <Stack>
-              <Box component="label" sx={{ fontWeight: 'bold' }}>
+              <Box component="label" sx={{ fontWeight: '500' }}>
                 First name <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
@@ -112,7 +121,7 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
               />
             </Stack>
             <Stack>
-              <Box component="label" sx={{ fontWeight: 'bold' }}>
+              <Box component="label" sx={{ fontWeight: '500' }}>
                 Last name <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
@@ -127,7 +136,7 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
               />
             </Stack>
             <Stack>
-              <Box component="label" sx={{ fontWeight: 'bold' }}>
+              <Box component="label" sx={{ fontWeight: '500' }}>
                 Email <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
@@ -142,7 +151,7 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
               />
             </Stack>
             <Stack>
-              <Box component="label" sx={{ fontWeight: 'bold' }}>
+              <Box component="label" sx={{ fontWeight: '500' }}>
                 Phone number <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
@@ -157,7 +166,7 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
               />
             </Stack>
             <Stack>
-              <Box component="label" sx={{ fontWeight: 'bold' }}>
+              <Box component="label" sx={{ fontWeight: '500' }}>
                 Date of birth
               </Box>
               <DatePicker

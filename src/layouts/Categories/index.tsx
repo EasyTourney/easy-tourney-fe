@@ -157,8 +157,8 @@ const Category = ({ navigate, location }: any) => {
   }, [])
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '1rem' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
           <DialogAddCategory
             addCategory={addCategory}

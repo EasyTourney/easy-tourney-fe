@@ -2,17 +2,15 @@
   margin-top: 1rem;
 }
 .general-wrapper {
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  padding: 0 5rem 2rem 5rem;
+  padding: 1rem 5rem;
   max-width: 80%;
-  height: 85vh;
   margin: 0 auto;
-  overflow-y: auto;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
+  background-color: white;
 }
 .general-info {
-  text-transform: uppercase;
-  padding-bottom: 1rem;
+  font-weight: 500;
+  font-size: 2rem;
 }
 .general-description-content {
   max-width: 100%;
@@ -24,7 +22,7 @@
 }
 
 .general-title-common {
-  font-weight: bold;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -41,14 +39,16 @@
 }
 
 .general-btn-discard {
-  background: #ed6262;
+  background: linear-gradient(195deg, rgb(187 102 102), rgb(241 28 28));
   color: white;
   display: flex;
   align-items: center;
+  padding: 0.5rem;
 }
 
 .general-discard-text {
   text-transform: math-auto;
+  padding: 0 0.5rem;
 }
 
 .general-btn-discard:hover {
@@ -71,5 +71,5 @@
 }
 
 .general-discard-content {
-  font-weight: bold;
+  font-weight: 500;
 }

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { CategorySchema } from '../../../../services/validator/category.validator'
 import { CategoryName } from '../../../../types/category'
 import styles from './DialogAddCategory.module.css'
+import { AddCircle } from '@mui/icons-material'
 interface DialogAddCategoryProps {
   addCategory: (data: CategoryName) => Promise<any>
   onAdd: () => void
@@ -70,14 +71,18 @@ export function DialogAddCategory({ addCategory, onAdd }: DialogAddCategoryProps
   }
 
   return (
-    <Box sx={{ textAlign: 'center', paddingTop: '30px' }}>
+    <Box sx={{ textAlign: 'center', paddingTop: '1rem' }}>
       <Button
         className={styles['btn-add']}
         variant="contained"
-        style={{ backgroundColor: '#24292e' }}
+        style={{
+          background: 'linear-gradient(195deg, rgb(102, 187, 106), rgb(67, 160, 71))',
+          color: 'white'
+        }}
         onClick={handleClickOpen}
+        endIcon={<AddCircle />}
       >
-        Add New
+        Add new
       </Button>
       <Dialog open={open} onClose={handleClose} onClick={handleClickOutside}>
         <DialogTitle>Create Category</DialogTitle>
@@ -88,8 +93,8 @@ export function DialogAddCategory({ addCategory, onAdd }: DialogAddCategoryProps
         )}
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
-            <Box component="label" sx={{ fontWeight: 'bold' }}>
-              Category Name <span className={styles['required-marked']}>*</span>
+            <Box component="label" sx={{ fontWeight: '500' }}>
+              Category name <span className={styles['required-marked']}>*</span>
             </Box>
             <TextField
               fullWidth

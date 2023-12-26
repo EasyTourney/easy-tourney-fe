@@ -1,10 +1,9 @@
 .tournament-title {
-  font-weight: bold;
   text-align: center;
 }
 
 .tournament-common-title {
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .tournament-content {
@@ -41,10 +40,6 @@
 }
 .tournament-form-category {
   margin-bottom: 2rem;
-}
-.tournament-commom-title {
-  font-weight: bold;
-  padding-bottom: 0.2rem;
 }
 .tournament-error {
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;

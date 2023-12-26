@@ -107,7 +107,7 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
       <DialogContent>
         <form onSubmit={formik.handleSubmit} className={styles['organizer-form']}>
           <Stack>
-            <Box component="label" sx={{ fontWeight: 'bold' }}>
+            <Box component="label" sx={{ fontWeight: '500' }}>
               First name <span className={styles['required-marked']}>*</span>
             </Box>
             <TextField
@@ -122,7 +122,7 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
             />
           </Stack>
           <Stack>
-            <Box component="label" sx={{ fontWeight: 'bold' }}>
+            <Box component="label" sx={{ fontWeight: '500' }}>
               Last name <span className={styles['required-marked']}>*</span>
             </Box>
             <TextField
@@ -137,7 +137,7 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
             />
           </Stack>
           <Stack>
-            <Box component="label" sx={{ fontWeight: 'bold' }}>
+            <Box component="label" sx={{ fontWeight: '500' }}>
               Email <span className={styles['required-marked']}>*</span>
             </Box>
             <TextField
@@ -152,7 +152,7 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
             />
           </Stack>
           <Stack>
-            <Box component="label" sx={{ fontWeight: 'bold' }}>
+            <Box component="label" sx={{ fontWeight: '500' }}>
               Phone number <span className={styles['required-marked']}>*</span>
             </Box>
             <TextField
@@ -167,7 +167,7 @@ const DialogEditOrganizer = ({ editOrganizer, onOpen, onClose }: DialogEditOrgan
             />
           </Stack>
           <Stack>
-            <Box component="label" sx={{ fontWeight: 'bold' }}>
+            <Box component="label" sx={{ fontWeight: '500' }}>
               Date of birth
             </Box>
             <DatePicker

@@ -2,6 +2,9 @@
   border-radius: 0.5rem;
   top: 0;
   z-index: 1000;
+  box-shadow: none !important;
+  background-color: #f0f2f5ad !important;
+  backdrop-filter: saturate(200%) blur(1rem);
 }
 
 .menu-title {
@@ -27,13 +30,18 @@
   justify-content: space-between;
   display: flex;
   text-align: center;
-  background-color: #24292e;
-  border-bottom-left-radius: 10px;
-  border-top-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-radius: 10px;
+  color: rgb(52, 71, 103);
 }
 
-.title{
+.title {
   display: flex;
-  text-align: center
+  text-align: center;
+}
+
+.typography-header {
+  margin-bottom: 0 !important;
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+  font-family: 'Poppins', sans-serif !important;
 }

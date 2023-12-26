@@ -25,12 +25,6 @@ const Theme = createTheme({
           },
           '&.login-textfield .MuiInputBase-input': {
             padding: '1rem 1rem'
-          },
-          '& .MuiOutlinedInput-root': {
-            padding: '0'
-          },
-          '&.login-textfield .MuiOutlinedInput-root': {
-            padding: '0 14px'
           }
         }
       }
@@ -62,8 +56,7 @@ const Theme = createTheme({
         root: {
           '&.MuiDialogTitle-root.MuiTypography-root': {
             fontSize: '1.7rem !important',
-            textAlign: 'center',
-            fontWeight: 'bold'
+            textAlign: 'center'
           }
         }
       }
@@ -73,6 +66,15 @@ const Theme = createTheme({
         root: {
           '&.MuiDialogContent-root': {
             padding: '0 24px 20px !important'
+          }
+        }
+      }
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          '&.MuiDialogContent-root': {
+            fontFamily: 'Poppins, sans-serif !important'
           }
         }
       }

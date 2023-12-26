@@ -23,30 +23,11 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
   const [userRole, setUserRole] = useState('')
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
   useEffect(() => {
     const role = localStorage.getItem('userRole')
     setUserRole(role || '')
-
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth)
-    }
-
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
   }, [])
-
-  useEffect(() => {
-    if (windowWidth < 610) {
-      setCollapsed(true)
-    } else {
-      setCollapsed(false)
-    }
-  }, [windowWidth])
 
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed)
@@ -60,24 +41,19 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
           {!collapsed && (
             <>
               <Box className={styles['logo-container']}>
-                <Typography
-                  className={styles['customTypography']}
-                  sx={{ color: 'white', fontSize: '25px', fontWeight: '600' }}
-                >
-                  EasyTourney
-                </Typography>
-                <Box sx={{ marginLeft: '10px' }}>
+                <Box>
                   <IconButton sx={{ fontSize: 30, color: 'white' }} onClick={handleToggleCollapse}>
                     <ReorderIcon sx={{ fontSize: 30 }} />
                   </IconButton>
                 </Box>
+                <Typography className={styles['custom-typography']}>EasyTourney</Typography>
               </Box>
             </>
           )}
           {collapsed && (
             <Box>
               <IconButton onClick={handleToggleCollapse}>
-                <SortIcon sx={{ fontSize: '35px', color: 'white', marginReft: '10px' }} />
+                <SortIcon sx={{ fontSize: 30, color: 'white' }} />
               </IconButton>
             </Box>
           )}
@@ -91,14 +67,27 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
           }}
         >
           {userRole !== 'ORGANIZER' && (
-            <Link
-              style={{ color: 'white', textDecoration: 'none' }}
-              to={{ pathname: '/category', search: '?sortType=&page=1' }}
-            >
+            <Link style={{ color: 'white', textDecoration: 'none' }} to={{ pathname: '/category', search: '?page=1' }}>
               <ListItem
+                className={styles['list-item']}
                 button
                 selected={location.pathname === '/category'}
-                sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
+                sx={{
+                  '&.Mui-selected': {
+                    backgroundColor: 'white',
+                    borderRadius: '10px',
+                    '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                      color: 'black'
+                    },
+                    '&:hover': {
+                      opacity: 0.9,
+                      backgroundColor: 'white'
+                    }
+                  },
+                  '&:hover': {
+                    opacity: 0.7
+                  }
+                }}
               >
                 <ListItemIcon sx={{ color: 'white' }}>
                   <CategoryIcon />
@@ -108,11 +97,27 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
             </Link>
           )}
           {userRole !== 'ORGANIZER' && (
-            <Link style={{ color: 'white' }} to={{ pathname: '/organizer', search: '?page=1' }}>
+            <Link to={{ pathname: '/organizer', search: '?page=1' }}>
               <ListItem
+                className={styles['list-item']}
                 button
                 selected={location.pathname === '/organizer'}
-                sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
+                sx={{
+                  '&.Mui-selected': {
+                    backgroundColor: 'white',
+                    borderRadius: '10px',
+                    '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                      color: 'black'
+                    },
+                    '&:hover': {
+                      opacity: 0.9,
+                      backgroundColor: 'white'
+                    }
+                  },
+                  '&:hover': {
+                    opacity: 0.7
+                  }
+                }}
               >
                 <ListItemIcon sx={{ color: 'white' }}>
                   <GroupIcon />
@@ -121,11 +126,27 @@ function Sidebar({ onToggleCollapse }: SidebarProps) {
               </ListItem>
             </Link>
           )}
-          <Link style={{ color: 'white' }} to={{ pathname: '/tournament', search: '?page=1' }}>
+          <Link to={{ pathname: '/tournament', search: '?page=1' }}>
             <ListItem
+              className={styles['list-item']}
               button
               selected={location.pathname === '/tournament'}
-              sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: 'white',
+                  borderRadius: '10px',
+                  '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                    color: 'black'
+                  },
+                  '&:hover': {
+                    opacity: 0.9,
+                    backgroundColor: 'white'
+                  }
+                },
+                '&:hover': {
+                  opacity: 0.7
+                }
+              }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
                 <EmojiEventsIcon />

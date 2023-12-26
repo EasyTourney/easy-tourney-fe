@@ -90,7 +90,7 @@ const DialogEditParticipant = ({ editParticipant, onOpen, onClose }: DialogEditP
       <DialogContent>
         <form onSubmit={formik.handleSubmit} className={styles['participant-form']}>
           <Stack spacing={2} width={'60vw'} maxWidth={450}>
-            <Box component="label" sx={{ fontWeight: 'bold' }}>
+            <Box component="label" sx={{ fontWeight: '500' }}>
               Team name <span className={styles['required-marked']}>*</span>
             </Box>
             <TextField

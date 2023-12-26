@@ -85,8 +85,8 @@ export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCatego
       )}
       <form onSubmit={formik.handleSubmit}>
         <DialogContent>
-          <Box component="label" sx={{ fontWeight: 'bold' }}>
-            Category Name <span className={styles['required-marked']}>*</span>
+          <Box component="label" sx={{ fontWeight: '500' }}>
+            Category name <span className={styles['required-marked']}>*</span>
           </Box>
           <TextField
             fullWidth

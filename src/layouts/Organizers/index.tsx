@@ -32,7 +32,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'Id',
-        width: '20px'
+        width: '120px'
       }
     },
     {
@@ -43,7 +43,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'fullName',
-        width: '150px'
+        width: '250px'
       }
     },
     {
@@ -54,7 +54,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'email',
-        width: '150px'
+        width: '250px'
       }
     },
     {
@@ -65,7 +65,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'phoneNumber',
-        width: '150px'
+        width: '250px'
       }
     },
     {
@@ -76,7 +76,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'dateOfBirth',
-        width: '140px'
+        width: '240px'
       }
     },
     {
@@ -87,7 +87,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'totalTournament',
-        width: '50px'
+        width: '150px'
       }
     },
     {
@@ -98,7 +98,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'createdAt',
-        width: '140px'
+        width: '240px'
       }
     }
   ]
@@ -245,8 +245,8 @@ const Organizers = ({ navigate, location }: any) => {
   }, [totalOrganizer])
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '1rem' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
           <DialogAddOrganizer
             addOrganizer={addOrganizer}

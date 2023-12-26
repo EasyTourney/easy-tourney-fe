@@ -1,17 +1,17 @@
 .sidebar {
-  position: relative;
-  width: 100%;
-  transition: width 0.3s ease;
-  height: 100vh;
-  background: #24292e;
+  position: fixed;
+  width: 250px;
+  transition: all 0.5s ease;
+  height: calc(100vh - 2rem);
+  background: linear-gradient(195deg, rgb(66, 66, 74), rgb(25, 25, 25));
   overflow: hidden;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-radius: 10px;
   z-index: 1000;
+  margin: 1rem;
 }
 
 .sidebar-collapsed {
-  width: 60px;
+  width: 88px;
 }
 
 .sidebar-header {
@@ -30,8 +30,8 @@
 
 .logo-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  margin: 0 1rem;
 }
 
 .hr-line {
@@ -39,69 +39,19 @@
   color: white;
 }
 
-@media (max-width: 430px) {
-  .sidebar {
-    width: 250px;
-  }
-
-  .sidebar-collapsed {
-    width: 60px;
-  }
+.custom-typography {
+  font-size: 1.5rem !important;
+  color: white;
+  font-family: 'Varela Round', sans-serif !important;
 }
 
-@media (min-width: 2000px) {
-  .logo-container {
-    margin-left: 30px;
-  }
-}
-@media (min-width: 2300px) {
-  .logo-container {
-    margin-left: 50px;
-  }
-}
-@media (min-width: 2500px) {
-  .logo-container {
-    margin-left: 70px;
-  }
-}
-@media screen and (min-width: 1200px) and (max-width: 1284px) {
-  .sidebar {
-    width: 225px;
-  }
-  .customTypography {
-    padding-left: 0px !important;
-  }
-  .sidebar-collapsed {
-    width: 60px;
-  }
-}
-@media screen and (min-width: 1284px) and (max-width: 1320px) {
-  .logo-container {
-    margin-left: 0px;
-  }
-
-  .sidebar {
-    width: 245px;
-  }
-
-  .sidebar-collapsed {
-    width: 60px;
-  }
+.list-item {
+  margin: 0.25rem 1rem !important;
+  padding: 0.75rem 1rem !important;
+  width: auto !important;
 }
 
-@media screen and (min-width: 440px) and (max-width: 750px) {
-  .logo-container {
-    margin-left: 0px;
-  }
-
-  .sidebar {
-    width: 250px;
-  }
-
-  .sidebar-collapsed {
-    width: 60px;
-  }
-}
-.customTypography {
-  padding-left: 30px;
+.text-menu {
+  color: white;
+  margin: 0 !important;
 }

@@ -161,7 +161,7 @@ const Participants = ({ navigate, location }: any) => {
   }, [])
 
   return (
-    <Box>
+    <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '1rem' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
           <DialogAddParticipant

@@ -12,14 +12,14 @@ import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
 import { TiArrowSortedDown } from 'react-icons/ti'
 import { memo, useState, useEffect } from 'react'
-import { LiaEdit } from 'react-icons/lia'
-import { RiDeleteBin2Line } from 'react-icons/ri'
 import Paginations from '../Paginations'
 import { ColumnTypes } from '../../types/commom'
 import { useSearchParams } from 'react-router-dom'
 import noItem from '../../assets/noItem.png'
-import { colorChip, isMultipleLine, isStatus } from '../../utils/function'
+import { isMultipleLine, isStatus } from '../../utils/function'
 import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp'
+import { AutoMode, Cached, CheckCircleOutline, HelpOutline, HighlightOff } from '@mui/icons-material'
+import { MdDeleteSweep, MdEditSquare } from 'react-icons/md'
 
 interface ReusedTableProps {
   columns: ColumnTypes[]
@@ -133,7 +133,7 @@ const TableReused = ({
         <Table size="small">
           <TableHead
             sx={{
-              background: '#24292e',
+              background: '#0070C1',
               '& .MuiTableHead-root': {
                 padding: '8px 16px'
               }
@@ -154,7 +154,7 @@ const TableReused = ({
                   sx={{
                     textAlign: `${column.left ? 'left' : 'center'}`,
                     color: 'white',
-                    fontWeight: 'bold',
+                    fontWeight: '500',
                     textTransform: 'uppercase',
                     borderRight: ' 1px solid rgba(224, 224, 224, 1)',
                     borderCollapse: 'collapse'
@@ -186,7 +186,7 @@ const TableReused = ({
                   sx={{
                     textAlign: 'center',
                     color: 'white',
-                    fontWeight: 'bold',
+                    fontWeight: '500',
                     textTransform: 'uppercase',
                     width: '100px'
                   }}
@@ -238,14 +238,62 @@ const TableReused = ({
                       {Object.values(column).indexOf('Id') > -1 ? (
                         (Number(myPage) > 1 ? Number(myPage) - 1 : 0) * totalIndex + rowIndex + 1
                       ) : isStatus(row[column.id]) ? (
-                        <Chip
-                          label={row[column.id].replace('_', ' ')}
-                          sx={{ width: '100%', fontWeight: 600, backgroundColor: colorChip(row[column.id]) }}
-                        ></Chip>
+                        row[column.id] === 'NEED_INFORMATION' ? (
+                          <Chip
+                            sx={{ width: '100%', justifyContent: 'flex-start' }}
+                            color="warning"
+                            variant="outlined"
+                            icon={<HelpOutline color="warning" />}
+                            label={row[column.id].replace('_', ' ')}
+                          />
+                        ) : row[column.id] === 'READY' ? (
+                          <Chip
+                            sx={{ width: '100%', justifyContent: 'flex-start' }}
+                            color="primary"
+                            variant="outlined"
+                            icon={<AutoMode color="primary" />}
+                            label={row[column.id].replace('_', ' ')}
+                          />
+                        ) : row[column.id] === 'IN_PROGRESS' ? (
+                          <Chip
+                            sx={{ width: '100%', justifyContent: 'flex-start' }}
+                            color="info"
+                            variant="outlined"
+                            icon={<Cached color="info" />}
+                            label={row[column.id].replace('_', ' ')}
+                          />
+                        ) : row[column.id] === 'FINISHED' ? (
+                          <Chip
+                            sx={{ width: '100%', justifyContent: 'flex-start' }}
+                            color="success"
+                            variant="outlined"
+                            icon={<CheckCircleOutline color="success" />}
+                            label={row[column.id].replace('_', ' ')}
+                          />
+                        ) : row[column.id] === 'DISCARDED' ? (
+                          <Chip
+                            sx={{ width: '100%', justifyContent: 'flex-start' }}
+                            color="error"
+                            variant="outlined"
+                            icon={<HighlightOff color="error" />}
+                            label={row[column.id].replace('_', ' ')}
+                          />
+                        ) : (
+                          <></>
+                        )
                       ) : isMultipleLine(row[column.id]) ? (
-                        <ul style={{ maxHeight: '300px', overflow: 'auto' }}>
+                        <ul style={{ maxHeight: '100px', overflow: 'auto' }}>
                           {row[column.id].split(';').map((element: string, index: number) => (
-                            <li key={index}>{element}</li>
+                            <Tooltip key={index} title={`${row[column.id]}`}>
+                              <Chip
+                                sx={{
+                                  backgroundColor: 'transparent',
+                                  whiteSpace: 'nowrap',
+                                  width: '100%'
+                                }}
+                                label={`${element}`}
+                              />
+                            </Tooltip>
                           ))}
                         </ul>
                       ) : column.id !== 'playerCount' ? (
@@ -282,19 +330,48 @@ const TableReused = ({
                       scope="row"
                       component="td"
                       sx={{
-                        borderRight: ' 1px solid rgba(224, 224, 224, 1)',
+                        borderRight: '1px solid rgba(224, 224, 224, 1)',
                         borderCollapse: 'collapse'
                       }}
                     >
-                      <Box sx={{ display: 'flex', alignItems: 'center ', justifyContent: 'center' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center ',
+                          justifyContent: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
                         {onEdit && (
-                          <Button title="Edit" onClick={() => onEdit(row)}>
-                            <LiaEdit color="green" size={20} />
+                          <Button
+                            title="Edit"
+                            onClick={() => onEdit(row)}
+                            sx={{
+                              background: 'linear-gradient(195deg, rgb(102, 187, 106), rgb(0 107 5))',
+                              minWidth: '3rem',
+                              '&:hover': {
+                                opacity: 0.8,
+                                backgroundColor: 'green'
+                              }
+                            }}
+                          >
+                            <MdEditSquare color="white" size={20} />
                           </Button>
                         )}
                         {onDelete && (
-                          <Button title="Delete" onClick={() => onDelete(row)}>
-                            <RiDeleteBin2Line color="red" size={20} />
+                          <Button
+                            title="Delete"
+                            onClick={() => onDelete(row)}
+                            sx={{
+                              background: 'linear-gradient(195deg, rgb(187 102 102), rgb(241 28 28))',
+                              minWidth: '3rem',
+                              '&:hover': {
+                                opacity: 0.8,
+                                backgroundColor: 'red'
+                              }
+                            }}
+                          >
+                            <MdDeleteSweep color="white" size={20} />
                           </Button>
                         )}
                       </Box>

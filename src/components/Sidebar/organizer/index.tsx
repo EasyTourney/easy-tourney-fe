@@ -24,30 +24,10 @@ type SidebarProps = {
 function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [tournamentId, setTournamentId] = useState('')
   useEffect(() => {
     setTournamentId(location.pathname.split('/')[2])
   }, [])
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth)
-    }
-
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (windowWidth < 610) {
-      setCollapsed(true)
-    } else {
-      setCollapsed(false)
-    }
-  }, [windowWidth])
 
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed)
@@ -60,24 +40,19 @@ function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
           {!collapsed && (
             <>
               <Box className={styles['logo-container']}>
-                <Typography
-                  className={styles['customTypography']}
-                  sx={{ color: 'white', fontSize: '25px', fontWeight: '600' }}
-                >
-                  EasyTourney
-                </Typography>
-                <Box sx={{ marginLeft: '10px' }}>
+                <Box>
                   <IconButton sx={{ fontSize: 30, color: 'white' }} onClick={handleToggleCollapse}>
                     <ReorderIcon sx={{ fontSize: 30 }} />
                   </IconButton>
                 </Box>
+                <Typography className={styles['custom-typography']}>EasyTourney</Typography>
               </Box>
             </>
           )}
           {collapsed && (
             <Box>
               <IconButton onClick={handleToggleCollapse}>
-                <SortIcon sx={{ fontSize: '35px', color: 'white', marginReft: '10px' }} />
+                <SortIcon sx={{ fontSize: 30, color: 'white' }} />
               </IconButton>
             </Box>
           )}
@@ -92,9 +67,25 @@ function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
         >
           <Link style={{ color: 'white', textDecoration: 'none' }} to={`/tournament/${tournamentId}/general`}>
             <ListItem
+              className={styles['list-item']}
               button
               selected={location.pathname === `/tournament/${tournamentId}/general`}
-              sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: 'white',
+                  borderRadius: '10px',
+                  '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                    color: 'black'
+                  },
+                  '&:hover': {
+                    opacity: 0.9,
+                    backgroundColor: 'white'
+                  }
+                },
+                '&:hover': {
+                  opacity: 0.7
+                }
+              }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
                 <WysiwygIcon />
@@ -107,9 +98,25 @@ function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
             to={{ pathname: `/tournament/${tournamentId}/participant`, search: '?page=1' }}
           >
             <ListItem
+              className={styles['list-item']}
               button
               selected={location.pathname === `/tournament/${tournamentId}/participant`}
-              sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: 'white',
+                  borderRadius: '10px',
+                  '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                    color: 'black'
+                  },
+                  '&:hover': {
+                    opacity: 0.9,
+                    backgroundColor: 'white'
+                  }
+                },
+                '&:hover': {
+                  opacity: 0.7
+                }
+              }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
                 <GroupsIcon />
@@ -119,9 +126,25 @@ function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
           </Link>
           <Link style={{ color: 'white' }} to={{ pathname: `/tournament/${tournamentId}/schedule`, search: '?page=1' }}>
             <ListItem
+              className={styles['list-item']}
               button
               selected={location.pathname === `/tournament/${tournamentId}/schedule`}
-              sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: 'white',
+                  borderRadius: '10px',
+                  '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                    color: 'black'
+                  },
+                  '&:hover': {
+                    opacity: 0.9,
+                    backgroundColor: 'white'
+                  }
+                },
+                '&:hover': {
+                  opacity: 0.7
+                }
+              }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
                 <CalendarMonthIcon />
@@ -131,9 +154,25 @@ function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
           </Link>
           <Link style={{ color: 'white' }} to={{ pathname: `/tournament/${tournamentId}/result`, search: '?page=1' }}>
             <ListItem
+              className={styles['list-item']}
               button
               selected={location.pathname === `/tournament/${tournamentId}/result`}
-              sx={{ '&.Mui-selected': { backgroundColor: 'gray', borderRadius: '10px' } }}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: 'white',
+                  borderRadius: '10px',
+                  '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                    color: 'black'
+                  },
+                  '&:hover': {
+                    opacity: 0.9,
+                    backgroundColor: 'white'
+                  }
+                },
+                '&:hover': {
+                  opacity: 0.7
+                }
+              }}
             >
               <ListItemIcon sx={{ color: 'white' }}>
                 <ContentPasteIcon />
