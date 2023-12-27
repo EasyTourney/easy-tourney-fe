@@ -72,6 +72,10 @@ export const router = createBrowserRouter([
       {
         path: '/tournament/:tournamentId/result',
         element: <ProtectedRoute element={<Result />} allowedRoles={['ADMIN', 'ORGANIZER']} />
+      },
+      {
+        path: '/tournament/schedule',
+        element: <ProtectedRoute element={<Schedule />} allowedRoles={['ADMIN', 'ORGANIZER']} />
       }
     ]
   },

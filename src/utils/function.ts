@@ -112,3 +112,10 @@ export const convertDateFormat = (dates: EventDate[]): EventDate[] => {
     return { ...eventDate, date: `${formattedDate} - from ${formattedStartTime} to ${formattedEndTime}` }
   })
 }
+export const generatePlaceholderCard = (column: any) => {
+  return {
+    id: `${column.eventDateId}-placeholder-card`,
+    eventDateId: column.eventDateId,
+    FE_PlaceholderCard: true
+  }
+}

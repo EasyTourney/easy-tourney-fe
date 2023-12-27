@@ -1,0 +1,36 @@
+import Box from '@mui/material/Box'
+import React, { memo } from 'react'
+import ScheduleCard from './ScheduleCard/ScheduleCard'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { MatchDataType } from '../../../../../../types/schedule.type'
+interface ListScheduleCardProps {
+  cards: MatchDataType[]
+}
+const ListScheduleCard = ({ cards }: ListScheduleCardProps) => {
+  return (
+    <SortableContext items={cards?.map((c: MatchDataType) => c.id)} strategy={verticalListSortingStrategy}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+          p: '0 5px',
+          m: '0 5px',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          maxHeight: (theme) => `calc(100vh - 64px - 50px - ${theme.spacing(5)} - 90px - 56px)`,
+          '&::-webkit-scrollbar-thumb': {
+            background: '#ced0da'
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            background: '#bfc2cf'
+          }
+        }}
+      >
+        {cards?.map((card: MatchDataType) => <ScheduleCard key={card.id} card={card} />)}
+      </Box>
+    </SortableContext>
+  )
+}
+
+export default memo(ListScheduleCard)
