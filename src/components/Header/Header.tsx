@@ -52,7 +52,12 @@ const Header: React.FC = () => {
       <AppBar position="static" className={styles['main-app-header']}>
         <Toolbar className={styles['toolbar']}>
           <Box className={styles['title']}>
-            <Typography variant="h5" gutterBottom className={styles['typography-header']}>
+            <Typography
+              variant="h5"
+              gutterBottom
+              className={styles['typography-header']}
+              style={{ marginTop: pathSegments.length > 1 ? '1.5rem' : '0' }}
+            >
               {pathSegments.length > 0 ? capitalizeFirstLetter(pathSegments[pathSegments.length - 1]) : 'Home'}
             </Typography>
           </Box>

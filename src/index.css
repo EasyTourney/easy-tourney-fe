@@ -20,7 +20,6 @@ body {
   background-color: #f0f2f5 !important;
 }
 
-
 .MuiDataGrid-root .MuiDataGrid-columnHeader,
 .MuiDataGrid-root .MuiDataGrid-cell {
   outline: none !important;
@@ -38,7 +37,10 @@ body {
 }
 .rmdp-top-class {
   height: 300px;
-  
+}
+
+* {
+  font-family: 'Poppins', sans-serif !important;
 }
 
 * {

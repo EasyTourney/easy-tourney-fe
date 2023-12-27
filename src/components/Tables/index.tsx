@@ -83,9 +83,9 @@ const TableReused = ({
     const sortType = sortStates[id]
 
     if (sortType === 'asc') {
-      return <TiArrowSortedDown size={15} />
-    } else if (sortType === 'desc') {
       return <TiArrowSortedUp size={15} />
+    } else if (sortType === 'desc') {
+      return <TiArrowSortedDown size={15} />
     } else {
       return <TiArrowUnsorted size={15} />
     }
@@ -177,7 +177,7 @@ const TableReused = ({
                     }}
                   >
                     <Box>{column.label}</Box>
-                    <Box>{column.sortTable && getColumnSortIcon(column.id)}</Box>
+                    <Box sx={{ display: 'flex' }}>{column.sortTable && getColumnSortIcon(column.id)}</Box>
                   </Box>
                 </TableCell>
               ))}
@@ -257,9 +257,9 @@ const TableReused = ({
                         ) : row[column.id] === 'IN_PROGRESS' ? (
                           <Chip
                             sx={{ width: '100%', justifyContent: 'flex-start' }}
-                            color="info"
+                            color="secondary"
                             variant="outlined"
-                            icon={<Cached color="info" />}
+                            icon={<Cached color="secondary" />}
                             label={row[column.id].replace('_', ' ')}
                           />
                         ) : row[column.id] === 'FINISHED' ? (
@@ -282,19 +282,21 @@ const TableReused = ({
                           <></>
                         )
                       ) : isMultipleLine(row[column.id]) ? (
-                        <ul style={{ maxHeight: '100px', overflow: 'auto' }}>
-                          {row[column.id].split(';').map((element: string, index: number) => (
-                            <Tooltip key={index} title={`${row[column.id]}`}>
-                              <Chip
-                                sx={{
-                                  backgroundColor: 'transparent',
-                                  whiteSpace: 'nowrap',
-                                  width: '100%'
-                                }}
-                                label={`${element}`}
-                              />
-                            </Tooltip>
-                          ))}
+                        <ul>
+                          <Tooltip title={`${row[column.id]}`} placement="right">
+                            <Box
+                              sx={{
+                                display: '-webkit-box',
+                                '-webkit-box-orient': 'vertical',
+                                '-webkit-line-clamp': '3',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                fontSize: '13px'
+                              }}
+                            >
+                              {row[column.id]}
+                            </Box>
+                          </Tooltip>
                         </ul>
                       ) : column.id !== 'playerCount' ? (
                         <Tooltip

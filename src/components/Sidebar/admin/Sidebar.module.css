@@ -6,7 +6,7 @@
   background: linear-gradient(195deg, rgb(66, 66, 74), rgb(25, 25, 25));
   overflow: hidden;
   border-radius: 10px;
-  z-index: 1000;
+  z-index: 1001;
   margin: 1rem;
 }
 

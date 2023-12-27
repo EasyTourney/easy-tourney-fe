@@ -90,7 +90,7 @@ const TournamentTable = ({ navigate, location }: any) => {
     },
     {
       id: 'status',
-      sortTable: true,
+      sortTable: false,
       label: 'Status',
       sortBy: 'status',
       left: false,
@@ -254,7 +254,8 @@ const TournamentTable = ({ navigate, location }: any) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginBottom: '0.25rem'
+          marginBottom: '0.25rem',
+          flexWrap: 'wrap'
         }}
       >
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
@@ -282,7 +283,7 @@ const TournamentTable = ({ navigate, location }: any) => {
             )}
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', alignSelf: 'flex-end', gap: '0.5rem' }}>
+        <Box sx={{ display: 'flex', alignSelf: 'flex-end', gap: '0.5rem', flexWrap: 'wrap' }}>
           <TextField
             id="filter"
             label="Category"
