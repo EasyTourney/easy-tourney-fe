@@ -61,12 +61,12 @@ const Login: React.FC = () => {
         >
           {(formProps: FormikProps<any>) => (
             <Form onSubmit={formProps.handleSubmit} className={styles['login-form']}>
+              {error && (
+                <Alert className={styles['login-alert-message']} severity="error">
+                  Login failed! Incorrect username or password
+                </Alert>
+              )}
               <Stack spacing={2} width={'60vw'} minWidth={100} maxWidth={450}>
-                {error && (
-                  <Alert className={styles['login-alert-message']} severity="error">
-                    Login failed! Incorrect username or password
-                  </Alert>
-                )}
                 <Field
                   as={TextField}
                   className="login-textfield"

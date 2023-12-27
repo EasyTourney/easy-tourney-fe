@@ -13,7 +13,7 @@ import { TiArrowSortedUp } from 'react-icons/ti'
 import { TiArrowSortedDown } from 'react-icons/ti'
 import { memo, useState, useEffect } from 'react'
 import Paginations from '../Paginations'
-import { ColumnTypes } from '../../types/commom'
+import { ColumnTypes } from '../../types/common'
 import { useSearchParams } from 'react-router-dom'
 import noItem from '../../assets/noItem.png'
 import { isMultipleLine, isStatus } from '../../utils/function'
@@ -297,13 +297,23 @@ const TableReused = ({
                           ))}
                         </ul>
                       ) : column.id !== 'playerCount' ? (
-                        <Tooltip title={`${row[column.id]}`}>
+                        <Tooltip
+                          title={`${
+                            row[column.id] && typeof row[column.id] === 'string'
+                              ? row[column.id].replaceAll(' ', '\u00A0')
+                              : row[column.id]
+                          }`}
+                        >
                           <Chip
                             sx={{
                               backgroundColor: 'transparent',
                               whiteSpace: 'nowrap'
                             }}
-                            label={`${row[column.id]}`}
+                            label={`${
+                              row[column.id] && typeof row[column.id] === 'string'
+                                ? row[column.id].replaceAll(' ', '\u00A0')
+                                : row[column.id]
+                            }`}
                           />
                         </Tooltip>
                       ) : (

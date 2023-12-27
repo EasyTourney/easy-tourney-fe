@@ -1,3 +1,6 @@
+.category-form {
+  margin: 1rem 0 0 0;
+}
 .alert-message {
   font-weight: 700 !important;
   width: 100%;
@@ -5,4 +8,9 @@
 }
 .required-marked {
   color: red;
+}
+.group-btn {
+  width: 100%;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }

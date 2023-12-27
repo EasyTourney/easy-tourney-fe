@@ -4,9 +4,9 @@ import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { APIRes, ParamApi } from '../../types/commom'
+import { APIRes, ParamApi } from '../../types/common'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
-import { apiDeleteCategory, getAllCategories, addCategory } from '../../apis/axios/categories/category'
+import { apiDeleteCategory, getAllCategories, addCategory, apiEditCategory } from '../../apis/axios/categories/category'
 import useDebounce from '../../hooks/useDebounce'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
@@ -168,6 +168,7 @@ const Category = ({ navigate, location }: any) => {
           />
         </Box>
         <DialogEditCategory
+          editCategory={apiEditCategory}
           categories={categories}
           onOpen={isEditDialogOpen}
           onClose={() => setIsEditDialogOpen(false)}

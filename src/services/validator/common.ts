@@ -1,8 +1,6 @@
 import * as Yup from 'yup'
 import {
   EMAIL_REGEX,
-  SPACE_END_REGEX,
-  SPACE_START_REGEX,
   CHARACTERS_REGEX,
   PHONE_NUMBER_REGEX,
   CHARACTERS_ONLY_REGEX,
@@ -12,6 +10,7 @@ import {
 import dayjs from 'dayjs'
 
 const email = Yup.string()
+  .trim()
   .required('Email is required.')
   .max(50, 'Email cannot be more than 50 characters')
   .matches(EMAIL_REGEX, 'Please enter a valid email address.')
@@ -19,37 +18,15 @@ const email = Yup.string()
 const password = Yup.string().trim().required('Password is required.').min(6, 'Password must be at least 6 characters')
 
 const categoryName = Yup.string()
+  .trim()
   .required('Category name is required.')
-  .test('no-leading-whitespace', 'Category name must not contain leading whitespace', function (value) {
-    if (value && SPACE_START_REGEX.test(value)) {
-      return false
-    }
-    return true
-  })
-  .test('no-trailing-whitespace', 'Category name must not contain trailing whitespace', function (value) {
-    if (value && SPACE_END_REGEX.test(value)) {
-      return false
-    }
-    return true
-  })
   .min(2, 'Category name must be at least 2 characters')
   .max(30, 'Category name must be less than 30 characters')
   .matches(CHARACTERS_REGEX, 'Category name must not contain special characters')
 
 const firstName = Yup.string()
+  .trim()
   .required('First name is required')
-  .test('no-leading-whitespace', 'First name must not contain leading whitespace', function (value) {
-    if (value && SPACE_START_REGEX.test(value)) {
-      return false
-    }
-    return true
-  })
-  .test('no-trailing-whitespace', 'First name must not contain trailing whitespace', function (value) {
-    if (value && SPACE_END_REGEX.test(value)) {
-      return false
-    }
-    return true
-  })
   .test('no-number', 'First name must not contain numbers', function (value) {
     if (value && /\d/.test(value)) {
       return false
@@ -60,19 +37,8 @@ const firstName = Yup.string()
   .max(30, 'First name cannot be more than 30 characters')
 
 const lastName = Yup.string()
+  .trim()
   .required('Last name is required')
-  .test('no-leading-whitespace', 'Last name must not contain leading whitespace', function (value) {
-    if (value && SPACE_START_REGEX.test(value)) {
-      return false
-    }
-    return true
-  })
-  .test('no-trailing-whitespace', 'Last name must not contain trailing whitespace', function (value) {
-    if (value && SPACE_END_REGEX.test(value)) {
-      return false
-    }
-    return true
-  })
   .test('no-number', 'Last name must not contain numbers', function (value) {
     if (value && /\d/.test(value)) {
       return false
@@ -83,6 +49,7 @@ const lastName = Yup.string()
   .max(30, 'Last name cannot be more than 30 characters')
 
 const phoneNumber = Yup.string()
+  .trim()
   .required('Phone number is required')
   .matches(PHONE_NUMBER_REGEX, 'Phone number must not contain special characters')
   .matches(PHONE_NUMBER_VALID_REGEX, 'Phone number must be valid')
@@ -104,19 +71,8 @@ const dateOfBirth = Yup.date()
   .nullable()
 
 const title = Yup.string()
+  .trim()
   .required('Title is required')
-  .test('no-leading-whitespace', 'Title must not contain leading whitespace', function (value) {
-    if (value && SPACE_START_REGEX.test(value)) {
-      return false
-    }
-    return true
-  })
-  .test('no-trailing-whitespace', 'Title must not contain trailing whitespace', function (value) {
-    if (value && SPACE_END_REGEX.test(value)) {
-      return false
-    }
-    return true
-  })
   .min(2, 'Title must be at least 2 characters')
   .max(30, 'Title must be less than 30 characters')
   .matches(CHARACTERS_REGEX, 'Title must not contain special characters')
@@ -124,9 +80,43 @@ const title = Yup.string()
 const selectCategory = Yup.string().required('Category is required.')
 
 const teamName = Yup.string()
+  .trim()
   .required('Team name is required.')
-  .min(2, 'Team name must be at least 2 characters')
   .max(30, 'Team name must be less than 30 characters')
   .matches(CHARACTERS_REGEX, 'Team name must not contain special characters')
 
-export { email, password, categoryName, firstName, lastName, phoneNumber, dateOfBirth, title, selectCategory, teamName }
+const playerName = Yup.string()
+  .trim()
+  .required('Player name is required')
+  .max(30, 'Player name cannot be more than 30 characters')
+  .test('no-number', 'Player name must not contain numbers', function (value) {
+    if (value && /\d/.test(value)) {
+      return false
+    }
+    return true
+  })
+  .matches(CHARACTERS_REGEX, 'Player name must not contain special characters')
+
+const phone = Yup.string()
+  .trim()
+  .required('Phone number is required')
+  .matches(PHONE_NUMBER_REGEX, 'Phone number must not contain special characters')
+  .matches(PHONE_NUMBER_VALID_REGEX, 'Phone number must be valid')
+  .matches(PHONE_NUMBER_START_REGEX, 'Phone number must start with 0')
+  .min(10, 'Phone number cannot be less than 10 digits')
+  .max(11, 'Phone number cannot be more than 11 digits')
+
+export {
+  email,
+  password,
+  categoryName,
+  firstName,
+  lastName,
+  phoneNumber,
+  dateOfBirth,
+  title,
+  selectCategory,
+  teamName,
+  playerName,
+  phone
+}

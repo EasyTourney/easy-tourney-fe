@@ -19,15 +19,16 @@ import type { DateObject } from 'react-multi-date-picker'
 import CustomMultipleInput from '../CustomMultipleInput/CustomMultipleInput'
 import styles from './DialogAddTournament.module.css'
 import moment from 'moment'
-import { createTournament } from '../../../../apis/axios/tournaments/tournament'
+import { Tournament } from '../../../../types/tournament'
 
 interface TournamentProps {
+  addTournament: (data: Tournament) => Promise<any>
   open: boolean
   setOpen: (value: boolean) => void
   onAdd: () => void
 }
 
-const DialogAddTournament = ({ open, setOpen, onAdd }: TournamentProps) => {
+const DialogAddTournament = ({ addTournament, open, setOpen, onAdd }: TournamentProps) => {
   const [dates, setDates] = useState<DateObject[] | []>([])
   const [errorCategory, setErrorCategory] = useState<boolean>(false)
   const [errorDatePicker, setErrorDatePicker] = useState<boolean>(false)
@@ -48,11 +49,12 @@ const DialogAddTournament = ({ open, setOpen, onAdd }: TournamentProps) => {
         if (dates?.length === 0) {
           setErrorDatePicker(true)
         } else {
-          const date = dates?.map((day) => day.format('YYYY-MM-DD'))
+          const eventDates = dates?.map((day) => day.format('YYYY-MM-DD'))
           const getCategoryId = listCategory?.find(
             (a: CategoryName) => a.categoryName === value.selectCategory && a.categoryId
           )
-          const payload = { ...value, date, categoryId: getCategoryId?.categoryId }
+          value.title = value.title.trim()
+          const payload = { ...value, eventDates, categoryId: getCategoryId?.categoryId }
           await callApi(payload)
         }
       } catch (error) {
@@ -82,10 +84,14 @@ const DialogAddTournament = ({ open, setOpen, onAdd }: TournamentProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const callApi = async (payload: any) => {
     try {
-      await createTournament(payload)
-      onAdd()
-      toast.success('Tournament is created successfully!')
-      handleClose()
+      const response = await addTournament(payload)
+      if (response.success) {
+        onAdd()
+        toast.success('Tournament is created successfully!')
+        handleClose()
+      } else {
+        toast.error('An error occurred while creating the catalog!')
+      }
     } catch (error) {
       toast.error('An error occurred while creating the catalog!')
     }

@@ -17,12 +17,28 @@ interface DialogAddOrganizerProps {
 const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) => {
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
-  const [error, setError] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [error, setError] = useState({
+    firstNameError: '',
+    lastNameError: '',
+    emailError: '',
+    phoneNumberError: '',
+    dateOfBirthError: '',
+    invalidError: ''
+  })
+
+  const resetError = () => {
+    setError({
+      firstNameError: '',
+      lastNameError: '',
+      emailError: '',
+      phoneNumberError: '',
+      dateOfBirthError: '',
+      invalidError: ''
+    })
+  }
 
   const handleClickOpen = () => {
-    setError(false)
-    setErrorMessage('')
+    resetError()
     formik.resetForm()
     setOpen(true)
   }
@@ -46,10 +62,10 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
         setIsSaving(true)
         const organizerData = {
           id: 0,
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          phoneNumber: values.phoneNumber,
+          firstName: values.firstName.trim(),
+          lastName: values.lastName.trim(),
+          email: values.email.trim(),
+          phoneNumber: values.phoneNumber.trim(),
           dateOfBirth: values.dateOfBirth ? dayjs(values.dateOfBirth).format('YYYY-MM-DD') : undefined
         }
         const response = await addOrganizer(organizerData)
@@ -59,8 +75,14 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
           toast.success('An organizer is created successfully!')
           handleClose()
         } else {
-          setError(true)
-          setErrorMessage(response.errorMessage['Invalid Error'])
+          setError({
+            firstNameError: response.errorMessage['firstName'],
+            lastNameError: response.errorMessage['lastName'],
+            emailError: response.errorMessage['email'],
+            phoneNumberError: response.errorMessage['phoneNumber'],
+            dateOfBirthError: response.errorMessage['dateOfBirth'],
+            invalidError: response.errorMessage['Invalid Error']
+          })
         }
       } catch (error) {
         toast.error('An error occurred while adding new organizer!')
@@ -98,9 +120,9 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
       </Button>
       <Dialog onClick={handleClickOutside} onClose={handleClose} open={open}>
         <DialogTitle className={styles['dialog-title']}>Create Organizer</DialogTitle>
-        {error && (
+        {error.invalidError && (
           <Alert className={styles['alert-message']} severity="error">
-            {errorMessage}
+            {error.invalidError}
           </Alert>
         )}
         <DialogContent>
@@ -110,14 +132,19 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
                 First name <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
-                error={formik.touched.firstName && Boolean(formik.errors.firstName)}
                 fullWidth
-                helperText={formik.touched.firstName && formik.errors.firstName}
+                value={formik.values.firstName}
                 id="firstName"
                 name="firstName"
                 onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.firstName}
+                onChange={(value) => {
+                  error.firstNameError = ''
+                  formik.handleChange(value)
+                }}
+                error={formik.touched.firstName && (Boolean(error.firstNameError) || Boolean(formik.errors.firstName))}
+                helperText={
+                  formik.touched.firstName && (error.firstNameError ? error.firstNameError : formik.errors.firstName)
+                }
               />
             </Stack>
             <Stack>
@@ -125,14 +152,19 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
                 Last name <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
-                error={formik.touched.lastName && Boolean(formik.errors.lastName)}
                 fullWidth
-                helperText={formik.touched.lastName && formik.errors.lastName}
+                value={formik.values.lastName}
                 id="lastName"
                 name="lastName"
                 onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.lastName}
+                onChange={(value) => {
+                  error.lastNameError = ''
+                  formik.handleChange(value)
+                }}
+                error={formik.touched.lastName && (Boolean(error.lastNameError) || Boolean(formik.errors.lastName))}
+                helperText={
+                  formik.touched.lastName && (error.lastNameError ? error.lastNameError : formik.errors.lastName)
+                }
               />
             </Stack>
             <Stack>
@@ -140,14 +172,17 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
                 Email <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
-                error={formik.touched.email && Boolean(formik.errors.email)}
                 fullWidth
-                helperText={formik.touched.email && formik.errors.email}
+                value={formik.values.email}
                 id="email"
                 name="email"
                 onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.email}
+                onChange={(value) => {
+                  error.emailError = ''
+                  formik.handleChange(value)
+                }}
+                error={formik.touched.email && (Boolean(error.emailError) || Boolean(formik.errors.email))}
+                helperText={formik.touched.email && (error.emailError ? error.emailError : formik.errors.email)}
               />
             </Stack>
             <Stack>
@@ -155,14 +190,22 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
                 Phone number <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
-                error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                 fullWidth
-                helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
+                value={formik.values.phoneNumber}
                 id="phoneNumber"
                 name="phoneNumber"
                 onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.phoneNumber}
+                onChange={(value) => {
+                  error.phoneNumberError = ''
+                  formik.handleChange(value)
+                }}
+                error={
+                  formik.touched.phoneNumber && (Boolean(error.phoneNumberError) || Boolean(formik.errors.phoneNumber))
+                }
+                helperText={
+                  formik.touched.phoneNumber &&
+                  (error.phoneNumberError ? error.phoneNumberError : formik.errors.phoneNumber)
+                }
               />
             </Stack>
             <Stack>
@@ -175,13 +218,18 @@ const DialogAddOrganizer = ({ addOrganizer, onAdd }: DialogAddOrganizerProps) =>
                 shouldDisableDate={disableToday}
                 value={formik.values.dateOfBirth || null}
                 onChange={(date: any) => {
+                  error.dateOfBirthError = ''
                   formik.setFieldValue('dateOfBirth', date)
                 }}
                 slotProps={{
                   textField: {
-                    error: !!formik.errors.dateOfBirth,
-                    helperText: formik.errors.dateOfBirth,
-                    onBlur: formik.handleBlur
+                    onBlur: formik.handleBlur,
+                    error:
+                      formik.touched.dateOfBirth &&
+                      (Boolean(error.dateOfBirthError) || Boolean(formik.errors.dateOfBirth)),
+                    helperText:
+                      formik.touched.dateOfBirth &&
+                      (error.dateOfBirthError ? error.dateOfBirthError : formik.errors.dateOfBirth)
                   }
                 }}
               />

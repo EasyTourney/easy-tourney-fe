@@ -1,16 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { PlayerRecord } from '../../../types/player'
+import { Player, PlayerRecord } from '../../../types/player'
 
 interface PlayerState {
   players: PlayerRecord[]
   isLoading: boolean
   selectedTeamId: number
+  selectedPlayer: Player | null
 }
 
 const initialState: PlayerState = {
   players: [],
   isLoading: false,
-  selectedTeamId: -1
+  selectedTeamId: -1,
+  selectedPlayer: null
 }
 
 const playersSlice = createSlice({
@@ -22,10 +24,22 @@ const playersSlice = createSlice({
     },
     setSelectedTeamId: (state, action) => {
       state.selectedTeamId = action.payload
+    },
+    setSelectedPlayer: (state, action) => {
+      state.selectedPlayer = action.payload
+    },
+    updatePlayer: (state, action) => {
+      const player = action.payload
+      const index = state.players.findIndex((p) => p.playerId === player.playerId)
+      if (index !== -1) {
+        state.players[index].playerName = player.playerName
+        state.players[index].dateOfBirth = player.dateOfBirth
+        state.players[index].phone = player.phone
+      }
     }
   }
 })
 
-export const { setPlayers, setSelectedTeamId } = playersSlice.actions
+export const { setPlayers, setSelectedTeamId, setSelectedPlayer, updatePlayer } = playersSlice.actions
 
 export default playersSlice.reducer

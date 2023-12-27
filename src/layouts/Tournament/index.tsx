@@ -4,7 +4,7 @@ import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
 import { ChangeEvent, useCallback, useRef, useState } from 'react'
 import React, { useEffect } from 'react'
-import { ParamApi, TournamentAPIRes } from '../../types/commom'
+import { ParamApi, TournamentAPIRes } from '../../types/common'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
 import useDebounce from '../../hooks/useDebounce'
 import Swal from 'sweetalert2'
@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import { Button } from '@mui/material'
 import { MenuItem, TextField } from '@mui/material'
 import { tournamentStatuses } from '../../constants/status'
-import { deleteTournament, getAllTournaments } from '../../apis/axios/tournaments/tournament'
+import { createTournament, deleteTournament, getAllTournaments } from '../../apis/axios/tournaments/tournament'
 import { removeEmptyFields } from '../../utils/function'
 import { convertTournament } from '../../utils/tournament'
 import { useDispatch, useSelector } from 'react-redux'
@@ -272,6 +272,7 @@ const TournamentTable = ({ navigate, location }: any) => {
             </Button>
             {open && (
               <DialogAddTournament
+                addTournament={createTournament}
                 open={open}
                 setOpen={setOpen}
                 onAdd={() => {

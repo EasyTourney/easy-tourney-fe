@@ -13,12 +13,20 @@ interface DialogAddCategoryProps {
 
 export function DialogAddCategory({ addCategory, onAdd }: DialogAddCategoryProps) {
   const [isSaving, setIsSaving] = useState<boolean>(false)
-  const [error, setError] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [error, setError] = useState({
+    categoryNameError: '',
+    invalidError: ''
+  })
   const [open, setOpen] = useState<boolean>(false)
+
+  const resetError = () => {
+    setError({
+      categoryNameError: '',
+      invalidError: ''
+    })
+  }
   const handleClickOpen = () => {
-    setError(false)
-    setErrorMessage('')
+    resetError()
     formik.resetForm()
     setOpen(true)
   }
@@ -36,7 +44,7 @@ export function DialogAddCategory({ addCategory, onAdd }: DialogAddCategoryProps
         setIsSaving(true)
         const categoryData = {
           categoryId: 0,
-          categoryName: values.categoryName,
+          categoryName: values.categoryName.trim(),
           createdAt: new Date().toISOString(),
           updatedAt: null,
           deletedAt: null,
@@ -49,13 +57,14 @@ export function DialogAddCategory({ addCategory, onAdd }: DialogAddCategoryProps
           toast.success('A category is created successfully!')
           handleClose()
         } else {
-          setError(true)
-          setErrorMessage(response.errorMessage['Invalid Error'])
+          setError({
+            categoryNameError: response.errorMessage['categoryName'],
+            invalidError: response.errorMessage['Invalid Error']
+          })
         }
       } catch (error) {
         toast.error('An error occurred while creating the category!')
-        setError(false)
-        setErrorMessage('')
+        handleClose()
       } finally {
         setIsSaving(false)
       }
@@ -86,13 +95,13 @@ export function DialogAddCategory({ addCategory, onAdd }: DialogAddCategoryProps
       </Button>
       <Dialog open={open} onClose={handleClose} onClick={handleClickOutside}>
         <DialogTitle>Create Category</DialogTitle>
-        {error && (
+        {error.invalidError && (
           <Alert className={styles['alert-message']} severity="error">
-            {errorMessage}
+            {error.invalidError}
           </Alert>
         )}
-        <form onSubmit={formik.handleSubmit}>
-          <DialogContent>
+        <DialogContent>
+          <form onSubmit={formik.handleSubmit} className={styles['category-form']}>
             <Box component="label" sx={{ fontWeight: '500' }}>
               Category name <span className={styles['required-marked']}>*</span>
             </Box>
@@ -101,21 +110,29 @@ export function DialogAddCategory({ addCategory, onAdd }: DialogAddCategoryProps
               id="categoryName"
               name="categoryName"
               value={formik.values.categoryName}
-              onChange={formik.handleChange}
+              onChange={(value) => {
+                error.categoryNameError = ''
+                formik.handleChange(value)
+              }}
               onBlur={formik.handleBlur}
-              error={formik.touched.categoryName && Boolean(formik.errors.categoryName)}
-              helperText={formik.touched.categoryName && formik.errors.categoryName}
+              error={
+                formik.touched.categoryName && (Boolean(error.categoryNameError) || Boolean(formik.errors.categoryName))
+              }
+              helperText={
+                formik.touched.categoryName &&
+                (error.categoryNameError ? error.categoryNameError : formik.errors.categoryName)
+              }
             />
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button variant="contained" type="submit" disabled={isSaving}>
-              Save
-            </Button>
-          </DialogActions>
-        </form>
+            <DialogActions className={styles['group-btn']}>
+              <Button variant="outlined" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button variant="contained" type="submit" disabled={isSaving}>
+                Save
+              </Button>
+            </DialogActions>
+          </form>
+        </DialogContent>
       </Dialog>
     </Box>
   )

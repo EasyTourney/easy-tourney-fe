@@ -7,7 +7,7 @@ import ProtectedRoute from './ProtectedRoute'
 const General = lazy(() => import('../layouts/Tournament/General'))
 const Schedule = lazy(() => import('../layouts/Schedule'))
 const Result = lazy(() => import('../layouts/Result'))
-const Participants = lazy(() => import('../layouts/Participants'))
+const Teams = lazy(() => import('../layouts/Teams'))
 const Categories = lazy(() => import('../layouts/Categories'))
 const Login = lazy(() => import('../pages/Login/Login'))
 const NotFound = lazy(() => import('../pages/NotFound'))
@@ -63,7 +63,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'tournament/:tournamentId/participant',
-        element: <ProtectedRoute element={<Participants />} allowedRoles={['ADMIN', 'ORGANIZER']} />
+        element: <ProtectedRoute element={<Teams />} allowedRoles={['ADMIN', 'ORGANIZER']} />
       },
       {
         path: '/tournament/:tournamentId/schedule',

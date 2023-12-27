@@ -5,19 +5,30 @@ import styles from './DialogViewPlayerList.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import TableReused from '../../../../components/Tables'
 import Swal from 'sweetalert2'
-import { setPlayers } from '../../../../redux/reducers/players/players.reducer'
-import { deletePlayer, getAllPlayersInTeam } from '../../../../apis/axios/players/player'
-import { PlayerAPIRes } from '../../../../types/commom'
-import { useLocation } from 'react-router-dom'
+import { setPlayers, setSelectedPlayer } from '../../../../redux/reducers/players/players.reducer'
+import {
+  addPlayer,
+  deletePlayer,
+  getAllPlayersInTeam,
+  getPlayerById,
+  putPlayerById
+} from '../../../../apis/axios/players/player'
+import { PlayerAPIRes, PlayerByIdAPIRes } from '../../../../types/common'
+import { useLocation, useParams } from 'react-router-dom'
 import { convertPlayer } from '../../../../utils/player'
-import { AddCircle } from '@mui/icons-material'
+import { DialogAddPlayer } from '../AddPlayer'
+import { DialogEditPlayer } from '../EditPlayer'
+import { RootState } from '../../../../redux/store'
+import dayjs from 'dayjs'
 
 interface DialogProps {
+  onAddPlayer: () => void
   onOpen: boolean
   onClose: () => void
+  onDelete: () => void
 }
 
-const DialogViewPlayerList = ({ onOpen, onClose }: DialogProps) => {
+const DialogViewPlayerList = ({ onAddPlayer, onOpen, onClose, onDelete }: DialogProps) => {
   const columns = [
     {
       id: 'id',
@@ -69,9 +80,12 @@ const DialogViewPlayerList = ({ onOpen, onClose }: DialogProps) => {
   const [totalPlayers, setTotalPlayers] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
   const [update, setUpdate] = useState<boolean>(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const location = useLocation()
   const selectedTeamId = useSelector((state: any) => state.player.selectedTeamId)
+  const { tournamentId } = useParams()
+  const teamId = useSelector((state: RootState) => state.player.selectedTeamId)
 
   // get all players from DB
   const getAll = useCallback(async () => {
@@ -80,6 +94,7 @@ const DialogViewPlayerList = ({ onOpen, onClose }: DialogProps) => {
     if (getPlayers && getPlayers.data) {
       const convertedData = []
       for (const player of getPlayers.data) {
+        player.dateOfBirth = player.dateOfBirth ? dayjs(player.dateOfBirth).format('DD/MM/YYYY') : ''
         convertedData.push(convertPlayer(player))
       }
       dispatch(setPlayers([...convertedData]))
@@ -92,14 +107,24 @@ const DialogViewPlayerList = ({ onOpen, onClose }: DialogProps) => {
 
   const handleEdit = useCallback(
     async (rowData: { [key: string]: any }) => {
-      alert(rowData)
+      try {
+        const selectedOrganizer = (await getPlayerById(
+          Number(tournamentId),
+          teamId,
+          rowData.playerId
+        )) as PlayerByIdAPIRes
+        dispatch(setSelectedPlayer(selectedOrganizer.data))
+        setIsEditDialogOpen(true)
+      } catch (err) {
+        console.error('Error fetching organizer', err)
+      }
     },
     [dispatch]
   )
 
   const handleDelete = useCallback((rowData: { [key: string]: any }) => {
     const tournamentId = Number(location.pathname.split('/')[2])
-    const { playerId } = rowData //get organizerId
+    const { playerId } = rowData
 
     Swal.fire({
       title: 'Are you sure?',
@@ -119,6 +144,7 @@ const DialogViewPlayerList = ({ onOpen, onClose }: DialogProps) => {
         if (res.success) {
           toast.success('A player is deleted successfully!')
           setUpdate((prev) => !prev)
+          onDelete()
         } else {
           toast.error(res.message)
         }
@@ -156,17 +182,20 @@ const DialogViewPlayerList = ({ onOpen, onClose }: DialogProps) => {
     >
       <DialogTitle className={styles['dialog-title']}>Players</DialogTitle>
       <DialogContent className={styles['dialog-container']}>
-        <Button
-          className={styles['add-player-btn']}
-          variant="contained"
-          style={{
-            background: 'linear-gradient(195deg, rgb(102, 187, 106), rgb(67, 160, 71))',
-            color: 'white'
+        <DialogAddPlayer
+          addPlayer={addPlayer}
+          onAdd={() => {
+            setUpdate((prev) => !prev)
+            onAddPlayer()
           }}
-          endIcon={<AddCircle />}
-        >
-          Add new
-        </Button>
+        />
+        <DialogEditPlayer
+          editPlayer={putPlayerById}
+          onOpen={isEditDialogOpen}
+          onClose={() => {
+            setIsEditDialogOpen(false)
+          }}
+        />
         <TableReused
           columns={columns}
           rows={players}

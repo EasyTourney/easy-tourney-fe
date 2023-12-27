@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { APIRes } from '../../../types/commom'
+import { APIRes } from '../../../types/common'
 import { getAllCategory } from '../../../apis/axios/categories/category'
 
 export const getCategories = createAsyncThunk('categories/getAll', async (data, { rejectWithValue }) => {

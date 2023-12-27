@@ -1,3 +1,9 @@
+export interface PlayerRecord {
+  playerId: number
+  playerName: string
+  dateOfBirth?: string
+  phone?: string
+}
 export interface Player {
   playerId: number
   playerName: string
@@ -6,11 +12,4 @@ export interface Player {
   phone?: string
   createdAt?: string
   updatedAt?: string
-}
-
-export interface PlayerRecord {
-  playerId: string
-  playerName: string
-  dateOfBirth?: string
-  phone?: string
 }

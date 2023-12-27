@@ -1,8 +1,8 @@
 import axios from '../../config/axios-config'
-import { ParamApi } from '../../../types/commom'
-import { Participant } from '../../../types/participant'
+import { ParamApi } from '../../../types/common'
+import { Team } from '../../../types/team'
 
-export async function getAllParticipant(param: ParamApi, tournamentId: number) {
+export async function getAllTeam(param: ParamApi, tournamentId: number) {
   const res = await axios({
     url: '/tournament/' + tournamentId + '/team',
     method: 'GET',
@@ -11,7 +11,7 @@ export async function getAllParticipant(param: ParamApi, tournamentId: number) {
   return res
 }
 
-export async function deleteParticipant(id: number, tournamentId: number) {
+export async function deleteTeam(id: number, tournamentId: number) {
   const res = await axios({
     url: '/tournament/' + tournamentId + `/team/${id}`,
     method: 'DELETE'
@@ -19,7 +19,7 @@ export async function deleteParticipant(id: number, tournamentId: number) {
   return res
 }
 
-export async function addParticipant(data: Participant, tournamentId: number) {
+export async function addTeam(data: Team, tournamentId: number) {
   const res = await axios({
     url: '/tournament/' + tournamentId + '/team',
     method: 'POST',
@@ -28,7 +28,7 @@ export async function addParticipant(data: Participant, tournamentId: number) {
   return res
 }
 
-export async function getParticipantById(id: number, tournamentId: number) {
+export async function getTeamById(id: number, tournamentId: number) {
   const res = await axios({
     url: '/tournament/' + tournamentId + `/team/${id}`,
     method: 'GET'
@@ -36,7 +36,7 @@ export async function getParticipantById(id: number, tournamentId: number) {
   return res
 }
 
-export async function putParticipantById(data: Participant, tournamentId: number) {
+export async function putTeamById(data: Team, tournamentId: number) {
   const res = await axios({
     url: '/tournament/' + tournamentId + `/team/${data.teamId}`,
     method: 'PUT',

@@ -5,23 +5,32 @@ import { toast } from 'react-toastify'
 import { CategorySchema } from '../../../../services/validator/category.validator'
 import { Categories } from '../../../../types/category'
 import { useDispatch, useSelector } from 'react-redux'
-import { apiEditCategory } from '../../../../apis/axios/categories/category'
 import styles from './DialogEditCategory.module.css'
 import { updateCategory } from '../../../../redux/reducers/categories/categories.reducer'
 
 interface EditCategoryProps {
+  editCategory: (categoryId: number, data: Categories) => Promise<any>
   categories: Categories[]
   onOpen: boolean
   onClose: () => void
   categoryName: string
 }
 
-export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCategoryProps) {
+export function DialogEditCategory({ editCategory, onOpen, onClose, categoryName }: EditCategoryProps) {
   const dispatch = useDispatch()
   const [isSaving, setIsSaving] = useState<boolean>(false)
-  const [error, setError] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [error, setError] = useState({
+    categoryNameError: '',
+    invalidError: ''
+  })
   const selectedCategory = useSelector((state: any) => state.category.seletedCategory)
+
+  const resetError = () => {
+    setError({
+      categoryNameError: '',
+      invalidError: ''
+    })
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -32,17 +41,20 @@ export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCatego
       try {
         setIsSaving(true)
         const updatedCategoryName = {
-          categoryName: formik.values.categoryName
+          categoryId: selectedCategory.categoryId,
+          categoryName: formik.values.categoryName.trim()
         }
-        const response = await apiEditCategory(selectedCategory.categoryId, updatedCategoryName)
-        if (response.data !== '') {
+        const response = await editCategory(selectedCategory.categoryId, updatedCategoryName)
+        if (response.success) {
           const updatedCategory = response.data
           dispatch(updateCategory(updatedCategory))
           toast.success('A category is updated successfully!')
           handleClose()
         } else {
-          setError(true)
-          setErrorMessage('Category name has already exist')
+          setError({
+            categoryNameError: response.errorMessage['categoryName'],
+            invalidError: response.errorMessage['Invalid Error']
+          })
         }
       } catch (error) {
         toast.error('An error occurred while updating the category!')
@@ -54,8 +66,7 @@ export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCatego
   })
   useEffect(() => {
     if (onOpen) {
-      setError(false)
-      setErrorMessage('')
+      resetError()
       formik.resetForm()
       formik.setValues({
         categoryName: categoryName
@@ -78,12 +89,12 @@ export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCatego
   return (
     <Dialog open={onOpen} onClose={onClose} onClick={handleClickOutside}>
       <DialogTitle>Edit Category</DialogTitle>
-      {error && (
+      {error.invalidError && (
         <Alert className={styles['alert-message']} severity="error">
-          {errorMessage}
+          {error.invalidError}
         </Alert>
       )}
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} className={styles['category-form']}>
         <DialogContent>
           <Box component="label" sx={{ fontWeight: '500' }}>
             Category name <span className={styles['required-marked']}>*</span>
@@ -93,22 +104,28 @@ export function DialogEditCategory({ onOpen, onClose, categoryName }: EditCatego
             id="categoryName"
             name="categoryName"
             value={formik.values.categoryName}
-            onChange={formik.handleChange}
+            onChange={(value) => {
+              error.categoryNameError = ''
+              formik.handleChange(value)
+            }}
             onBlur={formik.handleBlur}
-            error={formik.touched.categoryName && Boolean(formik.errors.categoryName)}
+            error={
+              formik.touched.categoryName && (Boolean(error.categoryNameError) || Boolean(formik.errors.categoryName))
+            }
             helperText={
-              formik.touched.categoryName && typeof formik.errors.categoryName === 'string'
-                ? formik.errors.categoryName
-                : ''
+              formik.touched.categoryName &&
+              (error.categoryNameError ? error.categoryNameError : formik.errors.categoryName)
             }
           />
+          <DialogActions className={styles['group-btn']}>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" type="submit" disabled={isSaving}>
+              Save
+            </Button>
+          </DialogActions>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" type="submit" disabled={isSaving}>
-            Save
-          </Button>
-        </DialogActions>
       </form>
     </Dialog>
   )

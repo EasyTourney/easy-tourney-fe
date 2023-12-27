@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios'
 import { Categories } from './category'
 import { Organizer, OrganizerRecord } from './organizer'
 import { Tournament } from './tournament'
-import { Participant } from './participant'
+import { Team } from './team'
 import { Player } from './player'
 
 export interface APIRes extends AxiosResponse {
@@ -51,9 +51,16 @@ export interface PlayerAPIRes extends AxiosResponse {
   errorMessage?: unknown
 }
 
-export interface ParticipantAPIRes extends AxiosResponse {
+export interface PlayerByIdAPIRes extends AxiosResponse {
   success: boolean
-  data: Participant[]
+  data: Player
+  message: string
+  errorMessage?: unknown
+}
+
+export interface TeamAPIRes extends AxiosResponse {
+  success: boolean
+  data: Team[]
   total: number
   additionalData: {
     totalTeamOfTournament: number
@@ -61,9 +68,9 @@ export interface ParticipantAPIRes extends AxiosResponse {
   message: string
 }
 
-export interface ParticipantByIdAPIRes extends AxiosResponse {
+export interface TeamByIdAPIRes extends AxiosResponse {
   success: boolean
-  data: Participant
+  data: Team
   message: string
 }
 

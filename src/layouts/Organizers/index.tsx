@@ -4,7 +4,7 @@ import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
 import { useCallback, useRef, useState } from 'react'
 import React, { useEffect } from 'react'
-import { OrganizerAPIRes, OrganizerByIdAPIRes, ParamApi } from '../../types/commom'
+import { OrganizerAPIRes, OrganizerByIdAPIRes, ParamApi } from '../../types/common'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
 import useDebounce from '../../hooks/useDebounce'
 import {

@@ -1,5 +1,5 @@
 import axios from '../../config/axios-config'
-import { ParamApi } from '../../../types/commom'
+import { ParamApi } from '../../../types/common'
 import { CategoryName } from '../../../types/category'
 
 export async function getAllCategories(param: ParamApi) {

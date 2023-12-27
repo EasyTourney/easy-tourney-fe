@@ -3,25 +3,19 @@ import Box from '@mui/material/Box'
 import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ParamApi, ParticipantAPIRes, ParticipantByIdAPIRes } from '../../types/commom'
+import { ParamApi, TeamAPIRes, TeamByIdAPIRes } from '../../types/common'
 import { createSearchParams, useParams, useSearchParams } from 'react-router-dom'
-import {
-  addParticipant,
-  deleteParticipant,
-  getAllParticipant,
-  getParticipantById,
-  putParticipantById
-} from '../../apis/axios/participants/participant'
+import { addTeam, deleteTeam, getAllTeam, getTeamById, putTeamById } from '../../apis/axios/teams/team'
 import { useDispatch, useSelector } from 'react-redux'
-import { setParticipants, setSelectedParticipant } from '../../redux/reducers/participants/participants.reducer'
-import { DialogEditParticipant } from '../../components/Dialog/Participant/EditParticipant'
+import { setTeams, setSelectedTeam } from '../../redux/reducers/teams/teams.reducer'
+import { DialogEditTeam } from '../../components/Dialog/Team/EditTeam'
 import { setPlayers, setSelectedTeamId } from '../../redux/reducers/players/players.reducer'
 import DialogViewPlayerList from '../../components/Dialog/Player/ViewPlayer/DialogViewPlayerList'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
-import { DialogAddParticipant } from '../../components/Dialog/Participant/AddParticipant'
+import { DialogAddTeam } from '../../components/Dialog/Team/AddTeam'
 
-const Participants = ({ navigate, location }: any) => {
+const Teams = ({ navigate, location }: any) => {
   const columns = [
     {
       id: 'Id',
@@ -57,10 +51,10 @@ const Participants = ({ navigate, location }: any) => {
     }
   ]
 
-  const participants = useSelector((state: any) => state.participant.participants)
+  const teams = useSelector((state: any) => state.team.teams)
 
   const [isOpenPlayerDialog, setIsOpenPlayerDialog] = useState<boolean>(false)
-  const [totalParticipants, setTotalParticipants] = useState<number>(0)
+  const [totalTeams, setTotalTeams] = useState<number>(0)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
   const [update, setUpdate] = useState<boolean>(false)
@@ -74,11 +68,11 @@ const Participants = ({ navigate, location }: any) => {
 
   // get all team from DB
   const getAll = async (param: ParamApi, tournamentId: number) => {
-    const getParticipants = (await getAllParticipant(param, tournamentId)) as ParticipantAPIRes
-    if (getParticipants.data) {
-      dispatch(setParticipants([...getParticipants.data]))
-      setTotalCurrentPage(getParticipants?.total)
-      setTotalParticipants(getParticipants?.additionalData?.totalTeamOfTournament)
+    const getTeams = (await getAllTeam(param, tournamentId)) as TeamAPIRes
+    if (getTeams.data) {
+      dispatch(setTeams([...getTeams.data]))
+      setTotalCurrentPage(getTeams?.total)
+      setTotalTeams(getTeams?.additionalData?.totalTeamOfTournament)
     }
   }
 
@@ -108,10 +102,10 @@ const Participants = ({ navigate, location }: any) => {
   }, [currentPage, update])
 
   useEffect(() => {
-    if (totalParticipants === undefined && currentPage > 1) {
+    if (totalTeams === undefined && currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1)
     }
-  }, [totalParticipants])
+  }, [totalTeams])
 
   const handleOpenPlayerDialog = useCallback((rowData: { [key: string]: any }) => {
     dispatch(setPlayers([]))
@@ -122,14 +116,11 @@ const Participants = ({ navigate, location }: any) => {
   const handleEdit = useCallback(
     async (rowData: { [key: string]: any }) => {
       try {
-        const selectedParticipant = (await getParticipantById(
-          rowData['teamId'],
-          Number(tournamentId)
-        )) as ParticipantByIdAPIRes
-        dispatch(setSelectedParticipant(selectedParticipant.data))
+        const selectedTeam = (await getTeamById(rowData['teamId'], Number(tournamentId))) as TeamByIdAPIRes
+        dispatch(setSelectedTeam(selectedTeam.data))
         setIsEditDialogOpen(true)
       } catch (err) {
-        console.error('Error fetching participant', err)
+        console.error('Error fetching team', err)
       }
     },
     [dispatch]
@@ -149,7 +140,7 @@ const Participants = ({ navigate, location }: any) => {
       allowOutsideClick: false
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = (await deleteParticipant(teamId, Number(tournamentId))) as ParticipantAPIRes
+        const res = (await deleteTeam(teamId, Number(tournamentId))) as TeamAPIRes
         if (res.success) {
           toast.success('A team is deleted successfully!')
           setUpdate((prev) => !prev)
@@ -164,15 +155,15 @@ const Participants = ({ navigate, location }: any) => {
     <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '1rem' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          <DialogAddParticipant
-            addParticipant={addParticipant}
+          <DialogAddTeam
+            addTeam={addTeam}
             onAdd={() => {
               setUpdate((prev) => !prev)
             }}
           />
         </Box>
-        <DialogEditParticipant
-          editParticipant={putParticipantById}
+        <DialogEditTeam
+          editTeam={putTeamById}
           onOpen={isEditDialogOpen}
           onClose={() => {
             setIsEditDialogOpen(false)
@@ -181,20 +172,29 @@ const Participants = ({ navigate, location }: any) => {
       </Box>
       <TableReused
         columns={columns}
-        rows={participants}
+        rows={teams}
         onOpenPlayerDialog={handleOpenPlayerDialog}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        total={totalParticipants}
+        total={totalTeams}
         handlePageSearch={pageSearch}
         totalCurrentPage={totalCurrentPage}
         loading={loading}
       />
       {isOpenPlayerDialog && (
-        <DialogViewPlayerList onOpen={isOpenPlayerDialog} onClose={() => setIsOpenPlayerDialog(false)} />
+        <DialogViewPlayerList
+          onAddPlayer={() => {
+            setUpdate((prev) => !prev)
+          }}
+          onOpen={isOpenPlayerDialog}
+          onClose={() => setIsOpenPlayerDialog(false)}
+          onDelete={() => {
+            setUpdate((prev) => !prev)
+          }}
+        />
       )}
     </Box>
   )
 }
 
-export default withBaseLogic(Participants)
+export default withBaseLogic(Teams)

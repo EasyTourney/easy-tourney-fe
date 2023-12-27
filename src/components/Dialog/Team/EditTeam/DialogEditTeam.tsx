@@ -2,57 +2,68 @@ import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, 
 import { useFormik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import styles from './DialogEditParticipant.module.css'
+import styles from './DialogEditTeam.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../redux/store'
-import { Participant } from '../../../../types/participant'
-import { ParticipantSchema } from '../../../../services/validator/participant.validator'
-import { updateParticipants } from '../../../../redux/reducers/participants/participants.reducer'
+import { Team } from '../../../../types/team'
+import { TeamSchema } from '../../../../services/validator/team.validator'
+import { updateTeams } from '../../../../redux/reducers/teams/teams.reducer'
 import { useParams } from 'react-router-dom'
 
-interface DialogEditParticipantProps {
-  editParticipant: (data: Participant, tournamentId: number) => Promise<any>
+interface DialogEditTeamProps {
+  editTeam: (data: Team, tournamentId: number) => Promise<any>
   onOpen: boolean
   onClose: () => void
 }
 
-const DialogEditParticipant = ({ editParticipant, onOpen, onClose }: DialogEditParticipantProps) => {
+const DialogEditTeam = ({ editTeam, onOpen, onClose }: DialogEditTeamProps) => {
   const [isSaving, setIsSaving] = useState<boolean>(false)
-  const [error, setError] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string>('')
   const dispatch = useDispatch()
-  const selectedParticipant = useSelector((state: RootState) => state.participant.selectedParticipant)
+  const selectedTeam = useSelector((state: RootState) => state.team.selectedTeam)
   const { tournamentId } = useParams()
+  const [error, setError] = useState({
+    teamNameError: '',
+    invalidError: ''
+  })
+
+  const resetError = () => {
+    setError({
+      teamNameError: '',
+      invalidError: ''
+    })
+  }
 
   const formik = useFormik({
     initialValues: {
       teamName: ''
     },
-    validationSchema: ParticipantSchema,
+    validationSchema: TeamSchema,
     validateOnChange: false,
     onSubmit: async (values) => {
       try {
         setIsSaving(true)
-        const participantData = {
-          teamId: selectedParticipant?.teamId || -1,
-          teamName: values.teamName,
-          playerCount: selectedParticipant?.playerCount || 0
+        const teamData = {
+          teamId: selectedTeam?.teamId || -1,
+          teamName: values.teamName.trim(),
+          playerCount: selectedTeam?.playerCount || 0
         }
-        const response = await editParticipant(participantData, Number(tournamentId))
+        const response = await editTeam(teamData, Number(tournamentId))
 
         if (response.success) {
-          const newParticipant = {
+          const newTeam = {
             ...response.data
           }
-          dispatch(updateParticipants(newParticipant))
-          toast.success('A participant is updated successfully!')
+          dispatch(updateTeams(newTeam))
+          toast.success('A team is updated successfully!')
           onClose()
         } else {
-          setError(true)
-          setErrorMessage(response.errorMessage['Invalid Error'])
+          setError({
+            teamNameError: response.errorMessage['teamName'],
+            invalidError: response.errorMessage['Invalid Error']
+          })
         }
       } catch (error) {
-        toast.error('An error occurred while updating participant!')
+        toast.error('An error occurred while updating team!')
         onClose()
       } finally {
         setIsSaving(false)
@@ -62,11 +73,10 @@ const DialogEditParticipant = ({ editParticipant, onOpen, onClose }: DialogEditP
 
   useEffect(() => {
     if (onOpen) {
-      setError(false)
-      setErrorMessage('')
+      resetError()
       formik.resetForm()
       formik.setValues({
-        teamName: selectedParticipant?.teamName || ''
+        teamName: selectedTeam?.teamName || ''
       })
     }
   }, [onOpen])
@@ -81,27 +91,32 @@ const DialogEditParticipant = ({ editParticipant, onOpen, onClose }: DialogEditP
 
   return (
     <Dialog onClick={handleClickOutside} onClose={onClose} open={onOpen} PaperProps={{ sx: { borderRadius: '1rem' } }}>
-      <DialogTitle className={styles['dialog-title']}>Edit Participant</DialogTitle>
-      {error && (
+      <DialogTitle className={styles['dialog-title']}>Edit Team</DialogTitle>
+      {error.invalidError && (
         <Alert className={styles['alert-message']} severity="error">
-          {errorMessage}
+          {error.invalidError}
         </Alert>
       )}
       <DialogContent>
-        <form onSubmit={formik.handleSubmit} className={styles['participant-form']}>
+        <form onSubmit={formik.handleSubmit} className={styles['team-form']}>
           <Stack spacing={2} width={'60vw'} maxWidth={450}>
             <Box component="label" sx={{ fontWeight: '500' }}>
               Team name <span className={styles['required-marked']}>*</span>
             </Box>
             <TextField
-              error={formik.touched.teamName && Boolean(formik.errors.teamName)}
               fullWidth
-              helperText={formik.touched.teamName && formik.errors.teamName}
+              value={formik.values.teamName}
               id="teamName"
               name="teamName"
               onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.teamName}
+              onChange={(value) => {
+                error.teamNameError = ''
+                formik.handleChange(value)
+              }}
+              error={formik.touched.teamName && (Boolean(error.teamNameError) || Boolean(formik.errors.teamName))}
+              helperText={
+                formik.touched.teamName && (error.teamNameError ? error.teamNameError : formik.errors.teamName)
+              }
             />
           </Stack>
           <DialogActions className={styles['group-btn']}>
@@ -118,4 +133,4 @@ const DialogEditParticipant = ({ editParticipant, onOpen, onClose }: DialogEditP
   )
 }
 
-export { DialogEditParticipant }
+export { DialogEditTeam }
