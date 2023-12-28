@@ -5,7 +5,7 @@ function NotFound() {
   return (
     <Box className={styles.container}>
       <Box>
-        <img src="https://www.dienmayxanh.com/html/%C4%90MX/destop/images/404.png" alt="" />
+        <img className={styles.img404} src="https://www.dienmayxanh.com/html/%C4%90MX/destop/images/404.png" alt="" />
       </Box>
 
       <Box className={styles.contet}>

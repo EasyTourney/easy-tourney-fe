@@ -2,18 +2,63 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from './General.module.css'
 import { checkLengthDescription, convertDateFormat } from '../../../utils/function'
 import TableReused from '../../../components/Tables'
 import { useParams } from 'react-router'
 import { getTournamentById } from '../../../apis/axios/tournaments/tournament'
-import { Tournament } from '../../../types/tournament'
+import DialogEditTournamentTitle from '../../../components/Dialog/Tournament/General/EditTitle/DialogEditTitle'
+import DialogEditDescription from '../../../components/Dialog/Tournament/General/EditDescription/DialogEditDescription'
+import DiaLogEditCategoryInTournamnet from '../../../components/Dialog/Tournament/General/EditCategory/DialogEditCategory'
+import DialogEditOrganizerTournament from '../../../components/Dialog/Tournament/General/EditOrganizer/DialogEditOrganizerTournament'
+import DialogEditEventDateTournament from '../../../components/Dialog/Tournament/General/EditEventDate/DialogEditEventDateTournament'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  setSelectedCategory,
+  setSelectedDescription,
+  setSelectedEventDate,
+  setSelectedOrganizer,
+  setSelectedTitle
+} from '../../../redux/reducers/general/general.reducer'
+import { setGeneral } from '../../../redux/reducers/tournaments/tournaments.reducer'
 import { MdEditSquare } from 'react-icons/md'
 
 const General = () => {
+  const dispatch = useDispatch()
   const [loading, setIsLoading] = useState<boolean>(false)
-  const [tournamentData, setTournamentData] = useState<Tournament>()
+  const tournamentData = useSelector((state: any) => state.tournament.general)
+  const [openTitle, setOpenTitle] = useState(false)
+  const [openDescription, setOpenDescription] = useState(false)
+  const [openCategory, setOpenCategory] = useState(false)
+  const [openOrganizer, setOpenOrganizer] = useState(false)
+  const [openEventDate, setOpenEventDate] = useState(false)
+  const generalTournamnet = useSelector((state: any) => state.tournament.general)
+
+  const handleClickOpenTitle = useCallback(() => {
+    setOpenTitle(true)
+    dispatch(setSelectedTitle(generalTournamnet.title))
+  }, [dispatch, generalTournamnet?.title, setOpenTitle])
+
+  const handleEditCategory = useCallback(() => {
+    setOpenCategory(true)
+    dispatch(setSelectedCategory(generalTournamnet.category.categoryName))
+  }, [dispatch, generalTournamnet.category?.categoryName, setOpenCategory])
+
+  const handleEditDescription = useCallback(() => {
+    setOpenDescription(true)
+    dispatch(setSelectedDescription(generalTournamnet.description))
+  }, [dispatch, generalTournamnet.description, setOpenDescription])
+
+  const handleEditOrganizer = useCallback(() => {
+    setOpenOrganizer(true)
+    dispatch(setSelectedOrganizer(generalTournamnet.organizers))
+  }, [dispatch, generalTournamnet.organizers, setOpenOrganizer])
+  const handleEditEventDate = useCallback(() => {
+    setOpenEventDate(true)
+    dispatch(setSelectedEventDate(generalTournamnet.eventDates))
+  }, [dispatch, generalTournamnet.eventDates, setOpenEventDate])
+
   const columnsOrganizer = [
     {
       id: 'id',
@@ -75,12 +120,11 @@ const General = () => {
       setIsLoading(true)
     }, 1000)
   }, [loading])
-
   const param: { tournamentId?: string } = useParams()
   useEffect(() => {
     const fetchTournamentData = async () => {
       const response = await getTournamentById(Number(param.tournamentId))
-      setTournamentData(response.data)
+      dispatch(setGeneral(response.data))
     }
 
     if (param.tournamentId) {
@@ -95,9 +139,7 @@ const General = () => {
     return (
       <Box className={styles['general-container']}>
         <Box className={styles['general-wrapper']}>
-          <Box component="h2" className={styles['general-info']}>
-            General Information
-          </Box>
+          <Box className={styles['general-info']}>General Information</Box>
           {/* title */}
           <Box className={styles['general-wrapper-title']}>
             <Box className={styles['general-title-common']}>
@@ -109,6 +151,7 @@ const General = () => {
                   minWidth: '1rem',
                   padding: '0.25rem'
                 }}
+                onClick={handleClickOpenTitle}
               >
                 <MdEditSquare color="green" size={20} />
               </Button>
@@ -126,11 +169,15 @@ const General = () => {
                   minWidth: '1rem',
                   padding: '0.25rem'
                 }}
+                onClick={handleEditCategory}
               >
                 <MdEditSquare color="green" size={20} />
               </Button>
             </Box>
-            <Box component="span">{tournamentData.category.categoryName}</Box>
+            <Box component="span">
+              {' '}
+              {tournamentData && tournamentData.category && tournamentData.category.categoryName}
+            </Box>
           </Box>
           {/* Description */}
           <Box className={styles['general-wrapper-common']}>
@@ -143,6 +190,7 @@ const General = () => {
                   minWidth: '1rem',
                   padding: '0.25rem'
                 }}
+                onClick={handleEditDescription}
               >
                 <MdEditSquare color="green" size={20} />
               </Button>
@@ -162,22 +210,26 @@ const General = () => {
                   minWidth: '1rem',
                   padding: '0.25rem'
                 }}
+                onClick={handleEditOrganizer}
               >
                 <MdEditSquare color="green" size={20} />
               </Button>
             </Box>
             <Box className={styles['general-organizer-table']}>
-              <TableReused
-                columns={columnsOrganizer}
-                rows={tournamentData?.organizers}
-                total={tournamentData?.organizers.length}
-                showActions={false}
-                hidePagination={false}
-                loading={loading}
-              />
+              {tournamentData?.organizers ? (
+                <TableReused
+                  columns={columnsOrganizer}
+                  rows={tournamentData.organizers}
+                  total={tournamentData.organizers.length}
+                  showActions={false}
+                  hidePagination={false}
+                  loading={loading}
+                />
+              ) : (
+                <div>No organizers available</div>
+              )}
             </Box>
           </Box>
-
           {/* Event dates */}
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
@@ -189,6 +241,7 @@ const General = () => {
                   minWidth: '1rem',
                   padding: '0.25rem'
                 }}
+                onClick={handleEditEventDate}
               >
                 <MdEditSquare color="green" size={20} />
               </Button>
@@ -196,8 +249,8 @@ const General = () => {
             <Box className={styles['general-eventdates-table']}>
               <TableReused
                 columns={columnsEventDates}
-                rows={eventDates}
-                total={eventDates.length}
+                rows={eventDates ?? []}
+                total={(eventDates ?? []).length}
                 showActions={false}
                 hidePagination={false}
                 loading={loading}
@@ -221,6 +274,11 @@ const General = () => {
             </Box>
           )}
         </Box>
+        <DialogEditTournamentTitle open={openTitle} setOpen={setOpenTitle}></DialogEditTournamentTitle>
+        <DialogEditDescription open={openDescription} setOpen={setOpenDescription}></DialogEditDescription>
+        <DiaLogEditCategoryInTournamnet open={openCategory} setOpen={setOpenCategory}></DiaLogEditCategoryInTournamnet>
+        <DialogEditOrganizerTournament open={openOrganizer} setOpen={setOpenOrganizer}></DialogEditOrganizerTournament>
+        <DialogEditEventDateTournament open={openEventDate} setOpen={setOpenEventDate}></DialogEditEventDateTournament>
       </Box>
     )
   }

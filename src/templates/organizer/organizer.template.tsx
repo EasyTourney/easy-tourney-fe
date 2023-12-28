@@ -1,12 +1,12 @@
 import { Box } from '@mui/material'
 import { Outlet } from 'react-router-dom'
-import { Header } from '../../components/Header'
 import { useState } from 'react'
 import React from 'react'
 import SidebarOrganizer from '../../components/Sidebar/organizer'
 import CustomizedBreadcrumbsOrganizer from '../../components/Navigation/organizer'
 import withTokenCheck from '../../hoc/withTokenCheck'
 import styles from '../Template.module.css'
+import TournamentHeader from '../../components/Header/Tournament/TournamentHeader'
 
 function OrganizerTemplate() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -24,7 +24,7 @@ function OrganizerTemplate() {
         <Box>
           <Box className={styles['sticky-header']}>
             <CustomizedBreadcrumbsOrganizer />
-            <Header />
+            <TournamentHeader />
           </Box>
           <Box>
             <Outlet />

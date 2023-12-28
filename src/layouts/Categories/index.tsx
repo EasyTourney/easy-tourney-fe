@@ -129,7 +129,6 @@ const Category = ({ navigate, location }: any) => {
 
   const handleDelete = useCallback(async (rowData: { [key: string]: any }) => {
     const { categoryId } = rowData //get categoryId
-
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to revert this!',

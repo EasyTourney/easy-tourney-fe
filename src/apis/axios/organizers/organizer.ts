@@ -30,7 +30,7 @@ export async function addOrganizer(data: Organizer) {
 
 export async function getAllOrganizers() {
   const res = await axios({
-    url: '/organizer',
+    url: '/organizer/getAllOrganizer',
     method: 'GET'
   })
   return res

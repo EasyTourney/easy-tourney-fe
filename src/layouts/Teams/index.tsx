@@ -153,6 +153,7 @@ const Teams = ({ navigate, location }: any) => {
 
   return (
     <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '1rem' }}>
+      <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Participant</Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
           <DialogAddTeam
@@ -170,6 +171,7 @@ const Teams = ({ navigate, location }: any) => {
           }}
         />
       </Box>
+
       <TableReused
         columns={columns}
         rows={teams}

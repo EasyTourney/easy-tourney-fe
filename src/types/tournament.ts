@@ -24,3 +24,12 @@ export interface TournamentRecord {
   createdAt: string
   status: string
 }
+
+export interface TournamentsEdit {
+  id: number
+  title?: string
+  description?: string
+  categoryId: string
+  organizers?: number[]
+  eventDates?: number[]
+}

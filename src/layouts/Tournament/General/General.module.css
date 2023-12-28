@@ -11,6 +11,7 @@
 .general-info {
   font-weight: 500;
   font-size: 2rem;
+  text-align: center;
 }
 .general-description-content {
   max-width: 100%;
@@ -49,6 +50,8 @@
 .general-discard-text {
   text-transform: math-auto;
   padding: 0 0.5rem;
+  text-align: center;
+  color: #fff;
 }
 
 .general-btn-discard:hover {

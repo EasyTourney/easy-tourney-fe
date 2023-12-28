@@ -12,6 +12,6 @@
   position: sticky;
   top: 1rem;
   border-radius: 1rem;
-  z-index: 1000;
+  z-index: 999;
   backdrop-filter: blur(1rem);
 }

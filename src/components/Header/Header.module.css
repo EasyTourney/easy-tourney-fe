@@ -1,7 +1,7 @@
 .main-app-header {
   border-radius: 0.5rem;
   top: 0;
-  z-index: 1000;
+  z-index: 999;
   box-shadow: none !important;
   background-color: #f0f2f5ad !important;
   backdrop-filter: saturate(200%) blur(1rem);

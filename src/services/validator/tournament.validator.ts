@@ -1,7 +1,6 @@
 import * as Yup from 'yup'
-import { title, selectCategory } from './common'
+import { title } from './common'
 
 export const TournamentSchema = Yup.object().shape({
-  title,
-  selectCategory
+  title
 })

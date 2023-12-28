@@ -294,6 +294,7 @@ const ScheduleContent = () => {
           borderRadius: '1rem'
         }}
       >
+        <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Schedule</Box>
         <ListScheduleColumn columnData={columnData} />
 
         <DragOverlay dropAnimation={dropAnimation}>

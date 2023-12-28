@@ -5,12 +5,14 @@ interface OrganizerState {
   organizers: OrganizerRecord[]
   isLoading: boolean
   selectedOrganizer: Organizer | null
+  selectOrganizers: []
 }
 
 const initialState: OrganizerState = {
   organizers: [],
   isLoading: false,
-  selectedOrganizer: null
+  selectedOrganizer: null,
+  selectOrganizers: []
 }
 
 const organizersSlice = createSlice({
@@ -32,10 +34,13 @@ const organizersSlice = createSlice({
         state.organizers[index].phoneNumber = updatedOrganizer.phoneNumber
         state.organizers[index].dateOfBirth = updatedOrganizer.dateOfBirth
       }
+    },
+    setSelectOrganizer: (state, action) => {
+      state.selectOrganizers = action.payload
     }
   }
 })
 
-export const { setOrganizer, setSelectedOrganizer, updateOrganizer } = organizersSlice.actions
+export const { setOrganizer, setSelectedOrganizer, updateOrganizer, setSelectOrganizer } = organizersSlice.actions
 
 export default organizersSlice.reducer

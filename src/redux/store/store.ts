@@ -1,5 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { authSlice, categoriesSlice, organizersSlice, tournamentsSlice, playersSlice, teamsSlice } from '../reducers'
+import {
+  authSlice,
+  categoriesSlice,
+  organizersSlice,
+  tournamentsSlice,
+  playersSlice,
+  teamsSlice,
+  generalSlice
+} from '../reducers'
 
 export const store = configureStore({
   reducer: {
@@ -8,7 +16,8 @@ export const store = configureStore({
     organizer: organizersSlice,
     tournament: tournamentsSlice,
     player: playersSlice,
-    team: teamsSlice
+    team: teamsSlice,
+    general: generalSlice
   }
 })
 

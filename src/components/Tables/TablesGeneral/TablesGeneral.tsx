@@ -6,60 +6,39 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { Badge, Box, Button, Chip, Skeleton, Tooltip } from '@mui/material'
-import PersonIcon from '@mui/icons-material/Person'
+import { Box, Button, Chip, Skeleton, Tooltip } from '@mui/material'
 import { TiArrowUnsorted } from 'react-icons/ti'
 import { TiArrowSortedUp } from 'react-icons/ti'
 import { TiArrowSortedDown } from 'react-icons/ti'
 import { memo, useState, useEffect } from 'react'
-import Paginations from '../Paginations'
-import { ColumnTypes } from '../../types/common'
+import { ColumnTypes } from '../../../types/common'
 import { useSearchParams } from 'react-router-dom'
-import noItem from '../../assets/noItem.png'
-import { isMultipleLine, isStatus } from '../../utils/function'
-import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp'
-import { AutoMode, Cached, CheckCircleOutline, HelpOutline, HighlightOff } from '@mui/icons-material'
-import { MdDeleteSweep, MdEditSquare } from 'react-icons/md'
+import noItem from '../../../assets/noItem.png'
+import { MdDeleteSweep } from 'react-icons/md'
+import moment from 'moment'
 
-interface ReusedTableProps {
+interface TableGeneralProps {
   columns: ColumnTypes[]
   rows: { [key: string]: any }[]
   showActions?: boolean
-  onOpenPlayerDialog?: (rowData: { [key: string]: any }) => void
-  onEdit?: (rowData: { [key: string]: any }) => void
   onDelete?: (rowData: { [key: string]: any }) => void
   handleColumnSort?: (id: any, status: 'asc' | 'desc' | '') => void
-  total: number
-  handlePageSearch?: (page: number) => void
-  totalCurrentPage?: number
   loading?: boolean
-  hidePagination?: boolean
 }
 
-const TableReused = ({
+const TableGeneral = ({
   rows,
   columns,
   showActions = true,
-  onOpenPlayerDialog,
-  onEdit,
   onDelete,
   handleColumnSort,
-  total,
-  handlePageSearch,
-  totalCurrentPage,
-  loading,
-  hidePagination = true
-}: ReusedTableProps) => {
+  loading
+}: TableGeneralProps) => {
   const [sortStates, setSortStates] = useState<{ [key: string]: 'asc' | 'desc' | '' }>(
     Object.fromEntries(columns.map((column) => [column.id, '']))
   )
   const [params] = useSearchParams()
   const myPage = params.get('page')
-  const totalIndex = totalCurrentPage
-    ? totalCurrentPage < 10
-      ? totalCurrentPage - totalCurrentPage + 10
-      : totalCurrentPage
-    : 0
 
   const handleSortTableClick = (id: any) => {
     const currentSortType = sortStates[id]
@@ -83,9 +62,9 @@ const TableReused = ({
     const sortType = sortStates[id]
 
     if (sortType === 'asc') {
-      return <TiArrowSortedUp size={15} />
-    } else if (sortType === 'desc') {
       return <TiArrowSortedDown size={15} />
+    } else if (sortType === 'desc') {
+      return <TiArrowSortedUp size={15} />
     } else {
       return <TiArrowUnsorted size={15} />
     }
@@ -98,11 +77,6 @@ const TableReused = ({
       setPage(page - 1)
     }
   }, [page, rows])
-
-  const handlePageChange = (pageNumber: number) => {
-    handlePageSearch?.(pageNumber)
-    setPage(pageNumber)
-  }
 
   // Loading skeleton
   const TableRowsLoader = ({ rowsNum }: any) => {
@@ -126,7 +100,10 @@ const TableReused = ({
       </>
     )
   }
-
+  const rowsWithPastInfo = rows.map((row) => ({
+    ...row,
+    isPast: moment(row.date, 'dddd, MMMM D, YYYY - [from] HH:mm [to] HH:mm').isBefore(moment())
+  }))
   return (
     <Box>
       <TableContainer component={Paper}>
@@ -177,7 +154,7 @@ const TableReused = ({
                     }}
                   >
                     <Box>{column.label}</Box>
-                    <Box sx={{ display: 'flex' }}>{column.sortTable && getColumnSortIcon(column.id)}</Box>
+                    <Box>{column.sortTable && getColumnSortIcon(column.id)}</Box>
                   </Box>
                 </TableCell>
               ))}
@@ -213,7 +190,7 @@ const TableReused = ({
                 </TableCell>
               </TableRow>
             ) : (
-              rows?.map((row, rowIndex) => (
+              rowsWithPastInfo?.map((row, rowIndex) => (
                 <TableRow
                   key={rowIndex}
                   sx={{
@@ -230,111 +207,22 @@ const TableReused = ({
                       sx={{
                         textAlign: `${column.left ? 'left' : 'center'}`,
                         borderRight: ' 1px solid rgba(224, 224, 224, 1)',
-                        borderCollapse: 'collapse',
-                        maxWidth: '120px',
-                        minWidth: '50px'
+                        borderCollapse: 'collapse'
                       }}
                     >
                       {Object.values(column).indexOf('Id') > -1 ? (
-                        (Number(myPage) > 1 ? Number(myPage) - 1 : 0) * totalIndex + rowIndex + 1
-                      ) : isStatus(row[column.id]) ? (
-                        row[column.id] === 'NEED_INFORMATION' ? (
-                          <Chip
-                            sx={{ width: '100%', justifyContent: 'flex-start' }}
-                            color="warning"
-                            variant="outlined"
-                            icon={<HelpOutline color="warning" />}
-                            label={row[column.id].replace('_', ' ')}
-                          />
-                        ) : row[column.id] === 'READY' ? (
-                          <Chip
-                            sx={{ width: '100%', justifyContent: 'flex-start' }}
-                            color="primary"
-                            variant="outlined"
-                            icon={<AutoMode color="primary" />}
-                            label={row[column.id].replace('_', ' ')}
-                          />
-                        ) : row[column.id] === 'IN_PROGRESS' ? (
-                          <Chip
-                            sx={{ width: '100%', justifyContent: 'flex-start' }}
-                            color="secondary"
-                            variant="outlined"
-                            icon={<Cached color="secondary" />}
-                            label={row[column.id].replace('_', ' ')}
-                          />
-                        ) : row[column.id] === 'FINISHED' ? (
-                          <Chip
-                            sx={{ width: '100%', justifyContent: 'flex-start' }}
-                            color="success"
-                            variant="outlined"
-                            icon={<CheckCircleOutline color="success" />}
-                            label={row[column.id].replace('_', ' ')}
-                          />
-                        ) : row[column.id] === 'DISCARDED' ? (
-                          <Chip
-                            sx={{ width: '100%', justifyContent: 'flex-start' }}
-                            color="error"
-                            variant="outlined"
-                            icon={<HighlightOff color="error" />}
-                            label={row[column.id].replace('_', ' ')}
-                          />
-                        ) : (
-                          <></>
-                        )
-                      ) : isMultipleLine(row[column.id]) ? (
-                        <ul>
-                          <Tooltip title={`${row[column.id]}`} placement="right">
-                            <Box
-                              sx={{
-                                display: '-webkit-box',
-                                '-webkit-box-orient': 'vertical',
-                                '-webkit-line-clamp': '3',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                fontSize: '13px'
-                              }}
-                            >
-                              {row[column.id]}
-                            </Box>
-                          </Tooltip>
-                        </ul>
-                      ) : column.id !== 'playerCount' ? (
-                        <Tooltip
-                          title={`${
-                            row[column.id] && typeof row[column.id] === 'string'
-                              ? row[column.id].replaceAll(' ', '\u00A0')
-                              : row[column.id]
-                          }`}
-                        >
+                        (Number(myPage) > 1 ? Number(myPage) - 1 : 0) + rowIndex + 1
+                      ) : (
+                        <Tooltip title={`${row[column.id as keyof typeof row]}`}>
                           <Chip
                             sx={{
                               backgroundColor: 'transparent',
                               whiteSpace: 'nowrap'
                             }}
-                            label={`${
-                              row[column.id] && typeof row[column.id] === 'string'
-                                ? row[column.id].replaceAll(' ', '\u00A0')
-                                : row[column.id]
-                            }`}
+                            label={`${row[column.id as keyof typeof row]}`}
                           />
                         </Tooltip>
-                      ) : (
-                        ''
                       )}
-                      {onOpenPlayerDialog &&
-                        (Object.values(column).indexOf('playerCount') > -1 && row[column.id] > 0 ? (
-                          <Button title="Players" onClick={() => onOpenPlayerDialog(row)}>
-                            <Badge badgeContent={row[column.id]} color="default" max={99}>
-                              <PersonIcon />
-                            </Badge>
-                          </Button>
-                        ) : Object.values(column).indexOf('playerCount') > -1 ? (
-                          <Button title="Players" onClick={() => onOpenPlayerDialog(row)}>
-                            <PersonAddAltSharpIcon />
-                          </Button>
-                        ) : (
-                          ''
-                        ))}
                     </TableCell>
                   ))}
                   {showActions && (
@@ -354,23 +242,7 @@ const TableReused = ({
                           gap: '0.5rem'
                         }}
                       >
-                        {onEdit && (
-                          <Button
-                            title="Edit"
-                            onClick={() => onEdit(row)}
-                            sx={{
-                              background: 'linear-gradient(195deg, rgb(102, 187, 106), rgb(0 107 5))',
-                              minWidth: '3rem',
-                              '&:hover': {
-                                opacity: 0.8,
-                                backgroundColor: 'green'
-                              }
-                            }}
-                          >
-                            <MdEditSquare color="white" size={20} />
-                          </Button>
-                        )}
-                        {onDelete && (
+                        {onDelete && !row.isPast && (
                           <Button
                             title="Delete"
                             onClick={() => onDelete(row)}
@@ -395,13 +267,8 @@ const TableReused = ({
           </TableBody>
         </Table>
       </TableContainer>
-      {hidePagination && (
-        <Box sx={{ mt: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
-          <Paginations totalItems={total} itemsPerPage={10} onPageChange={handlePageChange} />
-        </Box>
-      )}
     </Box>
   )
 }
 
-export default memo(TableReused)
+export default memo(TableGeneral)

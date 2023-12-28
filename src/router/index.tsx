@@ -1,18 +1,17 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { lazy } from 'react'
 import BaseTemplate from '../templates/base/base.template'
 import React from 'react'
 import OrganizerTemplate from '../templates/organizer/organizer.template'
 import ProtectedRoute from './ProtectedRoute'
-const General = lazy(() => import('../layouts/Tournament/General'))
-const Schedule = lazy(() => import('../layouts/Schedule'))
-const Result = lazy(() => import('../layouts/Result'))
-const Teams = lazy(() => import('../layouts/Teams'))
-const Categories = lazy(() => import('../layouts/Categories'))
-const Login = lazy(() => import('../pages/Login/Login'))
-const NotFound = lazy(() => import('../pages/NotFound'))
-const Tournament = lazy(() => import('../layouts/Tournament'))
-const Organizer = lazy(() => import('../layouts/Organizers'))
+import Categories from '../layouts/Categories'
+import Organizers from '../layouts/Organizers'
+import Tournament from '../layouts/Tournament'
+import General from '../layouts/Tournament/General'
+import Schedule from '../layouts/Schedule'
+import Result from '../layouts/Result'
+import { Login } from '../pages/Login'
+import NotFound from '../pages/NotFound'
+import Teams from '../layouts/Teams'
 
 const getDefaultRedirectPath = () => {
   const storedRole = localStorage.getItem('userRole')
@@ -42,7 +41,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'organizer',
-        element: <ProtectedRoute element={<Organizer />} allowedRoles={['ADMIN']} />
+        element: <ProtectedRoute element={<Organizers />} allowedRoles={['ADMIN']} />
       },
       {
         path: 'tournament',

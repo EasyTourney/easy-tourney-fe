@@ -10,9 +10,9 @@ import { Divider, Typography } from '@mui/material'
 import { Logout } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { logout } from '../../redux/reducers'
-import { getLocalStorage } from '../../utils/localStorage'
-import styles from './Header.module.css'
+import { logout } from '../../../redux/reducers'
+import { getLocalStorage } from '../../../utils/localStorage'
+import styles from '../Header.module.css'
 
 const Header: React.FC = () => {
   const dispatch = useDispatch()

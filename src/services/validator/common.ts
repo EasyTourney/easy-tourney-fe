@@ -106,6 +106,7 @@ const phone = Yup.string()
   .min(10, 'Phone number cannot be less than 10 digits')
   .max(11, 'Phone number cannot be more than 11 digits')
 
+const description = Yup.string().max(1000, 'Description cannot be more than 1000 characters')
 export {
   email,
   password,
@@ -117,6 +118,7 @@ export {
   title,
   selectCategory,
   teamName,
-  playerName,
-  phone
+  description,
+  phone,
+  playerName
 }
