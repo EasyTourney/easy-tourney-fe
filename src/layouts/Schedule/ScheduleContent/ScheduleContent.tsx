@@ -289,9 +289,10 @@ const ScheduleContent = () => {
         sx={{
           backgroundColor: '#fff',
           width: '100%',
-          height: 'calc(100vh - 64px - 49px)',
-          p: '10px 0',
-          borderRadius: '1rem'
+          height: 'calc(100vh - 64px - 3rem)',
+          p: '1rem 0',
+          borderRadius: '1rem',
+          transition: 'all 0.5s ease'
         }}
       >
         <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Schedule</Box>

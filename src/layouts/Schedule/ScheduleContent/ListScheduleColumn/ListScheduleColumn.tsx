@@ -13,10 +13,11 @@ const ListScheduleColumn = ({ columnData }: ListScheduleColumnProps) => {
       sx={{
         bgcolor: 'inherit',
         width: '100%',
-        height: '100%',
+        height: 'auto',
         display: 'flex',
         overflowX: 'auto',
         overflowY: 'hidden',
+        borderRadius: '1rem',
         '&::-webkit-scrollbar-track': { m: 3 }
       }}
     >

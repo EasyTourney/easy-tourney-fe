@@ -201,7 +201,7 @@ const TableReused = ({
               <TableRowsLoader rowsNum={10} />
             ) : rows?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columns?.length}>
+                <TableCell colSpan={columns?.length + 1}>
                   <Box sx={{ textAlign: 'center', color: 'gray', padding: '20px 0px' }}>
                     <Box
                       component="img"

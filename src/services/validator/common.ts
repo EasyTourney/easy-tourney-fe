@@ -107,6 +107,37 @@ const phone = Yup.string()
   .max(11, 'Phone number cannot be more than 11 digits')
 
 const description = Yup.string().max(1000, 'Description cannot be more than 1000 characters')
+
+const duration = Yup.number().required('Duration is required').min(1, 'Duration must be greater than 0 minute')
+
+const betweenTime = Yup.number().required('Break is required')
+
+const startTime = Yup.string()
+  .required('Start time is required')
+  .test('isValid', 'Start time is not a valid time', (value) => {
+    if (value === null) return true
+    return dayjs(value).isValid()
+  })
+
+const endTime = Yup.string()
+  .required('End time is required')
+  .test('isValid', 'End time is not a valid time', (value) => {
+    if (value === null) return true
+    return dayjs(value).isValid()
+  })
+  .test({
+    name: 'endTimeCheck',
+    message: 'End time must be greater than start time by the specified duration',
+    test: function (endTime, context) {
+      const { startTime, duration } = context.parent
+      if (!startTime || !endTime) {
+        return true
+      }
+      const expectedEndTime = dayjs(startTime).add(duration - 1, 'minutes')
+      return dayjs(endTime).isAfter(expectedEndTime)
+    }
+  })
+
 export {
   email,
   password,
@@ -120,5 +151,9 @@ export {
   teamName,
   description,
   phone,
-  playerName
+  playerName,
+  duration,
+  betweenTime,
+  startTime,
+  endTime
 }

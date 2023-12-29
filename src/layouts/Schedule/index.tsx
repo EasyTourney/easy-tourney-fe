@@ -1,11 +1,19 @@
+import { Box, Grid } from '@mui/material'
 import React from 'react'
 import ScheduleContent from './ScheduleContent/ScheduleContent'
-import { Box } from '@mui/material'
+import PlanSection from '../../components/Schedule/PlanSection/PlanSection'
 
 function Schedule() {
   return (
-    <Box sx={{ height: '85vh', width: '100%', display: 'flex', marginTop: '1rem' }}>
-      <ScheduleContent />
+    <Box sx={{ marginTop: '1rem', overflowX: 'auto' }}>
+      <Grid container spacing={2}>
+        <Grid item xs={9}>
+          <ScheduleContent />
+        </Grid>
+        <Grid item xs={3}>
+          <PlanSection />
+        </Grid>
+      </Grid>
     </Box>
   )
 }
