@@ -70,7 +70,7 @@ const General = () => {
       left: false,
       style: {
         filed: 'Id',
-        width: '40px'
+        width: '10%'
       }
     },
     {
@@ -80,7 +80,7 @@ const General = () => {
       left: false,
       style: {
         filed: 'fullName',
-        width: '400px'
+        width: '45%'
       }
     },
     {
@@ -90,7 +90,7 @@ const General = () => {
       left: false,
       style: {
         filed: 'email',
-        width: '400px'
+        width: '45%'
       }
     }
   ]
@@ -103,7 +103,7 @@ const General = () => {
       left: false,
       style: {
         filed: 'Id',
-        width: '40px'
+        width: '10%'
       }
     },
     {
@@ -113,7 +113,7 @@ const General = () => {
       left: false,
       style: {
         filed: 'event',
-        width: '800px'
+        width: '90%'
       }
     }
   ]

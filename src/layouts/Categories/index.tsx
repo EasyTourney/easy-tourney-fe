@@ -24,7 +24,7 @@ const Category = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'Id',
-        width: '100px'
+        width: '70px'
       }
     },
     {

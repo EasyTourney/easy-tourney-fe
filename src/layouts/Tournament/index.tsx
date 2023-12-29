@@ -30,7 +30,7 @@ const TournamentTable = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'Id',
-        width: '120px'
+        width: '70px'
       }
     },
     {
@@ -165,7 +165,7 @@ const TournamentTable = ({ navigate, location }: any) => {
       sortType: sortType,
       sortValue: sortType && sortValue,
       filterStatus: filterStatus !== 'All' ? filterStatus : '',
-      filterCategory: filterCategory
+      filterCategory: filterCategory !== 'All' ? filterCategory : ''
     }
     removeEmptyFields(currentParams)
     navigate({
@@ -178,7 +178,7 @@ const TournamentTable = ({ navigate, location }: any) => {
       sortType: sortType,
       sortValue: sortType && sortValue,
       filterStatus: filterStatus !== 'All' ? filterStatus : '',
-      filterCategory: filterCategory
+      filterCategory: filterCategory !== 'All' ? filterCategory : ''
     }
     removeEmptyFields(param)
     getAll({ ...param })
@@ -287,7 +287,7 @@ const TournamentTable = ({ navigate, location }: any) => {
           <TextField
             id="filter"
             label="Category"
-            defaultValue=""
+            defaultValue="All"
             variant="outlined"
             select
             size="small"
@@ -302,7 +302,7 @@ const TournamentTable = ({ navigate, location }: any) => {
             }}
             onChange={handleChangeFilterCategory}
           >
-            <MenuItem value="">None</MenuItem>
+            <MenuItem value="All">All</MenuItem>
             {listCategory?.map((option: any) => (
               <MenuItem key={option.categoryId} value={option.categoryId}>
                 {option.categoryName}

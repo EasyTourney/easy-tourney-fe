@@ -184,7 +184,7 @@ const TableGeneral = ({
                       component="img"
                       src={noItem}
                       alt="no-item"
-                      sx={{ width: '100%', height: '250px', objectFit: 'contain' }}
+                      sx={{ width: '100%', height: '200px', objectFit: 'contain' }}
                     />
                   </Box>
                 </TableCell>

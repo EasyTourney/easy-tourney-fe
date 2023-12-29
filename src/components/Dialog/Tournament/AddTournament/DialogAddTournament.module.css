@@ -51,3 +51,8 @@
   line-height: 1.66;
   letter-spacing: 0.03333em;
 }
+.add-tournament-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

@@ -157,7 +157,8 @@ const TableReused = ({
                     fontWeight: '500',
                     textTransform: 'uppercase',
                     borderRight: ' 1px solid rgba(224, 224, 224, 1)',
-                    borderCollapse: 'collapse'
+                    borderCollapse: 'collapse',
+                    padding: '6px 12px'
                   }}
                   style={{ width: `${column.id === column.style?.filed && column.style.width}` }}
                 >
@@ -188,7 +189,8 @@ const TableReused = ({
                     color: 'white',
                     fontWeight: '500',
                     textTransform: 'uppercase',
-                    width: '100px'
+                    width: '100px',
+                    padding: '6px 12px'
                   }}
                 >
                   Actions
@@ -207,7 +209,7 @@ const TableReused = ({
                       component="img"
                       src={noItem}
                       alt="no-item"
-                      sx={{ width: '100%', height: '250px', objectFit: 'contain' }}
+                      sx={{ width: '100%', height: '200px', objectFit: 'contain' }}
                     />
                   </Box>
                 </TableCell>
@@ -232,7 +234,8 @@ const TableReused = ({
                         borderRight: ' 1px solid rgba(224, 224, 224, 1)',
                         borderCollapse: 'collapse',
                         maxWidth: '120px',
-                        minWidth: '50px'
+                        minWidth: '50px',
+                        padding: '6px 12px'
                       }}
                     >
                       {Object.values(column).indexOf('Id') > -1 ? (
@@ -305,6 +308,7 @@ const TableReused = ({
                               ? row[column.id].replaceAll(' ', '\u00A0')
                               : row[column.id]
                           }`}
+                          placement="right"
                         >
                           <Chip
                             sx={{
@@ -343,7 +347,8 @@ const TableReused = ({
                       component="td"
                       sx={{
                         borderRight: '1px solid rgba(224, 224, 224, 1)',
-                        borderCollapse: 'collapse'
+                        borderCollapse: 'collapse',
+                        padding: '6px 12px'
                       }}
                     >
                       <Box

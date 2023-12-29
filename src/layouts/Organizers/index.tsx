@@ -32,7 +32,7 @@ const Organizers = ({ navigate, location }: any) => {
       left: false,
       style: {
         filed: 'Id',
-        width: '120px'
+        width: '70px'
       }
     },
     {
