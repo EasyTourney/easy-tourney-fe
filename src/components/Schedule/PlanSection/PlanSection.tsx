@@ -59,6 +59,9 @@ const PlanSection = () => {
               onChange={formik.handleChange}
               type="number"
               value={formik.values.duration}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
             />
           </Box>
           <Box>
@@ -75,6 +78,9 @@ const PlanSection = () => {
               onChange={formik.handleChange}
               type="number"
               value={formik.values.betweenTime}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
             />
           </Box>
           <Box>

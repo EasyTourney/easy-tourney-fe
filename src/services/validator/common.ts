@@ -110,7 +110,7 @@ const description = Yup.string().max(1000, 'Description cannot be more than 1000
 
 const duration = Yup.number().required('Duration is required').min(1, 'Duration must be greater than 0 minute')
 
-const betweenTime = Yup.number().required('Break is required')
+const betweenTime = Yup.number().required('Break is required').min(0, 'Break must not be negative number')
 
 const startTime = Yup.string()
   .required('Start time is required')
