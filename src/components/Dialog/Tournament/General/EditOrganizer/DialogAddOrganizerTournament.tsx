@@ -3,13 +3,12 @@ import Dialog from '@mui/material/Dialog'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useFormik } from 'formik'
-import { Alert, Autocomplete, DialogActions, DialogContent, DialogTitle, FormControl, TextField } from '@mui/material'
+import { Autocomplete, DialogActions, DialogContent, DialogTitle, FormControl, TextField } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import styles from './DialogAddOrganizerInTournament.module.css'
 import { getAllOrganizers } from '../../../../../apis/axios/organizers/organizer'
 import { setSelectOrganizer } from '../../../../../redux/reducers/organizers/organizers.reducer'
-import { Organizer } from '../../../../../types/organizer'
 import { getTournamentById } from '../../../../../apis/axios/tournaments/tournament'
 import { editGeneralTournament } from '../../../../../apis/axios/tournaments/generalTournaments'
 import { RootState } from '../../../../../redux/store'
@@ -23,10 +22,14 @@ interface OrganizerProps {
 
 const DiaLogAddOrganizerInTournamnet = ({ open, setOpen }: OrganizerProps) => {
   const dispatch = useDispatch()
-  const [errorCategory, setErrorCategory] = useState<boolean>(false)
-  const selectOrganizers = useSelector((state: any) => state.organizer.selectOrganizers)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const allFullNames = selectOrganizers.map((organizer: any) => organizer.fullName)
+  const [errorOrganizer, setErrorOrganizer] = useState<boolean>(false)
+  const organizerList = useSelector((state: any) => state.organizer.selectOrganizers)
+  const selectedOrganizer = useSelector((state: any) => state.general.selectedOrganizer)
+  const matchingFriends = organizerList.filter((friend: any) => {
+    return !selectedOrganizer.some((user: any) => user.id === friend.id)
+  })
+  const allFullNames = matchingFriends.map((organizer: any) => organizer.fullName)
+
   const tournament = useSelector((state: RootState) => {
     const selectedTournament = state.tournament.general
     if (Array.isArray(selectedTournament)) {
@@ -68,27 +71,19 @@ const DiaLogAddOrganizerInTournamnet = ({ open, setOpen }: OrganizerProps) => {
       try {
         const match = values.organizers.match(/^(.*) \((.*)\)$/)
         if (match) {
-          const fullName = match[1]
-          const selectedOrganizer = selectOrganizers.find((organizer: any) => organizer.fullName.includes(fullName))
-
+          const fullName = match[0]
+          const selectedOrganizer = organizerList.find((organizer: any) => organizer.fullName === fullName)
           if (selectedOrganizer) {
             const id = selectedOrganizer.id
             const currentOrganizerIds = await getCurrentOrganizerIds(tournament.id)
-
-            const isDuplicate = currentOrganizerIds.includes(id)
-
-            if (!isDuplicate) {
-              const updatedOrganizerIds = [...currentOrganizerIds, id]
-              const organizer = await editOrganizersInTournament(tournament.id, updatedOrganizerIds)
-              const organizerUpdate = organizer.organizers
-              dispatch(setSelectedOrganizer(organizerUpdate))
-              dispatch(updatedOrganizer(organizerUpdate))
-              toast.success('Category updated successfully!')
-              formik.resetForm()
-              handleClose()
-            } else {
-              setErrorMessage('Organizer has already existed !')
-            }
+            const updatedOrganizerIds = [...currentOrganizerIds, id]
+            const organizer = await editOrganizersInTournament(tournament.id, updatedOrganizerIds)
+            const organizerUpdate = organizer.organizers
+            dispatch(setSelectedOrganizer(organizerUpdate))
+            dispatch(updatedOrganizer(organizerUpdate))
+            toast.success('Category updated successfully!')
+            formik.resetForm()
+            handleClose()
           } else {
             console.error('Selected organizer not found')
           }
@@ -104,6 +99,7 @@ const DiaLogAddOrganizerInTournamnet = ({ open, setOpen }: OrganizerProps) => {
   useEffect(() => {
     if (open) {
       formik.resetForm()
+      setErrorOrganizer(false)
       formik.setValues({
         organizers: ''
       })
@@ -140,12 +136,12 @@ const DiaLogAddOrganizerInTournamnet = ({ open, setOpen }: OrganizerProps) => {
     }
   }
 
-  const handleBlurCategory = () => {
+  const handleBlurOrganizer = () => {
     if (formik.errors.organizers) {
-      setErrorCategory(false)
+      setErrorOrganizer(false)
     }
     if (selectedValue === '' || selectedValue === null) {
-      setErrorCategory(true)
+      setErrorOrganizer(true)
     }
   }
   const handleInputChange = (event: React.ChangeEvent<object>, value: string | null) => {
@@ -153,18 +149,17 @@ const DiaLogAddOrganizerInTournamnet = ({ open, setOpen }: OrganizerProps) => {
   }
 
   const selectedValue = formik?.values?.organizers
-  const isOptionExists = allFullNames?.some((option: Organizer) => option.email === selectedValue)
+  useEffect(() => {
+    if (selectedValue?.length > 0) {
+      setErrorOrganizer(false)
+    }
+  }, [selectedValue])
   return (
     <Dialog open={open} onClose={handleClose}>
       <Box sx={{ p: 2, minWidth: '300px' }}>
-        <DialogTitle className={styles['dialog-title']}>Edit Organizer</DialogTitle>
-        {errorMessage && (
-          <Alert className={styles['alert-message']} severity="error" onClose={() => setErrorMessage(null)}>
-            {errorMessage}
-          </Alert>
-        )}
-        <form onSubmit={formik.handleSubmit}>
-          <DialogContent sx={{ width: '100%' }}>
+        <DialogTitle className={styles['dialog-title']}>Add Organizer</DialogTitle>
+        <DialogContent>
+          <form onSubmit={formik.handleSubmit}>
             <FormControl fullWidth className={styles['form-organizer']}>
               <Box component="label" className={styles['title']}>
                 Organizer
@@ -175,22 +170,8 @@ const DiaLogAddOrganizerInTournamnet = ({ open, setOpen }: OrganizerProps) => {
                 onChange={(event, value) => {
                   formik.setFieldValue('organizers', value)
                 }}
-                onBlur={handleBlurCategory}
-                value={isOptionExists ? selectedValue : null}
-                sx={{
-                  width: '100%',
-                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: `${errorCategory && '#d32f2f'}`
-                  },
-
-                  '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    borderColor: `${errorCategory && '#d32f2f'}`
-                  },
-
-                  '& .MuiOutlinedInput-root': {
-                    padding: '2px'
-                  }
-                }}
+                onBlur={handleBlurOrganizer}
+                value={selectedValue}
                 ListboxProps={{
                   style: {
                     maxHeight: '195px',
@@ -207,13 +188,13 @@ const DiaLogAddOrganizerInTournamnet = ({ open, setOpen }: OrganizerProps) => {
                     }}
                     error={
                       (selectedValue === '' || selectedValue === null) &&
-                      errorCategory === false &&
+                      errorOrganizer === false &&
                       formik.touched.organizers &&
                       Boolean(formik.errors.organizers)
                     }
                     helperText={
                       (selectedValue === '' || selectedValue === null) &&
-                      errorCategory === false &&
+                      errorOrganizer === false &&
                       formik.touched.organizers &&
                       formik.errors.organizers
                     }
@@ -229,22 +210,22 @@ const DiaLogAddOrganizerInTournamnet = ({ open, setOpen }: OrganizerProps) => {
                   />
                 )}
               />
-              {errorCategory && (selectedValue === '' || selectedValue === null) ? (
+              {errorOrganizer && (selectedValue === '' || selectedValue === null) ? (
                 <Box component="span" className={styles['organizer-error']}>
-                  Category is required
+                  Organizer is required
                 </Box>
               ) : null}
             </FormControl>
-          </DialogContent>
-          <DialogActions className={styles['group-btn']}>
-            <Button variant="outlined" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="contained">
-              Save
-            </Button>
-          </DialogActions>
-        </form>
+            <DialogActions className={styles['group-btn']}>
+              <Button variant="outlined" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button style={{ marginLeft: '12px' }} type="submit" variant="contained">
+                Save
+              </Button>
+            </DialogActions>
+          </form>
+        </DialogContent>
       </Box>
     </Dialog>
   )

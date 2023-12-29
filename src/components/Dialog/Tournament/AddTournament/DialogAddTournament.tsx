@@ -263,7 +263,7 @@ const DialogAddTournament = ({ addTournament, open, setOpen, onAdd }: Tournament
             <Button variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
-            <Button type="submit" variant="contained">
+            <Button style={{ marginLeft: '12px' }} type="submit" variant="contained">
               Save
             </Button>
           </DialogActions>

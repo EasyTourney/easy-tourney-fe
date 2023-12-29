@@ -2,7 +2,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import styles from './DialogAddOrganizerInTournament.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-import DiaLogAddOrganizerInTournamnet from './DialogAddOrganizerTournamnet'
+import DiaLogAddOrganizerInTournament from './DialogAddOrganizerTournament'
 import TablesGeneral from '../../../../Tables/TablesGeneral/TablesGeneral'
 import Swal from 'sweetalert2'
 import { getTournamentById } from '../../../../../apis/axios/tournaments/tournament'
@@ -130,10 +130,10 @@ const DialogEditOrganizerTournament = ({ open, setOpen }: DialogProps) => {
 
   return (
     <Box>
-      <DiaLogAddOrganizerInTournamnet
+      <DiaLogAddOrganizerInTournament
         open={openAddOrganizer}
         setOpen={setOpenAddOrganizer}
-      ></DiaLogAddOrganizerInTournamnet>
+      ></DiaLogAddOrganizerInTournament>
       <Dialog
         onClick={handleClickOutside}
         onClose={handleClose}
@@ -149,7 +149,7 @@ const DialogEditOrganizerTournament = ({ open, setOpen }: DialogProps) => {
         maxWidth="xl"
         sx={{ zIndex: 1000 }}
       >
-        <DialogTitle className={styles['dialog-title']}>Organizer</DialogTitle>
+        <DialogTitle className={styles['dialog-title']}>Edit Organizers</DialogTitle>
         <DialogContent className={styles['dialog-container']}>
           <Button
             variant="contained"
@@ -166,9 +166,9 @@ const DialogEditOrganizerTournament = ({ open, setOpen }: DialogProps) => {
           </Button>
           <TablesGeneral columns={columns} rows={organizer} onDelete={handleDelete} loading={loading} />
         </DialogContent>
-        <DialogActions className={styles['group-btn']}>
-          <Button variant="outlined" onClick={handleClose}>
-            Close
+        <DialogActions className={styles['btn-canlce']}>
+          <Button style={{ marginRight: '22px' }} variant="outlined" onClick={handleClose}>
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

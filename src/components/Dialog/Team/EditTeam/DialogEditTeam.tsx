@@ -123,7 +123,7 @@ const DialogEditTeam = ({ editTeam, onOpen, onClose }: DialogEditTeamProps) => {
             <Button variant="outlined" onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="contained" type="submit" disabled={isSaving}>
+            <Button style={{ marginLeft: '12px' }} variant="contained" type="submit" disabled={isSaving}>
               Save
             </Button>
           </DialogActions>

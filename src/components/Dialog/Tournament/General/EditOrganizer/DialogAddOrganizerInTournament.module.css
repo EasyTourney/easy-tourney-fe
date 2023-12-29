@@ -20,7 +20,13 @@
   width: 100%;
   justify-content: flex-end;
   margin-top: 1rem;
-  padding: 0.5rem 1.75rem 1.75rem;
+  padding: 8px 0 !important
+}
+.btn-canlce {
+  width: 100%;
+  justify-content: flex-end;
+  padding: 8px 0 !important;
+  margin-bottom: 20px;
 }
 
 .alert-message {

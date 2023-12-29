@@ -121,16 +121,13 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
       handleClose()
     }
   }
-  const eventDatesFormattedWithPastInfo = eventDatesFormatted.map((eventDate) => ({
-    ...eventDate,
-    isPast: moment(eventDate.date, 'dddd, MMMM D, YYYY - [from] HH:mm [to] HH:mm').isBefore(moment())
-  }))
 
   return (
     <Box>
       <DiaLogAddEventDateTournamnet
         open={openAddEventDate}
         setOpen={setOpenAddEventDate}
+        eventDates={eventDatesFormatted}
       ></DiaLogAddEventDateTournamnet>
       <Dialog
         onClick={handleClickOutside}
@@ -147,7 +144,7 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
         maxWidth="xl"
         sx={{ zIndex: 1000 }}
       >
-        <DialogTitle className={styles['dialog-title']}>Event Date</DialogTitle>
+        <DialogTitle className={styles['dialog-title']}>Edit Event Dates</DialogTitle>
         <DialogContent className={styles['dialog-container']}>
           <Button
             variant="contained"
@@ -162,16 +159,11 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
           >
             Add new
           </Button>
-          <TablesGeneral
-            columns={columns}
-            rows={eventDatesFormattedWithPastInfo}
-            onDelete={handleDelete}
-            loading={loading}
-          />
+          <TablesGeneral columns={columns} rows={eventDatesFormatted} onDelete={handleDelete} loading={loading} />
         </DialogContent>
         <DialogActions className={styles['group-btn']}>
-          <Button variant="outlined" onClick={handleClose}>
-            Close
+          <Button style={{ marginRight: '22px' }} variant="outlined" onClick={handleClose}>
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

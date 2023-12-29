@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -16,13 +16,15 @@ import { getTournamentById } from '../../../../../apis/axios/tournaments/tournam
 import { editGeneralTournament } from '../../../../../apis/axios/tournaments/generalTournaments'
 import { setSelectedEventDate } from '../../../../../redux/reducers/general/general.reducer'
 import { updatedEventDate } from '../../../../../redux/reducers/tournaments/tournaments.reducer'
+import { EventDate } from '../../../../../types/eventDate'
 
 interface OrganizerProps {
   open: boolean
   setOpen: (value: boolean) => void
+  eventDates: EventDate[]
 }
 
-const DiaLogAddEventDateTournamnet = ({ open, setOpen }: OrganizerProps) => {
+const DiaLogAddEventDateTournamnet = ({ open, setOpen, eventDates }: OrganizerProps) => {
   const dispatch = useDispatch()
   const [dates, setDates] = useState<DateObject[] | []>([])
   const [errorDatePicker] = useState<boolean>(false)
@@ -54,8 +56,13 @@ const DiaLogAddEventDateTournamnet = ({ open, setOpen }: OrganizerProps) => {
         const currentEventDates = await getEventDatesFromBackend(tournament.id)
         const dates = currentEventDates.map((eventDate: any) => eventDate.date)
         const duplicateDates = values.eventDates.filter((date: string) => dates.includes(date))
-        if (duplicateDates.length > 0) {
-          const duplicateDatesString = duplicateDates.join(', ')
+        const formattedDates = duplicateDates.map((date: string) => {
+          const [year, month, day] = date.split('-')
+          const formattedDate = `${day}/${month}/${year}`
+          return formattedDate
+        })
+        if (formattedDates.length > 0) {
+          const duplicateDatesString = formattedDates.join(', ')
           setErrorMessage(`Duplicate event dates detected for ${duplicateDatesString}`)
         } else {
           setErrorMessage(null)
@@ -69,7 +76,6 @@ const DiaLogAddEventDateTournamnet = ({ open, setOpen }: OrganizerProps) => {
         }
       } catch (error) {
         console.error(error)
-        toast.error('An error occurred while updating event dates!')
       }
     }
   })
@@ -115,6 +121,11 @@ const DiaLogAddEventDateTournamnet = ({ open, setOpen }: OrganizerProps) => {
       setIsDateSelected(false)
     }
   }
+  useEffect(() => {
+    if (open) {
+      setErrorMessage(null)
+    }
+  }, [open])
 
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
@@ -134,21 +145,22 @@ const DiaLogAddEventDateTournamnet = ({ open, setOpen }: OrganizerProps) => {
         }
       }}
     >
-      <Box sx={{ p: 2, minWidth: '300px' }}>
-        <DialogTitle className={styles['dialog-title']}>Add Event Date</DialogTitle>
+      <Box sx={{ minWidth: '300px' }}>
+        <DialogTitle className={styles['dialog-title']}>Add Event Dates</DialogTitle>
         {errorMessage && (
           <Alert className={styles['alert-message']} severity="error" onClose={() => setErrorMessage(null)}>
             {errorMessage}
           </Alert>
         )}
-        <form onSubmit={formik.handleSubmit}>
-          <DialogContent
-            sx={{
-              width: '100%',
-              height: '150px',
-              overflowY: 'initial'
-            }}
-          >
+        <DialogContent
+          sx={{
+            width: '100%',
+            height: '200px',
+            overflowY: 'initial',
+            padding: '0px !important'
+          }}
+        >
+          <form onSubmit={formik.handleSubmit}>
             <FormControl fullWidth>
               <DatePicker
                 value={dates}
@@ -161,6 +173,17 @@ const DiaLogAddEventDateTournamnet = ({ open, setOpen }: OrganizerProps) => {
                 minDate={moment(today).format('DD/MM/YYYY')}
                 placeholder="YYYY/MM/DD"
                 render={<CustomMultipleInput errorDatePicker={errorDatePicker} />}
+                mapDays={({ date }) => {
+                  if (!moment(date.toDate()).isBefore(today)) {
+                    if (
+                      eventDates.find((eventDate) => moment(eventDate.date).format('DD/MM/YYYY') === date.toString())
+                    ) {
+                      return {
+                        disabled: true
+                      }
+                    }
+                  }
+                }}
               />
               {errorDatePicker && dates?.length === 0 ? (
                 <Box component="span" className={styles['eventdate-error']}>
@@ -168,16 +191,16 @@ const DiaLogAddEventDateTournamnet = ({ open, setOpen }: OrganizerProps) => {
                 </Box>
               ) : null}
             </FormControl>
-          </DialogContent>
-          <DialogActions className={styles['group-btn']}>
-            <Button variant="outlined" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="contained" disabled={!isDateSelected}>
-              Save
-            </Button>
-          </DialogActions>
-        </form>
+            <DialogActions className={styles['group-btn']}>
+              <Button variant="outlined" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="contained" disabled={!isDateSelected}>
+                Save
+              </Button>
+            </DialogActions>
+          </form>
+        </DialogContent>
       </Box>
     </Dialog>
   )

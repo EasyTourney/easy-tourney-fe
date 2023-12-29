@@ -1,6 +1,6 @@
 import { useFormik } from 'formik'
 import React, { useEffect } from 'react'
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, TextField } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
 import { toast } from 'react-toastify'
 import styles from './DialogEditDescription.module.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -73,39 +73,37 @@ const DialogEditDescription = ({ open, setOpen }: DescriptionProps) => {
         PaperProps={{ sx: { borderRadius: '1rem', width: '1000px !important', maxWidth: '600px !important' } }}
       >
         <DialogTitle className={styles['dialog-title']}>Edit Description</DialogTitle>
-        <form onSubmit={formik.handleSubmit} className={styles['description-form']}>
-          <DialogContent>
-            <FormControl fullWidth className={styles['tournament-form-container']}>
-              <Box component="label" sx={{ fontWeight: '500' }}>
-                Description
-              </Box>
-              <TextField
-                id="description"
-                name="description"
-                helperText={
-                  formik.touched.description && typeof formik.errors.description === 'string'
-                    ? formik.errors.description
-                    : ''
-                }
-                multiline
-                error={formik.touched.description && Boolean(formik.errors.description)}
-                onBlur={formik.handleBlur}
-                rows={5}
-                value={formik.values.description}
-                onChange={formik.handleChange}
-                style={{ width: '450px', padding: '0' }}
-              />
-            </FormControl>
-          </DialogContent>
-          <DialogActions className={styles['group-btn']}>
-            <Button variant="outlined" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button variant="contained" type="submit">
-              Save
-            </Button>
-          </DialogActions>
-        </form>
+        <DialogContent>
+          <form onSubmit={formik.handleSubmit} className={styles['description-form']}>
+            <Box component="label" sx={{ fontWeight: '500' }}>
+              Description
+            </Box>
+            <TextField
+              id="description"
+              name="description"
+              helperText={
+                formik.touched.description && typeof formik.errors.description === 'string'
+                  ? formik.errors.description
+                  : ''
+              }
+              multiline
+              error={formik.touched.description && Boolean(formik.errors.description)}
+              onBlur={formik.handleBlur}
+              rows={4}
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              style={{ width: '100%' }}
+            />
+            <DialogActions className={styles['group-btn']}>
+              <Button variant="outlined" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button style={{ marginLeft: '12px' }} variant="contained" type="submit">
+                Save
+              </Button>
+            </DialogActions>
+          </form>
+        </DialogContent>
       </Dialog>
     </Box>
   )

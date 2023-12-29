@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { Outlet } from 'react-router-dom'
 import Sidebar from '../../components/Sidebar/admin'
-import { Header } from '../../components/Header'
+import Header from '../../components/Header/General/Header'
 import { useState, useEffect } from 'react'
 import React from 'react'
 import withTokenCheck from '../../hoc/withTokenCheck'

@@ -23,6 +23,7 @@
 
 .tournament-action {
   margin-top: 1rem;
+  padding: 8px 0 !important;
 }
 .tournament-event-dates-warning {
   font-size: 0.75rem;

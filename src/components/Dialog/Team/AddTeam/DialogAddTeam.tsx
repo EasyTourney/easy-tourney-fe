@@ -134,7 +134,7 @@ const DialogAddTeam = ({ addTeam, onAdd }: DialogAddTeamProps) => {
               <Button variant="outlined" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button variant="contained" type="submit" disabled={isSaving}>
+              <Button style={{ marginLeft: '12px' }} variant="contained" type="submit" disabled={isSaving}>
                 Save
               </Button>
             </DialogActions>

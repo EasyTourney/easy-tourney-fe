@@ -23,6 +23,8 @@ import {
 } from '../../../redux/reducers/general/general.reducer'
 import { setGeneral } from '../../../redux/reducers/tournaments/tournaments.reducer'
 import { MdEditSquare } from 'react-icons/md'
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
 
 const General = () => {
   const dispatch = useDispatch()
@@ -34,6 +36,7 @@ const General = () => {
   const [openOrganizer, setOpenOrganizer] = useState(false)
   const [openEventDate, setOpenEventDate] = useState(false)
   const generalTournamnet = useSelector((state: any) => state.tournament.general)
+  const [isDiscarded, setIsDiscarded] = useState<boolean>(false)
 
   const handleClickOpenTitle = useCallback(() => {
     setOpenTitle(true)
@@ -61,12 +64,12 @@ const General = () => {
 
   const columnsOrganizer = [
     {
-      id: 'id',
+      id: 'Id',
       sortTable: false,
       label: 'No.',
       left: false,
       style: {
-        filed: 'id',
+        filed: 'Id',
         width: '40px'
       }
     },
@@ -120,6 +123,7 @@ const General = () => {
       setIsLoading(true)
     }, 1000)
   }, [loading])
+
   const param: { tournamentId?: string } = useParams()
   useEffect(() => {
     const fetchTournamentData = async () => {
@@ -131,6 +135,28 @@ const General = () => {
       fetchTournamentData()
     }
   }, [param.tournamentId])
+  const handleDiscard = useCallback(async (rowData: { [key: string]: any }) => {
+    const tournamentId = Number(location.pathname.split('/')[2])
+    console.log(rowData)
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, discard it!',
+      allowOutsideClick: false,
+      customClass: {
+        container: 'swal2-container'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        toast.success(tournamentId)
+        setIsDiscarded(true)
+      }
+    })
+  }, [])
   if (!tournamentData) {
     return <div>Loading...</div>
   } else {
@@ -144,17 +170,19 @@ const General = () => {
           <Box className={styles['general-wrapper-title']}>
             <Box className={styles['general-title-common']}>
               Title
-              <Button
-                title="Edit"
-                sx={{
-                  backgroundColor: 'white',
-                  minWidth: '1rem',
-                  padding: '0.25rem'
-                }}
-                onClick={handleClickOpenTitle}
-              >
-                <MdEditSquare color="green" size={20} />
-              </Button>
+              {!isDiscarded && (
+                <Button
+                  title="Edit"
+                  sx={{
+                    backgroundColor: 'white',
+                    minWidth: '1rem',
+                    padding: '0.25rem'
+                  }}
+                  onClick={handleClickOpenTitle}
+                >
+                  <MdEditSquare color="green" size={20} />
+                </Button>
+              )}
             </Box>
             <Box component="span">{tournamentData.title}</Box>
           </Box>
@@ -162,17 +190,19 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Category
-              <Button
-                title="Edit"
-                sx={{
-                  backgroundColor: 'white',
-                  minWidth: '1rem',
-                  padding: '0.25rem'
-                }}
-                onClick={handleEditCategory}
-              >
-                <MdEditSquare color="green" size={20} />
-              </Button>
+              {!isDiscarded && (
+                <Button
+                  title="Edit"
+                  sx={{
+                    backgroundColor: 'white',
+                    minWidth: '1rem',
+                    padding: '0.25rem'
+                  }}
+                  onClick={handleEditCategory}
+                >
+                  <MdEditSquare color="green" size={20} />
+                </Button>
+              )}
             </Box>
             <Box component="span">
               {' '}
@@ -203,17 +233,19 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Organizer
-              <Button
-                title="Edit"
-                sx={{
-                  backgroundColor: 'white',
-                  minWidth: '1rem',
-                  padding: '0.25rem'
-                }}
-                onClick={handleEditOrganizer}
-              >
-                <MdEditSquare color="green" size={20} />
-              </Button>
+              {!isDiscarded && (
+                <Button
+                  title="Edit"
+                  sx={{
+                    backgroundColor: 'white',
+                    minWidth: '1rem',
+                    padding: '0.25rem'
+                  }}
+                  onClick={handleEditOrganizer}
+                >
+                  <MdEditSquare color="green" size={20} />
+                </Button>
+              )}
             </Box>
             <Box className={styles['general-organizer-table']}>
               {tournamentData?.organizers ? (
@@ -234,17 +266,20 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Event dates
-              <Button
-                title="Edit"
-                sx={{
-                  backgroundColor: 'white',
-                  minWidth: '1rem',
-                  padding: '0.25rem'
-                }}
-                onClick={handleEditEventDate}
-              >
-                <MdEditSquare color="green" size={20} />
-              </Button>
+              {!isDiscarded && (
+                <Button
+                  disabled={isDiscarded}
+                  title="Edit"
+                  sx={{
+                    backgroundColor: 'white',
+                    minWidth: '1rem',
+                    padding: '0.25rem'
+                  }}
+                  onClick={handleEditEventDate}
+                >
+                  <MdEditSquare color="green" size={20} />
+                </Button>
+              )}
             </Box>
             <Box className={styles['general-eventdates-table']}>
               <TableReused
@@ -265,7 +300,7 @@ const General = () => {
                 <Typography className={styles['general-text-warning']}>
                   Once you discard this tournament, there is no going back. Please be certain.
                 </Typography>
-                <Button className={styles['general-btn-discard']}>
+                <Button onClick={handleDiscard} className={styles['general-btn-discard']}>
                   <Typography component="h2" className={styles['general-discard-text']}>
                     Discard
                   </Typography>

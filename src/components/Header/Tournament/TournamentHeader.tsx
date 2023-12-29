@@ -57,7 +57,7 @@ const TournamentHeader: React.FC = () => {
               variant="h5"
               gutterBottom
               className={styles['typography-header']}
-              style={{ marginTop: pathSegments.length > 1 ? '1.5rem' : '0' }}
+              style={{ marginTop: pathSegments.length > 1 ? '2.5rem' : '0' }}
             >
               {pathSegments.length > 0 ? general.title : capitalizeFirstLetter(pathSegments[pathSegments.length - 1])}
             </Typography>

@@ -13,6 +13,7 @@
 .group-btn {
   width: 100%;
   justify-content: flex-end;
+  padding: 8px 0 !important;
 }
 .add-organizer-btn,
 .add-organizer-btn:hover {

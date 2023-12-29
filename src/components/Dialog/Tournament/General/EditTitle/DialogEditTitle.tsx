@@ -1,6 +1,6 @@
 import { useFormik } from 'formik'
 import React, { useEffect } from 'react'
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, TextField } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
 import { toast } from 'react-toastify'
 import styles from './DialogEditTitle.module.css'
 import { TournamentSchema } from '../../../../../services/validator/tournament.validator'
@@ -73,34 +73,32 @@ const DialogEditTournamentTitle = ({ open, setOpen }: TournamentTitleProps) => {
         PaperProps={{ sx: { borderRadius: '1rem' } }}
       >
         <DialogTitle className={styles['dialog-title']}>Edit Title</DialogTitle>
-        <form onSubmit={formik.handleSubmit} className={styles['title-form']}>
-          <DialogContent sx={{ width: '100%' }}>
-            <FormControl fullWidth>
-              <Box component="label" sx={{ fontWeight: '500' }}>
-                Title <span className={styles['required-marked']}>*</span>
-              </Box>
-              <TextField
-                error={formik.touched.title && Boolean(formik.errors.title)}
-                fullWidth
-                helperText={formik.touched.title && typeof formik.errors.title === 'string' ? formik.errors.title : ''}
-                id="title"
-                name="title"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.title}
-                style={{ width: '100%' }}
-              />
-            </FormControl>
-          </DialogContent>
-          <DialogActions className={styles['group-btn']}>
-            <Button variant="outlined" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button variant="contained" type="submit">
-              Save
-            </Button>
-          </DialogActions>
-        </form>
+        <DialogContent>
+          <form onSubmit={formik.handleSubmit} className={styles['title-form']}>
+            <Box component="label" sx={{ fontWeight: '500' }}>
+              Title <span className={styles['required-marked']}>*</span>
+            </Box>
+            <TextField
+              error={formik.touched.title && Boolean(formik.errors.title)}
+              fullWidth
+              helperText={formik.touched.title && typeof formik.errors.title === 'string' ? formik.errors.title : ''}
+              id="title"
+              name="title"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              value={formik.values.title}
+              style={{ width: '100%' }}
+            />
+            <DialogActions className={styles['group-btn']}>
+              <Button variant="outlined" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button style={{ marginLeft: '12px' }} variant="contained" type="submit">
+                Save
+              </Button>
+            </DialogActions>
+          </form>
+        </DialogContent>
       </Dialog>
     </Box>
   )

@@ -14,6 +14,8 @@ import DialogViewPlayerList from '../../components/Dialog/Player/ViewPlayer/Dial
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 import { DialogAddTeam } from '../../components/Dialog/Team/AddTeam'
+import { getTournamentById } from '../../apis/axios/tournaments/tournament'
+import { setGeneral } from '../../redux/reducers/tournaments/tournaments.reducer'
 
 const Teams = ({ navigate, location }: any) => {
   const columns = [
@@ -125,7 +127,17 @@ const Teams = ({ navigate, location }: any) => {
     },
     [dispatch]
   )
+  const param: { tournamentId?: string } = useParams()
+  useEffect(() => {
+    const fetchTournamentData = async () => {
+      const response = await getTournamentById(Number(param.tournamentId))
+      dispatch(setGeneral(response.data))
+    }
 
+    if (param.tournamentId) {
+      fetchTournamentData()
+    }
+  }, [param.tournamentId])
   const handleDelete = useCallback((rowData: { [key: string]: any }) => {
     const { teamId } = rowData
 
@@ -152,7 +164,7 @@ const Teams = ({ navigate, location }: any) => {
   }, [])
 
   return (
-    <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '1rem' }}>
+    <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '2rem' }}>
       <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Participant</Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>

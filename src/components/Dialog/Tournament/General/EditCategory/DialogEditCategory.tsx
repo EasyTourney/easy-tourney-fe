@@ -94,10 +94,10 @@ const DiaLogEditCategoryInTournamnet = ({ open, setOpen }: EditCategoryInTournam
 
   return (
     <Dialog open={open} onClose={handleClose} onClick={handleClickOutside}>
-      <Box sx={{ p: 2, minWidth: '300px' }}>
+      <Box sx={{ minWidth: '300px' }}>
         <DialogTitle className={styles['dialog-title']}>Edit Category</DialogTitle>
-        <form onSubmit={formik.handleSubmit} className={styles['category-form']}>
-          <DialogContent sx={{ width: '100%' }}>
+        <DialogContent>
+          <form onSubmit={formik.handleSubmit} className={styles['category-form']}>
             <FormControl fullWidth className={styles['tournament-form-category']}>
               <Box component="label" sx={{ fontWeight: '500' }}>
                 Category <span className={styles['required-marked']}>*</span>
@@ -169,14 +169,16 @@ const DiaLogEditCategoryInTournamnet = ({ open, setOpen }: EditCategoryInTournam
                 </Box>
               ) : null}
             </FormControl>
-          </DialogContent>
-          <DialogActions className={styles['group-btn']}>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit" variant="contained">
-              Save
-            </Button>
-          </DialogActions>
-        </form>
+            <DialogActions className={styles['group-btn']}>
+              <Button variant="outlined" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button style={{ marginLeft: '12px' }} type="submit" variant="contained">
+                Save
+              </Button>
+            </DialogActions>
+          </form>
+        </DialogContent>
       </Box>
     </Dialog>
   )

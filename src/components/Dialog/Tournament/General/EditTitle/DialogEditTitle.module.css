@@ -1,11 +1,3 @@
-.title-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  margin: 1rem 0 0 0;
-}
-
 .dialog-title {
   font-size: 2rem !important;
   font-weight: 500 !important;
@@ -15,6 +7,8 @@
 .group-btn {
   width: 100%;
   justify-content: flex-end;
+  margin-top: 1rem;
+  padding: 8px 0 !important;
 }
 
 
