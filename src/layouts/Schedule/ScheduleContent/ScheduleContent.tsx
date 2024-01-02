@@ -17,23 +17,28 @@ import {
   useSensor,
   useSensors
 } from '@dnd-kit/core'
-import { mockDataBoardSchedule } from '../../../data/mockDataSchedule'
 import { cloneDeep, isEmpty } from 'lodash'
 import { arrayMove } from '@dnd-kit/sortable'
 import { generatePlaceholderCard } from '../../../utils/function'
 import { CSS } from '@dnd-kit/utilities'
 import { MatchDataType, ScheduleDataType } from '../../../types/schedule.type'
+import { dragDropApi, getAllSheduleMatches } from '../../../apis/axios/schedule/schedule'
+import { useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { ScheduleMatchesAPIRes } from '../../../types/common'
 export type CollisionDetectionArgs = Parameters<CollisionDetection>[0]
 
 const ScheduleContent = () => {
   const [columnData, setColumnData] = useState<ScheduleDataType[]>([])
 
-  const [activeDragItemId, setActiveDragItemId] = useState<string | null>(null) //  Get the id of card being draging
+  const [activeDragItemId, setActiveDragItemId] = useState<number | null>(null) //  Get the id of card being draging
   const [activeDragItemData, setActiveDragItemData] = useState<MatchDataType | null>(null) // Get the data of card being draging
   const [oldColumnWhenDragingCard, setOldColumnWhenDragingCard] = useState<any>(null) // Get old data when draging start
-
+  const [update, setUpdate] = useState<boolean>(false)
   // Final impact point
   const lastOverId = useRef<UniqueIdentifier | null>(null)
+
+  const { tournamentId } = useParams()
 
   // Sensors when start dragging card or cancle the operation
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
@@ -42,7 +47,7 @@ const ScheduleContent = () => {
 
   // Find id of column contain Card
   const findColumnByMatchCardId = (matchId: any) => {
-    return columnData?.find((column: any) => column?.matchs?.map((match: any) => match.id).includes(matchId))
+    return columnData?.find((column: any) => column?.matches?.map((match: any) => match.id).includes(matchId))
   }
 
   // Custom  collision detection algorithms
@@ -62,7 +67,7 @@ const ScheduleContent = () => {
         if (checkColumn) {
           const cardMatchIdsByColumn = columnData?.map((column: ScheduleDataType) => {
             if (column.eventDateId === checkColumn.eventDateId) {
-              return column.matchs?.map((match: any) => match.id) || []
+              return column.matches?.map((match: any) => match.id) || []
             }
           })
           const cardOrderIds = cardMatchIdsByColumn?.filter((item: any) => item !== undefined).flat()
@@ -84,17 +89,19 @@ const ScheduleContent = () => {
     [columnData]
   )
 
-  const moveCardBetweenTwoColumns = (
+  const moveCardBetweenTwoColumns = async (
     overColumns: ScheduleDataType,
     overCardId: string,
     active: any,
     over: any,
     activeColumns: ScheduleDataType,
     activeDragingCardId: string,
-    activeDragingCardData: ScheduleDataType
+    activeDragingCardData: ScheduleDataType,
+    triggerFrom: string
   ) => {
     setColumnData((prev: any) => {
-      const overCardIndex = overColumns?.matchs?.findIndex((match: any) => match.id === overCardId)
+      const overCardIndex = overColumns?.matches?.findIndex((match: any) => match.id === overCardId)
+
       // eslint-disable-next-line prefer-const
 
       let newCardIndex
@@ -103,7 +110,7 @@ const ScheduleContent = () => {
         active.rect.current.translated && active.rect.current.translated.top > over.rect.top + over.rect.height
       const modifier = isBelowOverItem ? 1 : 0
       // eslint-disable-next-line prefer-const
-      newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumns?.matchs?.length + 1
+      newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumns?.matches?.length + 1
 
       // Clone columnData to new array to handle data
       const nextColumns = cloneDeep(prev)
@@ -112,7 +119,7 @@ const ScheduleContent = () => {
 
       const filterIdOfColumn = nextColumns?.map((column: any) => {
         if (column.eventDateId === nextActiveColumns.eventDateId) {
-          return column.matchs?.map((match: any) => match.id) || []
+          return column.matches?.map((match: any) => match.id) || []
         }
       })
       let cardOrderIds = filterIdOfColumn?.filter((item: any) => item !== undefined).flat()
@@ -120,29 +127,41 @@ const ScheduleContent = () => {
       // Column old
       if (nextActiveColumns) {
         // Delete the dragging card from its column when dragging to a new column
-        nextActiveColumns.matchs = nextActiveColumns?.matchs?.filter((match: any) => match.id !== activeDragingCardId)
+        nextActiveColumns.matches = nextActiveColumns?.matches?.filter((match: any) => match.id !== activeDragingCardId)
 
-        if (isEmpty(nextActiveColumns.matchs)) {
-          nextActiveColumns.matchs = [generatePlaceholderCard(nextActiveColumns)]
+        if (isEmpty(nextActiveColumns.matches)) {
+          nextActiveColumns.matches = [generatePlaceholderCard(nextActiveColumns)]
         }
+
         // Update Id in column
-        cardOrderIds = nextActiveColumns?.matchs?.map((match: MatchDataType) => match.id)
+        cardOrderIds = nextActiveColumns?.matches?.map((match: MatchDataType) => match.id)
       }
 
       // Column new
       if (nextOverColumns) {
         // Check if the card that is pulling it exists in OverCloud or not => if it exists, delete it
-        nextOverColumns.matchs = nextOverColumns?.matchs?.filter((c: MatchDataType) => c.id !== activeDragingCardId)
+        nextOverColumns.matches = nextOverColumns?.matches?.filter((c: MatchDataType) => c.id !== activeDragingCardId)
         // Add the currently dragged card to the column according to the new index position
-        nextOverColumns.matchs = nextOverColumns.matchs?.toSpliced(newCardIndex, 0, {
+        nextOverColumns.matches = nextOverColumns.matches?.toSpliced(newCardIndex, 0, {
           ...activeDragingCardData,
           eventDateId: nextActiveColumns?.eventDateId
         })
-        nextOverColumns.matchs = nextOverColumns?.matchs?.filter((match: MatchDataType) => !match.FE_PlaceholderCard)
+        nextOverColumns.matches = nextOverColumns?.matches?.filter((match: MatchDataType) => !match.FE_PlaceholderCard)
         // Update Id in column
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        cardOrderIds = nextOverColumns?.matchs?.map((match: MatchDataType) => match.id)
+        cardOrderIds = nextOverColumns?.matches?.map((match: MatchDataType) => match.id)
       }
+      // Call Api Drag drop between different columns (Handle api at handleDragEnd to avoid call api many times)
+      if (triggerFrom === 'handleDragEnd') {
+        const data = {
+          matchId: activeDragingCardId,
+          newEventDateId: overColumns.eventDateId,
+          newIndexOfMatch: newCardIndex + 1
+        }
+
+        DragDropMatches(Number(tournamentId), data)
+      }
+
       return nextColumns
     })
   }
@@ -152,7 +171,7 @@ const ScheduleContent = () => {
     setActiveDragItemId(event?.active?.id)
     setActiveDragItemData(event?.active?.data?.current)
 
-    if (event?.active?.data?.current?.eventDateId) {
+    if (event?.active?.data?.current?.id) {
       setOldColumnWhenDragingCard(findColumnByMatchCardId(event?.active?.id))
     }
   }
@@ -183,7 +202,8 @@ const ScheduleContent = () => {
         over,
         activeColumns,
         activeDragingCardId,
-        activeDragingCardData
+        activeDragingCardData,
+        'handleDragOver'
       )
     }
   }
@@ -191,8 +211,7 @@ const ScheduleContent = () => {
   // Trigger when end draging card
   const handleDragEnd = (event: { active: any; over: any }) => {
     const { active, over } = event
-
-    // Kiểm tra nếu không tồn tại over (kéo linh tinh ra ngoài thì return luôn, tránh lỗi, tránh crash trang)
+    // Check if does not exist over (if drag anything out then return it, avoid errors, avoid crashing the page)
     if (!active || !over) return
 
     const {
@@ -201,6 +220,7 @@ const ScheduleContent = () => {
     } = active
 
     const { id: overCardId } = over
+
     const activeColumns = findColumnByMatchCardId(activeDragingCardId)
     const overColumns = findColumnByMatchCardId(overCardId)
 
@@ -216,42 +236,85 @@ const ScheduleContent = () => {
         over,
         activeColumns,
         activeDragingCardId,
-        activeDragingCardData
+        activeDragingCardData,
+        'handleDragEnd'
       )
     } else {
       // Draging card inside column
-      const oldCardIndex = oldColumnWhenDragingCard?.matchs?.findIndex(
+      const oldCardIndex = oldColumnWhenDragingCard?.matches?.findIndex(
         (c: MatchDataType) => c.id === activeDragingCardId
       )
-      const newCardIndex = oldColumnWhenDragingCard?.matchs?.findIndex((c: MatchDataType) => c.id === overCardId)
+      const newCardIndex = oldColumnWhenDragingCard?.matches?.findIndex((c: MatchDataType) => c.id === overCardId)
 
-      const dndSortCards = arrayMove(oldColumnWhenDragingCard?.matchs, oldCardIndex, newCardIndex) // use arrayMove to sort card by index
+      const dndSortCards = arrayMove(oldColumnWhenDragingCard?.matches, oldCardIndex, newCardIndex) // use arrayMove to sort card by index
 
       setColumnData((prev: any) => {
         const nextCard = cloneDeep(prev)
         const targetCard = nextCard?.find((column: ScheduleDataType) => column.eventDateId === overColumns.eventDateId)
         let cardMatchIds = prev
           ?.find((column: ScheduleDataType) => column.eventDateId === overColumns.eventDateId)
-          ?.matchs?.map((match: MatchDataType) => match.id)
-        targetCard.matchs = dndSortCards
+          ?.matches?.map((match: MatchDataType) => match.id)
+
+        targetCard.matches = dndSortCards
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         cardMatchIds = dndSortCards?.map((card: any) => card.id)
-
         return nextCard
       })
+      const data = {
+        matchId: activeDragingCardId,
+        newEventDateId: overColumns.eventDateId,
+        newIndexOfMatch: newCardIndex + 1
+      }
+      DragDropMatches(Number(tournamentId), data)
     }
 
-    // Những dữ liệu sau khi kéo thả đều phải trả về giá trị ban đầu là null
+    // Datas after drag and drop have to return initial value is null
     setActiveDragItemId(null)
     setActiveDragItemData(null)
     setOldColumnWhenDragingCard(null)
   }
 
-  useEffect(() => {
-    setColumnData(mockDataBoardSchedule?.columns as ScheduleDataType[])
-  }, [])
+  // Re-render component
+  const render = () => {
+    setUpdate(!update)
+  }
 
-  // Animation
+  // Handle api here
+  const getAllScheduleMatches = async (id: number) => {
+    const res = (await getAllSheduleMatches(id)) as ScheduleMatchesAPIRes
+    if (res?.success) {
+      setColumnData(res?.data)
+    }
+    // Generate special match (id,eventDataId,FE_PlaceholderCard) when matches array is empty
+    res?.data?.map((column: any) => {
+      if (column?.matches?.length === 0) {
+        column.matches = [
+          {
+            id: `${column.eventDateId}-placeholder-card`,
+            eventDateId: column.eventDateId,
+            FE_PlaceholderCard: true
+          }
+        ]
+      }
+    })
+  }
+  const DragDropMatches = async (id: number, data: any) => {
+    const res = (await dragDropApi(id, data)) as ScheduleMatchesAPIRes
+
+    if (res?.success) {
+      toast.success('Changed Schedule Matches successfully !')
+      render()
+    } else {
+      render()
+      toast.error(res?.errorMessage['Invalid Error'])
+    }
+  }
+
+  useEffect(() => {
+    getAllScheduleMatches(Number(tournamentId))
+  }, [update])
+
+  // Animation of DragOverlay when match is dragging
   const dropAnimation: DropAnimation = {
     keyframes({ transform }) {
       return [

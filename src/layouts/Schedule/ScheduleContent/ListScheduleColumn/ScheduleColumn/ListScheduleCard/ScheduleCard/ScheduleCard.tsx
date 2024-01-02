@@ -2,6 +2,7 @@ import React, { memo, useState } from 'react'
 import Card from '@mui/material/Card'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
+import Tooltip from '@mui/material/Tooltip'
 import CardActions from '@mui/material/CardActions'
 import Typography from '@mui/material/Typography'
 import { useSortable } from '@dnd-kit/sortable'
@@ -11,11 +12,11 @@ import { MatchDataType } from '../../../../../../../types/schedule.type'
 
 interface ScheduleCardProps {
   card: MatchDataType
-  activeDragItemId?: string | null
+  activeDragItemId?: number | null
 }
 const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
-  const [showAction, setShowAction] = useState(false)
-  const [cardIdAtive, setCardIdActive] = useState<string | null>(null)
+  const [showAction, setShowAction] = useState<boolean>(false)
+  const [cardIdAtive, setCardIdActive] = useState<number | null>(null)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card.id,
     data: { ...card },
@@ -34,7 +35,7 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
     border: isDragging ? '#3498db 1px solid' : ''
   }
 
-  const handleShowAction = (cardId: string, type: string) => {
+  const handleShowAction = (cardId: number, type: string) => {
     if (type === 'MOUSE_ENTER') {
       setCardIdActive(cardId)
       setShowAction(true)
@@ -48,10 +49,7 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
   return (
     <Card
       ref={setNodeRef}
-      style={{
-        ...dntKitCardStyle,
-        transition: 'transform 300ms linear 0s'
-      }}
+      style={dntKitCardStyle}
       {...attributes}
       {...listeners}
       sx={{
@@ -63,8 +61,8 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
         outline: 'none',
         position: 'relative'
       }}
-      onMouseEnter={() => handleShowAction(card.id, 'MOUSE_ENTER')}
-      onMouseLeave={() => handleShowAction(card.id, 'MOUSE_LEAVE')}
+      onMouseEnter={() => handleShowAction(Number(card.id), 'MOUSE_ENTER')}
+      onMouseLeave={() => handleShowAction(Number(card.id), 'MOUSE_LEAVE')}
     >
       <CardContent
         sx={{
@@ -88,8 +86,8 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
             width: '45px'
           }}
         >
-          <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.startTime}</Typography>
-          <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.endTime}</Typography>
+          <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.startTime?.slice(0, 5)}</Typography>
+          <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.endTime?.slice(0, 5)}</Typography>
         </Box>
         {/* Match Card match */}
         <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
@@ -103,9 +101,11 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
         {/* CardActions */}
 
         {cardIdAtive === card?.id && showAction && (
-          <CardActions disableSpacing sx={{ position: 'absolute', right: 0, top: 0, cursor: 'pointer' }}>
-            <MoreHorizIcon fontSize="small" />
-          </CardActions>
+          <Tooltip title="Options" placement="right-end">
+            <CardActions disableSpacing sx={{ position: 'absolute', right: 0, top: 0, cursor: 'pointer' }}>
+              <MoreHorizIcon fontSize="small" />
+            </CardActions>
+          </Tooltip>
         )}
       </CardContent>
     </Card>

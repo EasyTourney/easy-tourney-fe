@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import React from 'react'
+import React, { memo } from 'react'
 import ScheduleColumn from './ScheduleColumn/ScheduleColumn'
 import { ScheduleDataType } from '../../../../types/schedule.type'
 
@@ -27,4 +27,4 @@ const ListScheduleColumn = ({ columnData }: ListScheduleColumnProps) => {
   )
 }
 
-export default ListScheduleColumn
+export default memo(ListScheduleColumn)

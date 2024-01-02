@@ -8,7 +8,7 @@ export interface TeamDataType {
 }
 
 export interface MatchDataType {
-  id: string
+  id: string | number
   teamOne: TeamDataType
   teamTwo: TeamDataType
   teamOneResult: string | null
@@ -25,5 +25,11 @@ export interface ScheduleDataType {
   startTime: string
   endTime: string
   date: string
-  matchs: MatchDataType[]
+  matches: MatchDataType[]
+}
+
+export interface DragDropData {
+  matchId: number
+  newEventDateId: number
+  newIndexOfMatch: number
 }

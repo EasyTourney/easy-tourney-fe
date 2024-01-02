@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { memo } from 'react'
+import moment from 'moment'
 import Box from '@mui/material/Box'
-import ListScheduleCard from './ListScheduleCard/ListScheduleCard'
-import ModeEditIcon from '@mui/icons-material/ModeEdit'
+import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
+import ModeEditIcon from '@mui/icons-material/ModeEdit'
+import ListScheduleCard from './ListScheduleCard/ListScheduleCard'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ScheduleDataType } from '../../../../../types/schedule.type'
@@ -64,20 +66,22 @@ const ScheduleColumn = ({ column }: ScheduleColumnProps) => {
           }}
         >
           <Box component="span" sx={{ fontSize: '0.8rem' }}>
-            {column?.date}
+            {moment(column?.date, 'YYYY/MM/DD').format('ddd, DD/MM/YYYY')}
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box component="span" sx={{ fontSize: '0.7rem' }}>
-              {column?.startTime} - {column?.endTime}
+              {column?.startTime?.slice(0, 5)} - {column?.endTime?.slice(0, 5)}
             </Box>
           </Box>
         </Box>
         <Box component="span" sx={{ cursor: 'pointer', position: 'absolute', right: '10px' }}>
-          <ModeEditIcon fontSize="small" />
+          <Tooltip title="Edit" placement="top">
+            <ModeEditIcon fontSize="small" />
+          </Tooltip>
         </Box>
       </Box>
       {/* Box List Card */}
-      <ListScheduleCard cards={column?.matchs} />
+      <ListScheduleCard cards={column?.matches} />
       {/* Box footer */}
       <Box
         sx={{
@@ -89,24 +93,26 @@ const ScheduleColumn = ({ column }: ScheduleColumnProps) => {
           alignItems: 'center'
         }}
       >
-        <Button
-          startIcon={<AddIcon />}
-          sx={{
-            width: '100%',
-            background: 'white',
-            color: 'black',
-            '& .MuiButton-startIcon': { marginRight: 0 },
-            '&:hover': {
-              color: '#fff',
-              background: '#504d4d'
-            }
-          }}
-        >
-          Event
-        </Button>
+        <Tooltip title="Add new event" arrow>
+          <Button
+            startIcon={<AddIcon />}
+            sx={{
+              width: '100%',
+              background: 'white',
+              color: 'black',
+              '& .MuiButton-startIcon': { marginRight: 0 },
+              '&:hover': {
+                color: '#fff',
+                background: '#504d4d'
+              }
+            }}
+          >
+            Event
+          </Button>
+        </Tooltip>
       </Box>
     </Box>
   )
 }
 
-export default ScheduleColumn
+export default memo(ScheduleColumn)

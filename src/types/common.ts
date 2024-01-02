@@ -4,6 +4,7 @@ import { Organizer, OrganizerRecord } from './organizer'
 import { Tournament } from './tournament'
 import { Team } from './team'
 import { Player } from './player'
+import { ScheduleDataType } from './schedule.type'
 
 export interface APIRes extends AxiosResponse {
   success: boolean
@@ -94,4 +95,13 @@ export interface ParamApi {
   filterStatus?: string
   filterCategory?: string
   id?: number
+}
+export interface ScheduleMatchesAPIRes extends AxiosResponse {
+  success: boolean
+  data: ScheduleDataType[]
+  total: number
+  additionalData: {
+    totalOrganizer: number
+  } | null
+  errorMessage: { [key: string]: string }
 }

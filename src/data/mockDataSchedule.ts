@@ -3,11 +3,11 @@ export const mockDataBoardSchedule = {
     //Column1
     {
       eventDateId: 1,
-      startTime: '08:00',
-      endTime: '13:00',
+      startTime: '08:00:00',
+      endTime: '13:00:00',
       date: '31/12/2023',
       // cardOrderIds: ['card-id-01', 'card-id-02'],
-      matchs: [
+      matches: [
         {
           id: 'card-id-01',
           evendateId: 1,
@@ -29,8 +29,8 @@ export const mockDataBoardSchedule = {
           },
           teamOneResult: null,
           teamTwoResult: null,
-          startTime: '08:00',
-          endTime: '09:00',
+          startTime: '08:00:00',
+          endTime: '09:00:00',
           title: null,
           type: 'MATCH'
         },
@@ -55,8 +55,8 @@ export const mockDataBoardSchedule = {
           },
           teamOneResult: null,
           teamTwoResult: null,
-          startTime: '09:05',
-          endTime: '10:00',
+          startTime: '09:05:00',
+          endTime: '10:00:00',
           title: null,
           type: 'MATCH'
         }
@@ -65,11 +65,11 @@ export const mockDataBoardSchedule = {
     //column2
     {
       eventDateId: 2,
-      startTime: '10:00',
-      endTime: '13:00',
+      startTime: '10:00:00',
+      endTime: '13:00:00',
       date: '31/12/2023',
       // cardOrderIds: ['card-id-01', 'card-id-02'],
-      matchs: [
+      matches: [
         {
           id: 'card-id-03',
           evendateId: 2,
@@ -91,8 +91,8 @@ export const mockDataBoardSchedule = {
           },
           teamOneResult: null,
           teamTwoResult: null,
-          startTime: '08:00',
-          endTime: '09:00',
+          startTime: '08:00:00',
+          endTime: '09:00:00',
           title: null,
           type: 'MATCH'
         },
@@ -117,8 +117,8 @@ export const mockDataBoardSchedule = {
           },
           teamOneResult: null,
           teamTwoResult: null,
-          startTime: '09:05',
-          endTime: '10:00',
+          startTime: '09:05:00',
+          endTime: '10:00:00',
           title: null,
           type: 'MATCH'
         },
@@ -143,8 +143,8 @@ export const mockDataBoardSchedule = {
           },
           teamOneResult: null,
           teamTwoResult: null,
-          startTime: '09:30',
-          endTime: '10:30',
+          startTime: '09:30:00',
+          endTime: '10:30:00',
           title: null,
           type: 'MATCH'
         }
@@ -153,11 +153,11 @@ export const mockDataBoardSchedule = {
     // column empty
     {
       eventDateId: 3,
-      startTime: '17:00',
-      endTime: '22:00',
+      startTime: '17:00:00',
+      endTime: '22:00:00',
       date: '22/2/2023',
       // cardOrderIds: ['column-id-04-placeholder-card'],
-      matchs: [
+      matches: [
         {
           id: '3-placeholder-card',
           eventDateId: 3,
