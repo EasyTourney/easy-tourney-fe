@@ -22,13 +22,17 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { generatePlaceholderCard } from '../../../utils/function'
 import { CSS } from '@dnd-kit/utilities'
 import { MatchDataType, ScheduleDataType } from '../../../types/schedule.type'
-import { dragDropApi, getAllSheduleMatches } from '../../../apis/axios/schedule/schedule'
+import { dragDropApi, getAllScheduledMatches } from '../../../apis/axios/schedule/schedule'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { ScheduleMatchesAPIRes } from '../../../types/common'
 export type CollisionDetectionArgs = Parameters<CollisionDetection>[0]
 
-const ScheduleContent = () => {
+interface ScheduleContentProps {
+  isGenerated: boolean
+}
+
+const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
   const [columnData, setColumnData] = useState<ScheduleDataType[]>([])
 
   const [activeDragItemId, setActiveDragItemId] = useState<number | null>(null) //  Get the id of card being draging
@@ -281,7 +285,7 @@ const ScheduleContent = () => {
 
   // Handle api here
   const getAllScheduleMatches = async (id: number) => {
-    const res = (await getAllSheduleMatches(id)) as ScheduleMatchesAPIRes
+    const res = (await getAllScheduledMatches(id)) as ScheduleMatchesAPIRes
     if (res?.success) {
       setColumnData(res?.data)
     }
@@ -312,7 +316,7 @@ const ScheduleContent = () => {
 
   useEffect(() => {
     getAllScheduleMatches(Number(tournamentId))
-  }, [update])
+  }, [update, isGenerated])
 
   // Animation of DragOverlay when match is dragging
   const dropAnimation: DropAnimation = {

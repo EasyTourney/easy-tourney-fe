@@ -20,6 +20,8 @@ import { categoriesSelector } from '../../redux/reducers/categories/categories.s
 import { setTournaments } from '../../redux/reducers/tournaments/tournaments.reducer'
 import DialogAddTournament from '../../components/Dialog/Tournament/AddTournament/DialogAddTournament'
 import { AddCircle } from '@mui/icons-material'
+import { getCategories } from '../../redux/reducers/categories/categories.slice'
+import { ThunkDispatch } from '@reduxjs/toolkit'
 
 const TournamentTable = ({ navigate, location }: any) => {
   const columns = [
@@ -122,6 +124,11 @@ const TournamentTable = ({ navigate, location }: any) => {
   const { listCategory } = useSelector(categoriesSelector)
   const dispatch = useDispatch()
   const isSetPageURL = useRef(false)
+
+  const dispatchCategory = useDispatch<ThunkDispatch<any, any, any>>()
+  useEffect(() => {
+    dispatchCategory(getCategories())
+  }, [dispatchCategory])
 
   const getAll = useCallback(async (param: ParamApi) => {
     const getTournaments = (await getAllTournaments(param)) as TournamentAPIRes

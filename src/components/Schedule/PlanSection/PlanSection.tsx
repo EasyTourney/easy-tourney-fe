@@ -8,9 +8,18 @@ import { PlanInformationSchema } from '../../../services/validator/plan.validato
 import styles from './PlanSection.module.css'
 import { LoadingButton } from '@mui/lab'
 import { Autorenew } from '@mui/icons-material'
+import { generateSchedule } from '../../../apis/axios/schedule/schedule'
+import { useParams } from 'react-router-dom'
+import { ScheduleMatchesAPIRes } from '../../../types/common'
+import Swal from 'sweetalert2'
 
-const PlanSection = () => {
+interface PlanInformationProps {
+  onGenerateSchedule: () => void
+}
+
+const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { tournamentId } = useParams()
 
   const formik = useFormik({
     initialValues: {
@@ -23,18 +32,35 @@ const PlanSection = () => {
     validationSchema: PlanInformationSchema,
     onSubmit: async (values) => {
       try {
-        setIsLoading(true)
         const planInformation = {
           duration: values.duration,
           betweenTime: values.betweenTime,
-          startTime: values.startTime ? dayjs(values.startTime).format('HH:mm') : undefined,
-          endTime: values.endTime ? dayjs(values.endTime).format('HH:mm') : undefined
+          startTime: values.startTime ? dayjs(values.startTime).format('HH:mm:ss') : undefined,
+          endTime: values.endTime ? dayjs(values.endTime).format('HH:mm:ss') : undefined
         }
-        console.log(planInformation)
+
+        Swal.fire({
+          title: 'Re-generate schedule',
+          text: 'Generating a new schedule will discard all previously scheduled data! If you proceed, any existing tournament information will be lost. Do you wish to re-generate?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, re-generate!',
+          allowOutsideClick: false
+        }).then(async (result) => {
+          setIsLoading(true)
+          if (result.isConfirmed) {
+            const response = (await generateSchedule(Number(tournamentId), planInformation)) as ScheduleMatchesAPIRes
+            if (response.success) {
+              onGenerateSchedule()
+              toast.success('A schedule is generated successfully!')
+            }
+          }
+          setIsLoading(false)
+        })
       } catch (error) {
         toast.error('An error occurred while configuring plan information!')
-      } finally {
-        setTimeout(() => setIsLoading(false), 3000)
       }
     }
   })

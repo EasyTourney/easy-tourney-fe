@@ -1,5 +1,5 @@
 import { Box, Grid } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ScheduleContent from './ScheduleContent/ScheduleContent'
 import PlanSection from '../../components/Schedule/PlanSection/PlanSection'
 import { useParams } from 'react-router-dom'
@@ -10,24 +10,30 @@ import { useDispatch } from 'react-redux'
 function Schedule() {
   const dispatch = useDispatch()
   const param: { tournamentId?: string } = useParams()
+  const [update, setUpdate] = useState<boolean>(false)
+
   useEffect(() => {
     const fetchTournamentData = async () => {
       const response = await getTournamentById(Number(param.tournamentId))
       dispatch(setGeneral(response.data))
     }
-
     if (param.tournamentId) {
       fetchTournamentData()
     }
   }, [param.tournamentId])
+
   return (
     <Box sx={{ marginTop: '2rem', overflowX: 'auto' }}>
       <Grid container spacing={2}>
         <Grid item xs={9}>
-          <ScheduleContent />
+          <ScheduleContent isGenerated={update} />
         </Grid>
         <Grid item xs={3}>
-          <PlanSection />
+          <PlanSection
+            onGenerateSchedule={() => {
+              setUpdate((prev) => !prev)
+            }}
+          />
         </Grid>
       </Grid>
     </Box>
