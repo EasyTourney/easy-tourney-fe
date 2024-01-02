@@ -64,7 +64,7 @@ const DialogAddPlayer = ({ addPlayer, onAdd }: DialogAddPlayerProps) => {
           playerName: values.playerName.trim(),
           teamId: teamId,
           dateOfBirth: values.dateOfBirth ? dayjs(values.dateOfBirth).format('YYYY-MM-DD') : undefined,
-          phone: values.phone
+          phone: values.phone ? values.phone.trim() : undefined
         }
         const response = await addPlayer(Number(tournamentId), teamId, playerData)
 
@@ -175,7 +175,7 @@ const DialogAddPlayer = ({ addPlayer, onAdd }: DialogAddPlayerProps) => {
             </Stack>
             <Stack>
               <Box component="label" sx={{ fontWeight: '500' }}>
-                Phone number <span className={styles['required-marked']}>*</span>
+                Phone number
               </Box>
               <TextField
                 fullWidth

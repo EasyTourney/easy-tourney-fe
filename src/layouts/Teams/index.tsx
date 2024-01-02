@@ -32,7 +32,7 @@ const Teams = ({ navigate, location }: any) => {
     {
       id: 'teamName',
       sortTable: false,
-      label: 'Name',
+      label: 'Team Name',
       sortBy: 'teamName',
       left: false,
       style: {

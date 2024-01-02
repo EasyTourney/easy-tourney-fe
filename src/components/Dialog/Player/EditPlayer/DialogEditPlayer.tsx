@@ -56,14 +56,15 @@ const DialogEditPlayer = ({ editPlayer, onOpen, onClose }: DialogEditPlayerProps
           playerId: selectedPlayer?.playerId || -1,
           playerName: values.playerName.trim() || '',
           dateOfBirth: values.dateOfBirth ? dayjs(values.dateOfBirth).format('YYYY-MM-DD') : undefined,
-          phone: values.phone
+          phone: values.phone ? values.phone.trim() : undefined
         }
         const response = await editPlayer(Number(tournamentId), teamId, playerData)
 
         if (response.success) {
           const updatedPlayer = {
             ...response.data,
-            dateOfBirth: response.data.dateOfBirth ? dayjs(response.data.dateOfBirth).format('DD/MM/YYYY') : ''
+            dateOfBirth: response.data.dateOfBirth ? dayjs(response.data.dateOfBirth).format('DD/MM/YYYY') : '',
+            phone: response.data.phone || ''
           }
           dispatch(updatePlayer(updatedPlayer))
           toast.success('A player is updated successfully!')
@@ -167,7 +168,7 @@ const DialogEditPlayer = ({ editPlayer, onOpen, onClose }: DialogEditPlayerProps
           </Stack>
           <Stack>
             <Box component="label" sx={{ fontWeight: '500' }}>
-              Phone number <span className={styles['required-marked']}>*</span>
+              Phone number
             </Box>
             <TextField
               fullWidth
