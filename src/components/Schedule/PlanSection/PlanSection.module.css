@@ -29,3 +29,8 @@
 .generate-btn {
   width: 100%;
 }
+
+.warning-message {
+  font-size: 0.8rem;
+  align-items: center;
+}

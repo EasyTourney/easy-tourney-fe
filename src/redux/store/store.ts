@@ -7,7 +7,8 @@ import {
   playersSlice,
   teamsSlice,
   generalSlice,
-  resultsSlice
+  resultsSlice,
+  scheduleSlice
 } from '../reducers'
 
 export const store = configureStore({
@@ -19,7 +20,8 @@ export const store = configureStore({
     player: playersSlice,
     team: teamsSlice,
     general: generalSlice,
-    result: resultsSlice
+    result: resultsSlice,
+    schedule: scheduleSlice
   }
 })
 

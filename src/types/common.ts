@@ -105,3 +105,13 @@ export interface ScheduleMatchesAPIRes extends AxiosResponse {
   } | null
   errorMessage: { [key: string]: string }
 }
+
+export interface GeneralInformationAPIRes extends AxiosResponse {
+  success: boolean
+  data: any
+  total: number
+  additionalData: {
+    tournamentPlan: any
+  } | null
+  errorMessage: { [key: string]: string }
+}

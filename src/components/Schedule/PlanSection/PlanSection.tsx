@@ -1,5 +1,5 @@
-import { Box, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { Alert, Box, TextField, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
 import { TimePicker } from '@mui/x-date-pickers'
@@ -12,6 +12,8 @@ import { generateSchedule } from '../../../apis/axios/schedule/schedule'
 import { useParams } from 'react-router-dom'
 import { ScheduleMatchesAPIRes } from '../../../types/common'
 import Swal from 'sweetalert2'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../redux/store'
 
 interface PlanInformationProps {
   onGenerateSchedule: () => void
@@ -20,50 +22,99 @@ interface PlanInformationProps {
 const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { tournamentId } = useParams()
+  const planInformation = useSelector((state: RootState) => state.schedule.planInformation)
+  const totalTeams = useSelector((state: RootState) => state.schedule.totalTeams)
+  const { status } = useSelector((state: RootState) => state.tournament.general)
+  const [isDisabled, setIsDisabled] = useState<boolean>(false)
+  const [warningMessage, setWarningMessage] = useState<string>('')
 
   const formik = useFormik({
     initialValues: {
-      duration: 0,
-      betweenTime: 0,
-      startTime: null as Dayjs | null,
-      endTime: null as Dayjs | null
+      duration: planInformation?.duration || 0,
+      betweenTime: planInformation?.betweenTime || 0,
+      startTime: planInformation?.startTime ? dayjs(`1970-01-01 ${planInformation.startTime}`) : (null as Dayjs | null),
+      endTime: planInformation?.endTime ? dayjs(`1970-01-01 ${planInformation.endTime}`) : (null as Dayjs | null)
     },
+
     validateOnChange: false,
     validationSchema: PlanInformationSchema,
     onSubmit: async (values) => {
       try {
         const planInformation = {
-          duration: values.duration,
-          betweenTime: values.betweenTime,
+          duration: values.duration || 0,
+          betweenTime: values.betweenTime || 0,
           startTime: values.startTime ? dayjs(values.startTime).format('HH:mm:ss') : undefined,
           endTime: values.endTime ? dayjs(values.endTime).format('HH:mm:ss') : undefined
         }
 
-        Swal.fire({
-          title: 'Re-generate schedule',
-          text: 'Generating a new schedule will discard all previously scheduled data! If you proceed, any existing tournament information will be lost. Do you wish to re-generate?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, re-generate!',
-          allowOutsideClick: false
-        }).then(async (result) => {
-          setIsLoading(true)
-          if (result.isConfirmed) {
+        if (status === 'NEED_INFORMATION' || status === 'READY') {
+          if (status === 'READY') {
+            Swal.fire({
+              title: 'Re-generate schedule',
+              text: 'Generating a new schedule will discard all previously scheduled data! If you proceed, any existing tournament information will be lost. Do you wish to re-generate?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, re-generate!',
+              allowOutsideClick: false
+            }).then(async (result) => {
+              setIsLoading(true)
+              if (result.isConfirmed) {
+                const response = (await generateSchedule(
+                  Number(tournamentId),
+                  planInformation
+                )) as ScheduleMatchesAPIRes
+                if (response.success) {
+                  onGenerateSchedule()
+                  toast.success('A schedule is generated successfully!')
+                }
+              }
+              setIsLoading(false)
+            })
+          } else {
+            setIsLoading(true)
             const response = (await generateSchedule(Number(tournamentId), planInformation)) as ScheduleMatchesAPIRes
             if (response.success) {
               onGenerateSchedule()
               toast.success('A schedule is generated successfully!')
+            } else {
+              toast.error(response?.errorMessage['Invalid Error'])
             }
+            setIsLoading(false)
           }
-          setIsLoading(false)
-        })
+        }
       } catch (error) {
         toast.error('An error occurred while configuring plan information!')
       }
     }
   })
+
+  useEffect(() => {
+    formik.setValues({
+      duration: planInformation?.duration || 0,
+      betweenTime: planInformation?.betweenTime || 0,
+      startTime: planInformation?.startTime ? dayjs(`1970-01-01 ${planInformation.startTime}`) : (null as Dayjs | null),
+      endTime: planInformation?.endTime ? dayjs(`1970-01-01 ${planInformation.endTime}`) : (null as Dayjs | null)
+    })
+  }, [planInformation])
+
+  useEffect(() => {
+    if (totalTeams <= 1 || (status !== 'NEED_INFORMATION' && status !== 'READY')) {
+      setIsDisabled(true)
+      if (status !== 'NEED_INFORMATION' && status !== 'READY') {
+        setWarningMessage('Schedule generation is disabled as the tournament has already started or finished.')
+      }
+      if (totalTeams <= 1) {
+        setWarningMessage(
+          'Schedule generation is disabled due to insufficient participating teams. Please ensure an adequate number of teams are registered.'
+        )
+      }
+    } else {
+      setIsDisabled(false)
+    }
+  }, [totalTeams, status])
+
   return (
     <Box className={styles['plan-container']}>
       <Typography variant="h5" className={styles['plan-title']}>
@@ -76,6 +127,7 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
               <Typography className={styles['plan-sub-title']}>Match duration (minutes)</Typography>
             </Box>
             <TextField
+              disabled={isDisabled || isLoading}
               error={formik.touched.duration && Boolean(formik.errors.duration)}
               fullWidth
               helperText={formik.touched.duration && formik.errors.duration}
@@ -95,6 +147,7 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
               <Typography className={styles['plan-sub-title']}>Time between matches (minutes)</Typography>
             </Box>
             <TextField
+              disabled={isDisabled || isLoading}
               error={formik.touched.betweenTime && Boolean(formik.errors.betweenTime)}
               fullWidth
               helperText={formik.touched.betweenTime && formik.errors.betweenTime}
@@ -116,6 +169,7 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
             <TimePicker
               ampm={false}
               defaultValue={dayjs()}
+              disabled={isDisabled || isLoading}
               value={formik.values.startTime || null}
               onChange={(value) => (value === null ? dayjs() : formik.setFieldValue('startTime', value))}
               slotProps={{
@@ -134,6 +188,7 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
             </Box>
             <TimePicker
               ampm={false}
+              disabled={isDisabled || isLoading}
               value={formik.values.endTime || null}
               onChange={(value) => formik.setFieldValue('endTime', value)}
               slotProps={{
@@ -149,15 +204,21 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
           <Box className={styles['group-btn']}>
             <LoadingButton
               className={styles['generate-btn']}
-              variant="contained"
-              type="submit"
+              disabled={isDisabled}
+              endIcon={<Autorenew />}
               loading={isLoading}
               loadingPosition="end"
-              endIcon={<Autorenew />}
+              type="submit"
+              variant="contained"
             >
               {isLoading ? 'Generating...' : 'Generate'}
             </LoadingButton>
           </Box>
+          {isDisabled && (
+            <Alert severity="warning" className={styles['warning-message']}>
+              {warningMessage}
+            </Alert>
+          )}
         </Box>
       </form>
     </Box>

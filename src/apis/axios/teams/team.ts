@@ -44,3 +44,11 @@ export async function putTeamById(data: Team, tournamentId: number) {
   })
   return res
 }
+
+export async function getAllTeamsInTournament(tournamentId: number) {
+  const res = await axios({
+    url: '/tournament/' + tournamentId + '/team/all',
+    method: 'GET'
+  })
+  return res
+}

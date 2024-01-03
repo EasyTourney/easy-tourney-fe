@@ -38,7 +38,7 @@ const Result = () => {
       try {
         const tournamentId = Number(pathSegments[1])
         const result = await getAllResult(tournamentId)
-        const sortedResult = result.data.map((day: any) => ({
+        result.data.map((day: any) => ({
           ...day,
           matches: day.matches.sort((a: any, b: any) => {
             const timeA: any = moment(`${day.date} ${a.startTime}`)
@@ -47,7 +47,7 @@ const Result = () => {
           })
         }))
 
-        sortedResult.sort((a: any, b: any) => {
+        result.data.sort((a: any, b: any) => {
           const dateA: any = moment(a.date)
           const dateB: any = moment(b.date)
           return dateA.toDate() - dateB.toDate()

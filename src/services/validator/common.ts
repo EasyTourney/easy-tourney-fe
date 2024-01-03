@@ -105,11 +105,13 @@ const phone = Yup.string()
   .min(10, 'Phone number cannot be less than 10 digits')
   .max(11, 'Phone number cannot be more than 11 digits')
 
-const description = Yup.string().max(1000, 'Description cannot be more than 1000 characters')
+const description = Yup.string().max(100, 'Description cannot be more than 100 characters')
 
 const duration = Yup.number().required('Duration is required').min(1, 'Duration must be greater than 0 minute')
 
-const betweenTime = Yup.number().required('Break is required').min(0, 'Break must not be negative number')
+const betweenTime = Yup.number()
+  .required('Time between matches is required')
+  .min(0, 'Time between matches must not be negative number')
 
 const startTime = Yup.string()
   .required('Start time is required')
