@@ -6,7 +6,8 @@ import {
   tournamentsSlice,
   playersSlice,
   teamsSlice,
-  generalSlice
+  generalSlice,
+  resultsSlice
 } from '../reducers'
 
 export const store = configureStore({
@@ -17,7 +18,8 @@ export const store = configureStore({
     tournament: tournamentsSlice,
     player: playersSlice,
     team: teamsSlice,
-    general: generalSlice
+    general: generalSlice,
+    result: resultsSlice
   }
 })
 

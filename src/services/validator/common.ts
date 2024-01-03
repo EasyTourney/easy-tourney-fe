@@ -136,6 +136,16 @@ const endTime = Yup.string()
       return dayjs(endTime).isAfter(expectedEndTime)
     }
   })
+const teamOneResult = Yup.number()
+  .required('Score is required')
+  .positive('Score must be a positive number')
+  .integer('Score must be an integer')
+  .min(0, 'Scores cannot be negative')
+const teamTwoResult = Yup.number()
+  .required('Score is required')
+  .positive('Score must be a positive number')
+  .integer('Score must be an integer')
+  .min(0, 'Scores cannot be negative')
 
 export {
   email,
@@ -154,5 +164,7 @@ export {
   duration,
   betweenTime,
   startTime,
-  endTime
+  endTime,
+  teamOneResult,
+  teamTwoResult
 }

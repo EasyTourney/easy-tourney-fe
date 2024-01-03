@@ -14,7 +14,6 @@ function OrganizerTemplate() {
   const handleSidebarToggle = () => {
     setSidebarCollapsed(!sidebarCollapsed)
   }
-
   return (
     <Box className={styles['main-container']}>
       <Box>

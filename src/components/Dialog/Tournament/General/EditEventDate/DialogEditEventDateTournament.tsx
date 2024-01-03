@@ -49,7 +49,13 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [update] = useState<boolean>(false)
   const dispatch = useDispatch()
-  const eventDatesFormatted = convertDateFormat(eventDates)
+  const eventDatesFormatted: any[] = convertDateFormat(eventDates)
+  eventDatesFormatted.sort((a, b) => {
+    const dateA = new Date(a.date)
+    const dateB = new Date(b.date)
+
+    return dateA.getTime() - dateB.getTime()
+  })
 
   const handleAddEventDate = () => {
     setOpenAddEventDate(true)

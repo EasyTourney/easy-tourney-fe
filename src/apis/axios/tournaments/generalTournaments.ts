@@ -9,3 +9,10 @@ export async function editGeneralTournament(id: number, data: Partial<Tournament
   })
   return res
 }
+export async function discardTournament(id: number) {
+  const res = await axios({
+    url: `/tournament/${id}/discard`,
+    method: 'PUT'
+  })
+  return res
+}

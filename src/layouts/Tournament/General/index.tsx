@@ -35,32 +35,32 @@ const General = () => {
   const [openCategory, setOpenCategory] = useState(false)
   const [openOrganizer, setOpenOrganizer] = useState(false)
   const [openEventDate, setOpenEventDate] = useState(false)
-  const generalTournamnet = useSelector((state: any) => state.tournament.general)
+  const generalTournament = useSelector((state: any) => state.tournament.general)
   const [isDiscarded, setIsDiscarded] = useState<boolean>(false)
 
   const handleClickOpenTitle = useCallback(() => {
     setOpenTitle(true)
-    dispatch(setSelectedTitle(generalTournamnet.title))
-  }, [dispatch, generalTournamnet?.title, setOpenTitle])
+    dispatch(setSelectedTitle(generalTournament.title))
+  }, [dispatch, generalTournament?.title, setOpenTitle])
 
   const handleEditCategory = useCallback(() => {
     setOpenCategory(true)
-    dispatch(setSelectedCategory(generalTournamnet.category.categoryName))
-  }, [dispatch, generalTournamnet.category?.categoryName, setOpenCategory])
+    dispatch(setSelectedCategory(generalTournament.category.categoryName))
+  }, [dispatch, generalTournament.category?.categoryName, setOpenCategory])
 
   const handleEditDescription = useCallback(() => {
     setOpenDescription(true)
-    dispatch(setSelectedDescription(generalTournamnet.description))
-  }, [dispatch, generalTournamnet.description, setOpenDescription])
+    dispatch(setSelectedDescription(generalTournament.description))
+  }, [dispatch, generalTournament.description, setOpenDescription])
 
   const handleEditOrganizer = useCallback(() => {
     setOpenOrganizer(true)
-    dispatch(setSelectedOrganizer(generalTournamnet.organizers))
-  }, [dispatch, generalTournamnet.organizers, setOpenOrganizer])
+    dispatch(setSelectedOrganizer(generalTournament.organizers))
+  }, [dispatch, generalTournament.organizers, setOpenOrganizer])
   const handleEditEventDate = useCallback(() => {
     setOpenEventDate(true)
-    dispatch(setSelectedEventDate(generalTournamnet.eventDates))
-  }, [dispatch, generalTournamnet.eventDates, setOpenEventDate])
+    dispatch(setSelectedEventDate(generalTournament.eventDates))
+  }, [dispatch, generalTournament.eventDates, setOpenEventDate])
 
   const columnsOrganizer = [
     {
@@ -135,9 +135,8 @@ const General = () => {
       fetchTournamentData()
     }
   }, [param.tournamentId])
-  const handleDiscard = useCallback(async (rowData: { [key: string]: any }) => {
+  const handleDiscard = useCallback(async () => {
     const tournamentId = Number(location.pathname.split('/')[2])
-    console.log(rowData)
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to revert this!',
@@ -161,7 +160,14 @@ const General = () => {
     return <div>Loading...</div>
   } else {
     const isFinishedOrDiscarded = tournamentData.status === 'FINISHED' || tournamentData.status === 'DISCARDED'
-    const eventDates = convertDateFormat(tournamentData.eventDates)
+    const eventDates: any[] = convertDateFormat(tournamentData.eventDates)
+    eventDates.sort((a, b) => {
+      const dateA = new Date(a.date)
+      const dateB = new Date(b.date)
+
+      return dateA.getTime() - dateB.getTime()
+    })
+
     return (
       <Box className={styles['general-container']}>
         <Box className={styles['general-wrapper']}>
@@ -232,7 +238,7 @@ const General = () => {
           {/* Organizer */}
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
-              Organizer
+              Organizers
               {!isDiscarded && (
                 <Button
                   title="Edit"
