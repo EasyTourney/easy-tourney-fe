@@ -5,9 +5,10 @@ import { ScheduleDataType } from '../../../../types/schedule.type'
 
 interface ListScheduleColumnProps {
   columnData: ScheduleDataType[]
+  render: () => void
 }
 
-const ListScheduleColumn = ({ columnData }: ListScheduleColumnProps) => {
+const ListScheduleColumn = ({ columnData, render }: ListScheduleColumnProps) => {
   return (
     <Box
       sx={{
@@ -21,7 +22,9 @@ const ListScheduleColumn = ({ columnData }: ListScheduleColumnProps) => {
         '&::-webkit-scrollbar-track': { m: 3 }
       }}
     >
-      {columnData?.map((column: ScheduleDataType) => <ScheduleColumn key={column?.eventDateId} column={column} />)}
+      {columnData?.map((column: ScheduleDataType) => (
+        <ScheduleColumn key={column?.eventDateId} column={column} render={render} />
+      ))}
       <Box sx={{ mx: 2 }}></Box>
     </Box>
   )

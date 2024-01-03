@@ -363,7 +363,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
         }}
       >
         <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Schedule</Box>
-        <ListScheduleColumn columnData={columnData} />
+        <ListScheduleColumn columnData={columnData} render={render} />
 
         <DragOverlay dropAnimation={dropAnimation}>
           {(!activeDragItemId || !activeDragItemData) && null}

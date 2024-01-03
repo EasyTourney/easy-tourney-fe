@@ -1,5 +1,5 @@
-import React, { memo } from 'react'
 import moment from 'moment'
+import React, { useState, memo } from 'react'
 import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
@@ -9,16 +9,21 @@ import ListScheduleCard from './ListScheduleCard/ListScheduleCard'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ScheduleDataType } from '../../../../../types/schedule.type'
+import { DialogAddEvent } from '../../../../../components/Dialog/MatchEvent/AddEvent'
+import { addEvent } from '../../../../../apis/axios/matchEvent/matchEvent'
 
 interface ScheduleColumnProps {
   column: ScheduleDataType
+  render: () => void
 }
 
-const ScheduleColumn = ({ column }: ScheduleColumnProps) => {
+const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
   const { attributes, setNodeRef, transform, transition } = useSortable({
     id: column.eventDateId,
     data: { ...column }
   })
+
+  const [isOpenDialogAddEvent, setIsOpenDialogAddEvent] = useState(false)
 
   const dntKitStyle = {
     transform: CSS.Translate.toString(transform),
@@ -106,10 +111,22 @@ const ScheduleColumn = ({ column }: ScheduleColumnProps) => {
                 background: '#504d4d'
               }
             }}
+            onClick={() => {
+              setIsOpenDialogAddEvent(true)
+            }}
           >
             Event
           </Button>
         </Tooltip>
+        <DialogAddEvent
+          addEvent={addEvent}
+          onOpen={isOpenDialogAddEvent}
+          onClose={() => {
+            setIsOpenDialogAddEvent(false)
+          }}
+          eventDateId={column?.eventDateId}
+          render={render}
+        />
       </Box>
     </Box>
   )

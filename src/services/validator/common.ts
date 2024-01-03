@@ -148,6 +148,10 @@ const teamTwoResult = Yup.number()
   .positive('Score must be a positive number')
   .integer('Score must be an integer')
   .min(0, 'Scores cannot be negative')
+const durationEvent = Yup.number()
+  .required('Duration is required')
+  .moreThan(1, 'Duration must be at least 1 minute')
+  .lessThan(1440, 'Duration must be less than 24 hours')
 
 export {
   email,
@@ -168,5 +172,6 @@ export {
   startTime,
   endTime,
   teamOneResult,
-  teamTwoResult
+  teamTwoResult,
+  durationEvent
 }

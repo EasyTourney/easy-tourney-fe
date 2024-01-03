@@ -5,6 +5,7 @@ import { Tournament } from './tournament'
 import { Team } from './team'
 import { Player } from './player'
 import { ScheduleDataType } from './schedule.type'
+import { MatchEvent } from './event'
 
 export interface APIRes extends AxiosResponse {
   success: boolean
@@ -73,6 +74,13 @@ export interface TeamByIdAPIRes extends AxiosResponse {
   success: boolean
   data: Team
   message: string
+}
+
+export interface EventAPIRes extends AxiosResponse {
+  success: boolean
+  data: MatchEvent
+  message: string
+  errorMessage?: unknown
 }
 
 export interface ColumnTypes {

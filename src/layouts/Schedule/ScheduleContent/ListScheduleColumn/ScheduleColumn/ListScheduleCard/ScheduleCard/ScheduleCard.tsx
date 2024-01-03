@@ -56,7 +56,7 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
         cursor: 'pointer',
         boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
         overflow: 'unset',
-        background: '#fff0ad',
+        background: card?.type === 'EVENT' ? '#ffc0aa' : '#fff0ad',
         border: 'none',
         outline: 'none',
         position: 'relative'
@@ -90,14 +90,26 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
           <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.endTime?.slice(0, 5)}</Typography>
         </Box>
         {/* Match Card match */}
-        <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
-          <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>Match</Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-            <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.teamOne?.teamName}</Typography>
-            <Typography sx={{ fontSize: '12.8px' }}>vs</Typography>
-            <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.teamTwo?.teamName}</Typography>
+
+        {card?.type === 'EVENT' ? (
+          <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+              <Typography sx={{ fontWeight: '500', fontSize: '12.8px', textTransform: 'uppercase' }}>
+                {card?.title}
+              </Typography>
+            </Box>
           </Box>
-        </Box>
+        ) : (
+          <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
+            <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>Match</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+              <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.teamOne?.teamName}</Typography>
+              <Typography sx={{ fontSize: '12.8px' }}>vs</Typography>
+              <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.teamTwo?.teamName}</Typography>
+            </Box>
+          </Box>
+        )}
+
         {/* CardActions */}
 
         {cardIdAtive === card?.id && showAction && (
