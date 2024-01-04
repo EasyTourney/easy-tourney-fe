@@ -153,6 +153,20 @@ const durationEvent = Yup.number()
   .moreThan(1, 'Duration must be at least 1 minute')
   .lessThan(1440, 'Duration must be less than 24 hours')
 
+const startTimeEventDate = Yup.string()
+  .required('Start time is required')
+  .test('isValid', 'Start time is not a valid time', (value) => {
+    if (value === null) return true
+    return dayjs(value).isValid()
+  })
+
+const endTimeEventDate = Yup.string()
+  .required('End time is required')
+  .test('isValid', 'End time is not a valid time', (value) => {
+    if (value === null) return true
+    return dayjs(value).isValid()
+  })
+
 export {
   email,
   password,
@@ -173,5 +187,7 @@ export {
   endTime,
   teamOneResult,
   teamTwoResult,
-  durationEvent
+  durationEvent,
+  startTimeEventDate,
+  endTimeEventDate
 }

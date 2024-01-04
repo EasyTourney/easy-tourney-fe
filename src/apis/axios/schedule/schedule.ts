@@ -19,6 +19,15 @@ export async function dragDropApi(id: number, data: DragDropData) {
   return res
 }
 
+export async function EditEventTimeApi(idTournament: number, data: any, eventDateId: number) {
+  const res = await axios({
+    url: `/tournament/${idTournament}/eventDate/${eventDateId}`,
+    method: 'PUT',
+    data
+  })
+  return res
+}
+
 export async function generateSchedule(tournamentId: number, data: PlanInformation) {
   const res = await axios({
     url: `/generate/${tournamentId}`,

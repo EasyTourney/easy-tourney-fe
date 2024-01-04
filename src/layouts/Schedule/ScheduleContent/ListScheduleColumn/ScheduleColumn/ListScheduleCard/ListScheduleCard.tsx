@@ -18,7 +18,7 @@ const ListScheduleCard = ({ cards }: ListScheduleCardProps) => {
           m: '0 5px',
           overflowX: 'hidden',
           overflowY: 'auto',
-          maxHeight: (theme) => `calc(100vh - 64px - 50px - ${theme.spacing(5)} - 90px - 56px)`,
+          maxHeight: (theme) => `calc(100vh - 72px - 115px - ${theme.spacing(5)} - 90px - 56px)`,
           '&::-webkit-scrollbar-thumb': {
             background: '#ced0da'
           },

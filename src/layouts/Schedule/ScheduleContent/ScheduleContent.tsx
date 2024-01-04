@@ -356,10 +356,13 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
         sx={{
           backgroundColor: '#fff',
           width: '100%',
-          height: 'calc(100vh - 64px - 3rem)',
+          height: 'calc(100vh - 72px - 4rem)',
           p: '1rem 0',
           borderRadius: '1rem',
-          transition: 'all 0.5s ease'
+          transition: 'all 0.5s ease',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          '&::-webkit-scrollbar-track': { m: 3 }
         }}
       >
         <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Schedule</Box>

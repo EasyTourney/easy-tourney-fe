@@ -16,10 +16,7 @@ const ListScheduleColumn = ({ columnData, render }: ListScheduleColumnProps) => 
         width: '100%',
         height: 'auto',
         display: 'flex',
-        overflowX: 'auto',
-        overflowY: 'hidden',
-        borderRadius: '1rem',
-        '&::-webkit-scrollbar-track': { m: 3 }
+        borderRadius: '1rem'
       }}
     >
       {columnData?.map((column: ScheduleDataType) => (

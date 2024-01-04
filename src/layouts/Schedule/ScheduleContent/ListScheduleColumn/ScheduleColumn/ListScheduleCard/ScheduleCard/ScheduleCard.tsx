@@ -9,6 +9,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { CSS } from '@dnd-kit/utilities'
 import { MatchDataType } from '../../../../../../../types/schedule.type'
+import { checkLengthTeamOfMatch } from '../../../../../../../utils/function'
 
 interface ScheduleCardProps {
   card: MatchDataType
@@ -103,9 +104,17 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
           <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
             <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>Match</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-              <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.teamOne?.teamName}</Typography>
+              <Tooltip title={card?.teamOne?.teamName} placement="top">
+                <Typography sx={{ fontWeight: '500', fontSize: '12.8px', width: '59px' }}>
+                  {checkLengthTeamOfMatch(card?.teamOne?.teamName, 7)}
+                </Typography>
+              </Tooltip>
               <Typography sx={{ fontSize: '12.8px' }}>vs</Typography>
-              <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.teamTwo?.teamName}</Typography>
+              <Tooltip title={card?.teamTwo?.teamName} placement="top">
+                <Typography sx={{ fontWeight: '500', fontSize: '12.8px', width: '59px' }}>
+                  {checkLengthTeamOfMatch(card?.teamTwo?.teamName, 7)}
+                </Typography>
+              </Tooltip>
             </Box>
           </Box>
         )}

@@ -33,3 +33,13 @@ export interface DragDropData {
   newEventDateId: number
   newIndexOfMatch: number
 }
+
+export interface TimeEvent {
+  date: string
+  id: number
+  tournamentId: number
+  endTime: string
+  startTime: string
+  updatedAt: string | null
+  createdAt: string | null
+}
