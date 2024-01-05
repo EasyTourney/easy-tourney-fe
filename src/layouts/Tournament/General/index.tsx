@@ -25,6 +25,7 @@ import { setGeneral } from '../../../redux/reducers/tournaments/tournaments.redu
 import { MdEditSquare } from 'react-icons/md'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import { discardTournament } from '../../../apis/axios/tournaments/generalTournaments'
 
 const General = () => {
   const dispatch = useDispatch()
@@ -36,7 +37,8 @@ const General = () => {
   const [openOrganizer, setOpenOrganizer] = useState(false)
   const [openEventDate, setOpenEventDate] = useState(false)
   const generalTournament = useSelector((state: any) => state.tournament.general)
-  const [isDiscarded, setIsDiscarded] = useState<boolean>(false)
+  const isFinishedOrDiscarded = tournamentData.status === 'FINISHED' || tournamentData.status === 'DISCARDED'
+  const [isDiscardVisible, setIsDiscardVisible] = useState(!isFinishedOrDiscarded)
 
   const handleClickOpenTitle = useCallback(() => {
     setOpenTitle(true)
@@ -151,8 +153,9 @@ const General = () => {
       }
     }).then(async (result) => {
       if (result.isConfirmed) {
-        toast.success(tournamentId)
-        setIsDiscarded(true)
+        await discardTournament(tournamentId)
+        toast.success('Discarded successfully')
+        setIsDiscardVisible(false)
       }
     })
   }, [])
@@ -176,7 +179,7 @@ const General = () => {
           <Box className={styles['general-wrapper-title']}>
             <Box className={styles['general-title-common']}>
               Title
-              {!isDiscarded && (
+              {!isFinishedOrDiscarded && (
                 <Button
                   title="Edit"
                   sx={{
@@ -196,7 +199,7 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Category
-              {!isDiscarded && (
+              {!isFinishedOrDiscarded && (
                 <Button
                   title="Edit"
                   sx={{
@@ -219,17 +222,19 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Description
-              <Button
-                title="Edit"
-                sx={{
-                  backgroundColor: 'white',
-                  minWidth: '1rem',
-                  padding: '0.25rem'
-                }}
-                onClick={handleEditDescription}
-              >
-                <MdEditSquare color="green" size={20} />
-              </Button>
+              {!isFinishedOrDiscarded && (
+                <Button
+                  title="Edit"
+                  sx={{
+                    backgroundColor: 'white',
+                    minWidth: '1rem',
+                    padding: '0.25rem'
+                  }}
+                  onClick={handleEditDescription}
+                >
+                  <MdEditSquare color="green" size={20} />
+                </Button>
+              )}
             </Box>
             <Box component="span" className={styles['general-description-content']} title={tournamentData.description}>
               {checkLengthDescription(tournamentData.description, 500)}
@@ -239,7 +244,7 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Organizers
-              {!isDiscarded && (
+              {!isFinishedOrDiscarded && (
                 <Button
                   title="Edit"
                   sx={{
@@ -272,9 +277,8 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Event dates
-              {!isDiscarded && (
+              {!isFinishedOrDiscarded && (
                 <Button
-                  disabled={isDiscarded}
                   title="Edit"
                   sx={{
                     backgroundColor: 'white',
@@ -301,17 +305,21 @@ const General = () => {
           {/* Discard tournament */}
           {!isFinishedOrDiscarded && (
             <Box className={styles['general-wrapper-common']}>
-              <Box className={styles['general-discard-content']}>Discard this tournament</Box>
-              <Box className={styles['general-wrapper-discard']}>
-                <Typography className={styles['general-text-warning']}>
-                  Once you discard this tournament, there is no going back. Please be certain.
-                </Typography>
-                <Button onClick={handleDiscard} className={styles['general-btn-discard']}>
-                  <Typography component="h2" className={styles['general-discard-text']}>
-                    Discard
-                  </Typography>
-                </Button>
-              </Box>
+              {isDiscardVisible && (
+                <Box>
+                  <Box className={styles['general-discard-content']}>Discard this tournament</Box>
+                  <Box className={styles['general-wrapper-discard']}>
+                    <Typography className={styles['general-text-warning']}>
+                      Once you discard this tournament, there is no going back. Please be certain.
+                    </Typography>
+                    <Button onClick={handleDiscard} className={styles['general-btn-discard']}>
+                      <Typography component="h2" className={styles['general-discard-text']}>
+                        Discard
+                      </Typography>
+                    </Button>
+                  </Box>
+                </Box>
+              )}
             </Box>
           )}
         </Box>

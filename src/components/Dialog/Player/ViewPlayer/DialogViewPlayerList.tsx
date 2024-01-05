@@ -105,51 +105,55 @@ const DialogViewPlayerList = ({ onAddPlayer, onOpen, onClose, onDelete }: Dialog
     }
   }, [])
 
+  const tournamentStatus = useSelector((state: any) => state.tournament.general.status)
   const handleEdit = useCallback(
     async (rowData: { [key: string]: any }) => {
       try {
-        const selectedOrganizer = (await getPlayerById(
-          Number(tournamentId),
-          teamId,
-          rowData.playerId
-        )) as PlayerByIdAPIRes
-        dispatch(setSelectedPlayer(selectedOrganizer.data))
-        setIsEditDialogOpen(true)
+        const selectedPlayer = (await getPlayerById(Number(tournamentId), teamId, rowData.playerId)) as PlayerByIdAPIRes
+        if (selectedPlayer.data && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED') {
+          dispatch(setSelectedPlayer(selectedPlayer.data))
+          setIsEditDialogOpen(true)
+        } else {
+          toast.error('Editing a player is not allowed for a discarded or finished tournament.')
+        }
       } catch (err) {
-        console.error('Error fetching organizer', err)
+        console.error('Error fetching player', err)
       }
     },
-    [dispatch]
+    [dispatch, tournamentStatus]
   )
 
   const handleDelete = useCallback((rowData: { [key: string]: any }) => {
     const tournamentId = Number(location.pathname.split('/')[2])
     const { playerId } = rowData
-
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to revert this!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      allowOutsideClick: false,
-      customClass: {
-        container: 'swal2-container'
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const res = (await deletePlayer(tournamentId, selectedTeamId, playerId)) as PlayerAPIRes
-        if (res.success) {
-          toast.success('A player is deleted successfully!')
-          setUpdate((prev) => !prev)
-          onDelete()
-        } else {
-          toast.error(res.message)
+    if (tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED') {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        allowOutsideClick: false,
+        customClass: {
+          container: 'swal2-container'
         }
-      }
-    })
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res = (await deletePlayer(tournamentId, selectedTeamId, playerId)) as PlayerAPIRes
+          if (res.success) {
+            toast.success('A player is deleted successfully!')
+            setUpdate((prev) => !prev)
+            onDelete()
+          } else {
+            toast.error(res.message)
+          }
+        }
+      })
+    } else {
+      toast.error('Deleting a player is not allowed for a discarded or finished tournament.')
+    }
   }, [])
 
   useEffect(() => {
@@ -182,13 +186,15 @@ const DialogViewPlayerList = ({ onAddPlayer, onOpen, onClose, onDelete }: Dialog
     >
       <DialogTitle className={styles['dialog-title']}>Players</DialogTitle>
       <DialogContent className={styles['dialog-container']}>
-        <DialogAddPlayer
-          addPlayer={addPlayer}
-          onAdd={() => {
-            setUpdate((prev) => !prev)
-            onAddPlayer()
-          }}
-        />
+        {tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED' && (
+          <DialogAddPlayer
+            addPlayer={addPlayer}
+            onAdd={() => {
+              setUpdate((prev) => !prev)
+              onAddPlayer()
+            }}
+          />
+        )}
         <DialogEditPlayer
           editPlayer={putPlayerById}
           onOpen={isEditDialogOpen}
@@ -204,6 +210,7 @@ const DialogViewPlayerList = ({ onAddPlayer, onOpen, onClose, onDelete }: Dialog
           total={totalPlayers}
           loading={loading}
           hidePagination={false}
+          showActions={tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED'}
         />
       </DialogContent>
       <DialogActions className={styles['group-btn']}>

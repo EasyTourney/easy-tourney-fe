@@ -26,11 +26,11 @@ const Result = () => {
     setOpenScore(true)
     dispatch(setSelectedGoal(match))
   }
-  const isMatchNotPlayed = (date: any) => {
-    const matchDate = moment(date).toDate()
-    const currentDate = new Date()
+  const isMatchNotPlayed = (date: any, startTime: any) => {
+    const matchDateTime = moment(`${date} ${startTime}`)
+    const currentDateTime = moment()
 
-    return matchDate > currentDate
+    return matchDateTime.isAfter(currentDateTime)
   }
 
   useEffect(() => {
@@ -94,15 +94,18 @@ const Result = () => {
                       </Box>
                       <Box className={styles['match']}>
                         <Box className={styles['team-left']}>{match.teamOneName}</Box>
-                        <Tooltip title={isMatchNotPlayed(day.date) || isDiscarded ? '' : 'Edit score'} placement="top">
+                        <Tooltip
+                          title={isMatchNotPlayed(day.date, match.startTime) || isDiscarded ? '' : 'Edit score'}
+                          placement="top"
+                        >
                           <Box
                             onClick={() => {
-                              if (!isMatchNotPlayed(day.date) && !isDiscarded) {
+                              if (!isMatchNotPlayed(day.date, match.startTime) && !isDiscarded) {
                                 handleEditScore(match)
                               }
                             }}
                             className={`${styles['score']} ${
-                              isMatchNotPlayed(day.date) || isDiscarded ? styles['not-played'] : ''
+                              isMatchNotPlayed(day.date, match.startTime) || isDiscarded ? styles['not-played'] : ''
                             }`}
                           >
                             <span className={styles.scoreA}>{match.teamOneResult}</span>-

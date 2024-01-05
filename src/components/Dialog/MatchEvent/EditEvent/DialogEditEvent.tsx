@@ -37,8 +37,6 @@ export function DialogEditEvent({ addEvent, onAdd, onOpen, onClose }: DialogEdit
     },
     validationSchema: EventSchema,
     onSubmit: async (values) => {
-      console.log(values.duration)
-
       try {
         setIsSaving(true)
         const eventData = {

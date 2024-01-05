@@ -103,9 +103,10 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
     if (totalTeams <= 1 || (status !== 'NEED_INFORMATION' && status !== 'READY')) {
       setIsDisabled(true)
       if (status !== 'NEED_INFORMATION' && status !== 'READY') {
-        setWarningMessage('Schedule generation is disabled as the tournament has already started or finished.')
-      }
-      if (totalTeams <= 1) {
+        setWarningMessage(
+          'Schedule generation is disabled as the tournament has already started or finished or discarded.'
+        )
+      } else if (totalTeams <= 1) {
         setWarningMessage(
           'Schedule generation is disabled due to insufficient participating teams. Please ensure an adequate number of teams are registered.'
         )

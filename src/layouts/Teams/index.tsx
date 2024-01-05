@@ -115,18 +115,26 @@ const Teams = ({ navigate, location }: any) => {
     setIsOpenPlayerDialog(true)
   }, [])
 
+  const tournamentStatus = useSelector((state: any) => state.tournament.general.status)
   const handleEdit = useCallback(
     async (rowData: { [key: string]: any }) => {
       try {
         const selectedTeam = (await getTeamById(rowData['teamId'], Number(tournamentId))) as TeamByIdAPIRes
-        dispatch(setSelectedTeam(selectedTeam.data))
-        setIsEditDialogOpen(true)
+
+        // Check if tournamentStatus is not 'discarded'
+        if (selectedTeam.data && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED') {
+          dispatch(setSelectedTeam(selectedTeam.data))
+          setIsEditDialogOpen(true)
+        } else {
+          toast.error('Editing a team is not allowed for a discarded or finished tournament.')
+        }
       } catch (err) {
         console.error('Error fetching team', err)
       }
     },
-    [dispatch]
+    [dispatch, tournamentId, tournamentStatus]
   )
+
   const param: { tournamentId?: string } = useParams()
   useEffect(() => {
     const fetchTournamentData = async () => {
@@ -138,42 +146,56 @@ const Teams = ({ navigate, location }: any) => {
       fetchTournamentData()
     }
   }, [param.tournamentId])
-  const handleDelete = useCallback((rowData: { [key: string]: any }) => {
-    const { teamId } = rowData
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to revert this!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      allowOutsideClick: false
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const res = (await deleteTeam(teamId, Number(tournamentId))) as TeamAPIRes
-        if (res.success) {
-          toast.success('A team is deleted successfully!')
-          setUpdate((prev) => !prev)
-        } else {
-          toast.error(res.message)
-        }
+  const handleDelete = useCallback(
+    (rowData: { [key: string]: any }) => {
+      const { teamId } = rowData
+
+      // Check if tournamentStatus is not 'DISCARDED'
+      if (tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED') {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'You will not be able to revert this!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!',
+          allowOutsideClick: false
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              const res = (await deleteTeam(teamId, Number(tournamentId))) as TeamAPIRes
+              if (res.success) {
+                toast.success('A team is deleted successfully!')
+                setUpdate((prev) => !prev)
+              } else {
+                toast.error(res.message)
+              }
+            } catch (error) {
+              console.error('Error deleting team', error)
+            }
+          }
+        })
+      } else {
+        toast.error('Deleting a team is not allowed for a discarded or finished tournament.')
       }
-    })
-  }, [])
-
+    },
+    [tournamentStatus, setUpdate, tournamentId]
+  )
   return (
     <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '2rem' }}>
       <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Participant</Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          <DialogAddTeam
-            addTeam={addTeam}
-            onAdd={() => {
-              setUpdate((prev) => !prev)
-            }}
-          />
+          {tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED' && (
+            <DialogAddTeam
+              addTeam={addTeam}
+              onAdd={() => {
+                setUpdate((prev) => !prev)
+              }}
+            />
+          )}
         </Box>
         <DialogEditTeam
           editTeam={putTeamById}
@@ -194,6 +216,7 @@ const Teams = ({ navigate, location }: any) => {
         handlePageSearch={pageSearch}
         totalCurrentPage={totalCurrentPage}
         loading={loading}
+        showActions={tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED'}
       />
       {isOpenPlayerDialog && (
         <DialogViewPlayerList

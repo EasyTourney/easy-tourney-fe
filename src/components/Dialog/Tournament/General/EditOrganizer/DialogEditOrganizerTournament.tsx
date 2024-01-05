@@ -109,7 +109,6 @@ const DialogEditOrganizerTournament = ({ open, setOpen }: DialogProps) => {
     try {
       const updateResponse = await editGeneralTournament(tournamentId, { organizers })
       if (updateResponse.data) {
-        console.log(updateResponse.data)
         return updateResponse.data
       }
     } catch (error) {

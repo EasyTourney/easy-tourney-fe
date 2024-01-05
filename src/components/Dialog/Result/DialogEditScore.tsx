@@ -120,7 +120,7 @@ export const DialogEditScore = ({ open, setOpen }: EditScoreProps) => {
               />
             </Grid>
             <Grid item xs={2}>
-              <Box sx={{ marginTop: '25px', height: '70px' }}>-</Box>
+              <Box sx={{ marginTop: '40px', height: '70px' }}>-</Box>
             </Grid>
             <Grid item xs={5}>
               <Box component="label" sx={{ fontWeight: '500' }}>
