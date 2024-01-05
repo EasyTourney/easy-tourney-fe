@@ -1,5 +1,5 @@
-import React, { memo, useState } from 'react'
 import moment from 'moment'
+import React, { useState, memo, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
@@ -10,6 +10,12 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ScheduleDataType } from '../../../../../types/schedule.type'
 import EditTimeEvent from '../../../../../components/Dialog/Schedule/EditTimeEvent/EditTimeEvent'
+import { DialogAddEvent } from '../../../../../components/Dialog/MatchEvent/AddEvent'
+import { addEvent } from '../../../../../apis/axios/matchEvent/matchEvent'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { setGeneral } from '../../../../../redux/reducers/tournaments/tournaments.reducer'
+import { getTournamentById } from '../../../../../apis/axios/tournaments/tournament'
 
 interface ScheduleColumnProps {
   column: ScheduleDataType
@@ -22,6 +28,10 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
     data: { ...column }
   })
 
+  const [isOpenDialogAddEvent, setIsOpenDialogAddEvent] = useState(false)
+  const { tournamentId } = useParams()
+  const dispatch = useDispatch()
+  const tournamentStatus = useSelector((state: any) => state.tournament.general.status)
   const [editEvent, setEditEvent] = useState<boolean>(false)
   const [eventDateId, setEventDateId] = useState<number>()
 
@@ -34,6 +44,17 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
     setEventDateId(eventDateId)
     setEditEvent(true)
   }
+
+  useEffect(() => {
+    const fetchTournamentData = async () => {
+      const response = await getTournamentById(Number(tournamentId))
+      dispatch(setGeneral(response.data))
+    }
+
+    if (tournamentId) {
+      fetchTournamentData()
+    }
+  }, [tournamentId])
 
   return (
     <Box
@@ -99,7 +120,7 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
         </Box>
       </Box>
       {/* Box List Card */}
-      <ListScheduleCard cards={column?.matches} />
+      <ListScheduleCard cards={column?.matches} render={render} />
       {/* Box footer */}
       <Box
         sx={{
@@ -111,23 +132,40 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
           alignItems: 'center'
         }}
       >
-        <Tooltip title="Add new event" arrow>
-          <Button
-            startIcon={<AddIcon />}
-            sx={{
-              width: '100%',
-              background: 'white',
-              color: 'black',
-              '& .MuiButton-startIcon': { marginRight: 0 },
-              '&:hover': {
-                color: '#fff',
-                background: '#504d4d'
-              }
-            }}
-          >
-            Event
-          </Button>
-        </Tooltip>
+        {tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
+          <Tooltip title="Add new event" arrow>
+            <Button
+              startIcon={<AddIcon />}
+              sx={{
+                width: '100%',
+                background: 'rgb(102, 187, 106)',
+                color: 'white',
+                '& .MuiButton-startIcon': { marginRight: 0 },
+                '&:hover': {
+                  color: '#fff',
+                  background: 'rgb(50, 160, 71)'
+                }
+              }}
+              onClick={() => {
+                setIsOpenDialogAddEvent(true)
+              }}
+            >
+              Event
+            </Button>
+          </Tooltip>
+        ) : (
+          ''
+        )}
+
+        <DialogAddEvent
+          addEvent={addEvent}
+          onOpen={isOpenDialogAddEvent}
+          onClose={() => {
+            setIsOpenDialogAddEvent(false)
+          }}
+          eventDateId={column?.eventDateId}
+          render={render}
+        />
       </Box>
     </Box>
   )

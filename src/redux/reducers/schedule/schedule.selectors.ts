@@ -1,1 +1,1 @@
-export const tournamentsSelector = (state: any) => state.player
+export const scheduleSelector = (state: any) => state.match

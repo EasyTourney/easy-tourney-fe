@@ -5,8 +5,9 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { MatchDataType } from '../../../../../../types/schedule.type'
 interface ListScheduleCardProps {
   cards: MatchDataType[]
+  render: () => void
 }
-const ListScheduleCard = ({ cards }: ListScheduleCardProps) => {
+const ListScheduleCard = ({ cards, render }: ListScheduleCardProps) => {
   return (
     <SortableContext items={cards?.map((c: MatchDataType) => c.id)} strategy={verticalListSortingStrategy}>
       <Box
@@ -27,7 +28,7 @@ const ListScheduleCard = ({ cards }: ListScheduleCardProps) => {
           }
         }}
       >
-        {cards?.map((card: MatchDataType) => <ScheduleCard key={card.id} card={card} />)}
+        {cards?.map((card: MatchDataType) => <ScheduleCard key={card.id} card={card} render={render} />)}
       </Box>
     </SortableContext>
   )

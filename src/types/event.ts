@@ -1,4 +1,4 @@
 export interface MatchEvent {
-  title: string
-  timeDuration: number
+  title: string | null | undefined
+  timeDuration: number | undefined
 }

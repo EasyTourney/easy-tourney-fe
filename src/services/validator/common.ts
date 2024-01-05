@@ -150,7 +150,7 @@ const teamTwoResult = Yup.number()
   .min(0, 'Scores cannot be negative')
 const durationEvent = Yup.number()
   .required('Duration is required')
-  .moreThan(1, 'Duration must be at least 1 minute')
+  .moreThan(0, 'Duration must be at least 1 minute')
   .lessThan(1440, 'Duration must be less than 24 hours')
 
 const startTimeEventDate = Yup.string()

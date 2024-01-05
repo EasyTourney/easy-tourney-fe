@@ -286,6 +286,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
   // Handle api here
   const getAllScheduleMatches = async (id: number) => {
     const res = (await getAllScheduledMatches(id)) as ScheduleMatchesAPIRes
+
     if (res?.success) {
       setColumnData(res?.data)
     }
@@ -371,7 +372,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
           <DragOverlay dropAnimation={dropAnimation}>
             {(!activeDragItemId || !activeDragItemData) && null}
             {activeDragItemId && activeDragItemData && (
-              <ScheduleCard card={activeDragItemData} activeDragItemId={activeDragItemId} />
+              <ScheduleCard card={activeDragItemData} activeDragItemId={activeDragItemId} render={render} />
             )}
           </DragOverlay>
         </Box>

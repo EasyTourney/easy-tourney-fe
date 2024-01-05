@@ -18,6 +18,7 @@ export interface MatchDataType {
   eventDateId: number
   title: string | null
   type: string
+  timeDuration: number
   FE_PlaceholderCard?: boolean
 }
 export interface ScheduleDataType {

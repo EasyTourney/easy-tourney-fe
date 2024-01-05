@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import Card from '@mui/material/Card'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
@@ -10,12 +10,21 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { CSS } from '@dnd-kit/utilities'
 import { MatchDataType } from '../../../../../../../types/schedule.type'
 import { checkLengthTeamOfMatch } from '../../../../../../../utils/function'
+import { Chip, IconButton, Menu, MenuItem } from '@mui/material'
+import { DialogEditEvent } from '../../../../../../../components/Dialog/MatchEvent/EditEvent'
+import { editEvent } from '../../../../../../../apis/axios/matchEvent/matchEvent'
+import { MatchEvent } from '../../../../../../../types/event'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getTournamentById } from '../../../../../../../apis/axios/tournaments/tournament'
+import { setGeneral } from '../../../../../../../redux/reducers/tournaments/tournaments.reducer'
 
 interface ScheduleCardProps {
   card: MatchDataType
   activeDragItemId?: number | null
+  render: () => void
 }
-const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
+const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => {
   const [showAction, setShowAction] = useState<boolean>(false)
   const [cardIdAtive, setCardIdActive] = useState<number | null>(null)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -27,7 +36,19 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
     }
   })
 
+  const event: MatchEvent =
+    card?.type === 'EVENT' ? { title: card?.title, timeDuration: card?.timeDuration } : { title: null, timeDuration: 0 }
+
   const checkForcusCard = card.id === activeDragItemId
+  const [isOpenDialogEditEvent, setIsOpenDialogEditEvent] = useState(false)
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   const dntKitCardStyle = {
     transform: checkForcusCard ? 'rotate(4deg)' : CSS.Translate.toString(transform),
@@ -46,6 +67,21 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
       setCardIdActive(null)
     }
   }
+
+  const { tournamentId } = useParams()
+  const dispatch = useDispatch()
+  const tournamentStatus = useSelector((state: any) => state.tournament.general.status)
+
+  useEffect(() => {
+    const fetchTournamentData = async () => {
+      const response = await getTournamentById(Number(tournamentId))
+      dispatch(setGeneral(response.data))
+    }
+
+    if (tournamentId) {
+      fetchTournamentData()
+    }
+  }, [tournamentId])
 
   return (
     <Card
@@ -95,8 +131,16 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
         {card?.type === 'EVENT' ? (
           <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-              <Typography sx={{ fontWeight: '500', fontSize: '12.8px', textTransform: 'uppercase' }}>
-                {card?.title}
+              <Typography sx={{ maxWidth: '100px', fontWeight: '500', fontSize: '12.8px', textTransform: 'uppercase' }}>
+                <Tooltip title={card?.title}>
+                  <Chip
+                    sx={{
+                      backgroundColor: 'transparent',
+                      whiteSpace: 'nowrap'
+                    }}
+                    label={card?.title}
+                  />
+                </Tooltip>
               </Typography>
             </Box>
           </Box>
@@ -122,12 +166,60 @@ const ScheduleCard = ({ card, activeDragItemId }: ScheduleCardProps) => {
         {/* CardActions */}
 
         {cardIdAtive === card?.id && showAction && (
-          <Tooltip title="Options" placement="right-end">
+          <Tooltip title={!open && !isOpenDialogEditEvent ? 'Options' : ''} placement="right-start">
             <CardActions disableSpacing sx={{ position: 'absolute', right: 0, top: 0, cursor: 'pointer' }}>
-              <MoreHorizIcon fontSize="small" />
+              {card?.type === 'EVENT' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
+                <Box>
+                  <IconButton
+                    id="option-button"
+                    aria-controls={open ? 'option-button' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                  >
+                    <MoreHorizIcon />
+                  </IconButton>
+                  <Menu
+                    id="option-button"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right'
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left'
+                    }}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        setIsOpenDialogEditEvent(true)
+                        handleClose()
+                      }}
+                    >
+                      Edit
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>Delete</MenuItem>
+                  </Menu>
+                </Box>
+              ) : (
+                <MoreHorizIcon fontSize="small" />
+              )}
             </CardActions>
           </Tooltip>
         )}
+        <DialogEditEvent
+          editEvent={editEvent}
+          onOpen={isOpenDialogEditEvent}
+          onClose={() => {
+            setIsOpenDialogEditEvent(false)
+          }}
+          eventId={Number(card?.id)}
+          render={render}
+          event={event}
+        />
       </CardContent>
     </Card>
   )

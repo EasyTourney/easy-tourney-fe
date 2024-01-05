@@ -9,3 +9,12 @@ export async function addEvent(tournamentId: number, data: MatchEvent, eventDate
   })
   return res
 }
+
+export async function editEvent(tournamentId: number, data: MatchEvent, eventId: number) {
+  const res = await axios({
+    url: `/tournament/${tournamentId}/event/` + eventId,
+    method: 'PUT',
+    data
+  })
+  return res
+}

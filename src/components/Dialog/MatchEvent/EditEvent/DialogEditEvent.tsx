@@ -4,23 +4,29 @@ import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
 import { EventSchema } from '../../../../services/validator/event.validator'
 import { MatchEvent } from '../../../../types/event'
-import styles from './DialogAddEvent.module.css'
+import styles from './DialogEditEvent.module.css'
+import { useParams } from 'react-router'
 
 interface DialogEditEventProps {
-  addEvent: (data: MatchEvent, eventDateId: number) => Promise<any>
-  onAdd: () => void
+  editEvent: (tournamentId: number, data: MatchEvent, eventId: number) => Promise<any>
   onOpen: boolean
   onClose: () => void
+  eventId: number
+  render: () => void
+  event: MatchEvent
 }
 
-export function DialogEditEvent({ addEvent, onAdd, onOpen, onClose }: DialogEditEventProps) {
+export function DialogEditEvent({ editEvent, onOpen, onClose, eventId, render, event }: DialogEditEventProps) {
   const [isSaving, setIsSaving] = useState<boolean>(false)
-  const eventDateId = 3
+  const [title, setTitle] = useState<string | undefined | null>(event.title)
+  const [timeDuration, setTimeDuration] = useState<number | undefined>(event.timeDuration)
   const [error, setError] = useState({
     eventTitleError: '',
     durationError: '',
     invalidError: ''
   })
+
+  const { tournamentId } = useParams()
 
   const resetError = () => {
     setError({
@@ -32,22 +38,25 @@ export function DialogEditEvent({ addEvent, onAdd, onOpen, onClose }: DialogEdit
 
   const formik = useFormik({
     initialValues: {
-      title: '',
-      duration: 0
+      title: event?.title,
+      durationEvent: event?.timeDuration
     },
+
     validationSchema: EventSchema,
     onSubmit: async (values) => {
       try {
         setIsSaving(true)
-        const eventData = {
-          title: values.title.trim(),
-          timeDuration: values.duration
+        const updateEvent = {
+          title: values?.title?.trim(),
+          timeDuration: values?.durationEvent
         }
-        const response = await addEvent(eventData, eventDateId)
 
+        const response = await editEvent(Number(tournamentId), updateEvent, eventId)
         if (response.success) {
-          onAdd()
-          toast.success('A event is created successfully!')
+          setTitle(() => updateEvent.title)
+          setTimeDuration(() => updateEvent.timeDuration)
+          render()
+          toast.success('A event is updated successfully!')
           onClose()
         } else {
           setError({
@@ -57,7 +66,7 @@ export function DialogEditEvent({ addEvent, onAdd, onOpen, onClose }: DialogEdit
           })
         }
       } catch (error) {
-        toast.error('An error occurred while creating the category!')
+        toast.error('An error occurred while updating the event!')
         onClose()
       } finally {
         setIsSaving(false)
@@ -77,13 +86,17 @@ export function DialogEditEvent({ addEvent, onAdd, onOpen, onClose }: DialogEdit
     if (onOpen) {
       resetError()
       formik.resetForm()
+      formik.setValues({
+        title: title,
+        durationEvent: timeDuration
+      })
     }
   }, [onOpen])
 
   return (
     <Box sx={{ textAlign: 'center', paddingTop: '1rem' }}>
       <Dialog open={onOpen} onClose={onClose} onClick={handleClickOutside}>
-        <DialogTitle>Create Event</DialogTitle>
+        <DialogTitle>Edit Event</DialogTitle>
         {error.invalidError && (
           <Alert className={styles['alert-message']} severity="error">
             {error.invalidError}
@@ -111,23 +124,30 @@ export function DialogEditEvent({ addEvent, onAdd, onOpen, onClose }: DialogEdit
                 }
               />
             </Box>
-            <Box>
+            <Box sx={{ marginTop: '20px' }}>
               <Box component="label" sx={{ fontWeight: '500' }}>
                 Duration <span className={styles['required-marked']}>*</span>
               </Box>
               <TextField
                 fullWidth
-                id="duration"
-                name="duration"
-                value={formik.values.duration}
+                id="durationEvent"
+                name="durationEvent"
+                type="number"
+                InputProps={{
+                  inputProps: { min: 0 }
+                }}
+                value={formik.values.durationEvent}
                 onChange={(value) => {
                   error.durationError = ''
                   formik.handleChange(value)
                 }}
                 onBlur={formik.handleBlur}
-                error={formik.touched.duration && (Boolean(error.durationError) || Boolean(formik.errors.duration))}
+                error={
+                  formik.touched.durationEvent && (Boolean(error.durationError) || Boolean(formik.errors.durationEvent))
+                }
                 helperText={
-                  formik.touched.duration && (error.durationError ? error.durationError : formik.errors.duration)
+                  formik.touched.durationEvent &&
+                  (error.durationError ? error.durationError : formik.errors.durationEvent)
                 }
               />
             </Box>
