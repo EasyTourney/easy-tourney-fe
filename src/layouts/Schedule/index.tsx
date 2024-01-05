@@ -44,7 +44,7 @@ function Schedule() {
     if (param.tournamentId) {
       fetchTournamentData()
     }
-  }, [param.tournamentId])
+  }, [param.tournamentId, update])
 
   return (
     <Box sx={{ marginTop: '2rem', overflowX: 'auto' }}>

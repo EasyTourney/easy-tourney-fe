@@ -19,7 +19,7 @@ function OrganizerTemplate() {
       <Box>
         <SidebarOrganizer onToggleCollapse={handleSidebarToggle} />
       </Box>
-      <Box className={styles['main-content']} sx={{ marginLeft: `${sidebarCollapsed ? '7rem' : '17.5rem'}` }}>
+      <Box className={styles['main-content']} sx={{ paddingLeft: `${sidebarCollapsed ? '7rem' : '17.5rem'}` }}>
         <Box>
           <Box className={styles['sticky-header']}>
             <CustomizedBreadcrumbsOrganizer />

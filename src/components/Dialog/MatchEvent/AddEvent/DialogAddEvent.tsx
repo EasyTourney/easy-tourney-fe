@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Alert } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Alert,
+  InputAdornment
+} from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
 import { EventSchema } from '../../../../services/validator/event.validator'
@@ -136,6 +146,10 @@ export function DialogAddEvent({ addEvent, onOpen, onClose, eventDateId, render 
                   formik.touched.durationEvent &&
                   (error.durationError ? error.durationError : formik.errors.durationEvent)
                 }
+                InputProps={{
+                  endAdornment: <InputAdornment position="start">minutes</InputAdornment>,
+                  inputProps: { min: 0 }
+                }}
               />
             </Box>
             <DialogActions className={styles['group-btn']}>

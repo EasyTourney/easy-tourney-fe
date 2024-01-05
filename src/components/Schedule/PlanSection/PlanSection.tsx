@@ -1,4 +1,4 @@
-import { Alert, Box, TextField, Typography } from '@mui/material'
+import { Alert, Box, InputAdornment, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
@@ -125,7 +125,7 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
         <Box className={styles['plan-form']}>
           <Box>
             <Box>
-              <Typography className={styles['plan-sub-title']}>Match duration (minutes)</Typography>
+              <Typography className={styles['plan-sub-title']}>Match duration</Typography>
             </Box>
             <TextField
               disabled={isDisabled || isLoading}
@@ -136,16 +136,22 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
               name="duration"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
+              onKeyPress={(e) => {
+                if (e.key === 'E' || e.key === 'e' || e.key === '-' || e.key === '+') {
+                  e.preventDefault()
+                }
+              }}
               type="number"
               value={formik.values.duration}
               InputProps={{
+                endAdornment: <InputAdornment position="start">minutes</InputAdornment>,
                 inputProps: { min: 0 }
               }}
             />
           </Box>
           <Box>
             <Box component="label">
-              <Typography className={styles['plan-sub-title']}>Time between matches (minutes)</Typography>
+              <Typography className={styles['plan-sub-title']}>Time between matches</Typography>
             </Box>
             <TextField
               disabled={isDisabled || isLoading}
@@ -156,9 +162,15 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
               name="betweenTime"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
+              onKeyPress={(e) => {
+                if (e.key === 'E' || e.key === 'e' || e.key === '-' || e.key === '+') {
+                  e.preventDefault()
+                }
+              }}
               type="number"
               value={formik.values.betweenTime}
               InputProps={{
+                endAdornment: <InputAdornment position="start">minutes</InputAdornment>,
                 inputProps: { min: 0 }
               }}
             />

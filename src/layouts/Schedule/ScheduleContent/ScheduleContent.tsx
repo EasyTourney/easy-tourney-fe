@@ -343,39 +343,40 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
   }
 
   return (
-    <DndContext
-      onDragEnd={handleDragEnd}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      sensors={sensors}
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      collisionDetection={collisionDetectionStrategy} // Collision detection algorithms
-    >
-      <Box
-        sx={{
-          backgroundColor: '#fff',
-          width: '100%',
-          height: 'calc(100vh - 72px - 4rem)',
-          p: '1rem 0',
-          borderRadius: '1rem',
-          transition: 'all 0.5s ease',
-          overflowX: 'auto',
-          overflowY: 'hidden',
-          '&::-webkit-scrollbar-track': { m: 3 }
-        }}
+    <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem' }}>
+      <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Schedule</Box>
+      <DndContext
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        sensors={sensors}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        collisionDetection={collisionDetectionStrategy} // Collision detection algorithms
       >
-        <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Schedule</Box>
-        <ListScheduleColumn columnData={columnData} render={render} />
+        <Box
+          sx={{
+            backgroundColor: '#fff',
+            width: '100%',
+            height: 'calc(100vh - 225px)',
+            marginTop: '0.5rem',
+            transition: 'all 0.5s ease',
+            overflowX: 'scroll',
+            overflowY: 'hidden',
+            '&::-webkit-scrollbar-track': { m: 3 }
+          }}
+        >
+          <ListScheduleColumn columnData={columnData} render={render} />
 
-        <DragOverlay dropAnimation={dropAnimation}>
-          {(!activeDragItemId || !activeDragItemData) && null}
-          {activeDragItemId && activeDragItemData && (
-            <ScheduleCard card={activeDragItemData} activeDragItemId={activeDragItemId} />
-          )}
-        </DragOverlay>
-      </Box>
-    </DndContext>
+          <DragOverlay dropAnimation={dropAnimation}>
+            {(!activeDragItemId || !activeDragItemData) && null}
+            {activeDragItemId && activeDragItemData && (
+              <ScheduleCard card={activeDragItemData} activeDragItemId={activeDragItemId} />
+            )}
+          </DragOverlay>
+        </Box>
+      </DndContext>
+    </Box>
   )
 }
 
