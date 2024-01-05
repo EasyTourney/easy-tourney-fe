@@ -179,7 +179,7 @@ const General = () => {
           <Box className={styles['general-wrapper-title']}>
             <Box className={styles['general-title-common']}>
               Title
-              {!isFinishedOrDiscarded && (
+              {!isFinishedOrDiscarded && isDiscardVisible && (
                 <Button
                   title="Edit"
                   sx={{
@@ -199,7 +199,7 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Category
-              {!isFinishedOrDiscarded && (
+              {!isFinishedOrDiscarded && isDiscardVisible && (
                 <Button
                   title="Edit"
                   sx={{
@@ -222,7 +222,7 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Description
-              {!isFinishedOrDiscarded && (
+              {!isFinishedOrDiscarded && isDiscardVisible && (
                 <Button
                   title="Edit"
                   sx={{
@@ -244,7 +244,7 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Organizers
-              {!isFinishedOrDiscarded && (
+              {!isFinishedOrDiscarded && isDiscardVisible && (
                 <Button
                   title="Edit"
                   sx={{
@@ -277,7 +277,7 @@ const General = () => {
           <Box className={styles['general-wrapper-common']}>
             <Box className={styles['general-title-common']}>
               Event dates
-              {!isFinishedOrDiscarded && (
+              {!isFinishedOrDiscarded && isDiscardVisible && (
                 <Button
                   title="Edit"
                   sx={{

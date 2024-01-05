@@ -15,6 +15,8 @@
     font-weight: 500;
     font-size: 2rem;
     text-align: center;
+    flex: 2.2;
+    margin-left: 40px;
 }
 
 .result-container {
@@ -128,7 +130,7 @@
     align-items: center;
     justify-content: center;
     border-radius: .4rem;
-    width: 4rem;
+    width: 5rem;
     height: 2.3rem;
     margin: 0 20px;
     cursor: pointer;
@@ -138,15 +140,15 @@
 .scoreA {
     margin-right: 5px;
     display: inline-block;
-    width: 15px;
-    text-align: right;
+    width: 25px;
+    text-align: center;
 }
 
 .scoreB {
     margin-left: 5px;
     display: inline-block;
-    width: 15px;
-    text-align: left;
+    width: 25px;
+    text-align: center;
 }
 
 time {
@@ -169,4 +171,25 @@ time {
 .not-played {
     background-color: gray;
     cursor: default;
+}
+
+.result-pdf a {
+    text-align: center;
+    margin-right: 20px;
+    color: blue !important;
+    align-items: center;
+    display: flex;
+}
+
+.result-icon a {
+    text-align: center;
+    margin-right: 20px;
+    align-items: center;
+    display: flex;
+}
+
+.result-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

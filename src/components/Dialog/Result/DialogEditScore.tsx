@@ -8,6 +8,7 @@ import { RootState } from '../../../redux/store'
 import styles from './DialogEditScore.module.css'
 import { ResultSchema } from '../../../services/validator/result.validator'
 import { updateResult } from '../../../redux/reducers/result/result.reducer'
+import { checkLengthTeam } from '../../../utils/function'
 interface EditScoreProps {
   open: boolean
   setOpen: (value: boolean) => void
@@ -92,7 +93,7 @@ export const DialogEditScore = ({ open, setOpen }: EditScoreProps) => {
           <Grid sx={{ alignItems: 'center', textAlign: 'center' }} container spacing={2}>
             <Grid item xs={5}>
               <Box component="label" sx={{ fontWeight: '500' }}>
-                {selectedMatch.teamOneName}
+                {checkLengthTeam(selectedMatch.teamOneName)}
               </Box>
               <TextField
                 fullWidth

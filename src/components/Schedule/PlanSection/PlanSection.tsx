@@ -68,6 +68,8 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
                 if (response.success) {
                   onGenerateSchedule()
                   toast.success('A schedule is generated successfully!')
+                } else {
+                  toast.error(response?.errorMessage['Invalid Error'])
                 }
               }
               setIsLoading(false)
