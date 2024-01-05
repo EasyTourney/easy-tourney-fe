@@ -97,6 +97,13 @@ export const checkLengthDescription = (str: string, number: number) => {
     return str
   }
 }
+export const checkLengthTeam = (str: string) => {
+  if (str?.length > 10) {
+    return `${str.slice(0, 10)}...`
+  } else {
+    return str
+  }
+}
 export const checkLengthTeamOfMatch = (str: string, number: number) => {
   if (str?.length > 7) {
     return `${str.slice(0, number)}`

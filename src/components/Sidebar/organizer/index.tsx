@@ -11,6 +11,7 @@ import WysiwygIcon from '@mui/icons-material/Wysiwyg'
 import GroupsIcon from '@mui/icons-material/Groups'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ContentPasteIcon from '@mui/icons-material/ContentPaste'
+import LeaderboardIcon from '@mui/icons-material/Leaderboard'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { IconButton } from '@mui/material'
@@ -178,6 +179,37 @@ function SidebarOrganizer({ onToggleCollapse }: SidebarProps) {
                 <ContentPasteIcon />
               </ListItemIcon>
               {!collapsed && <ListItemText className={styles['text-menu']} primary="Result" />}
+            </ListItem>
+          </Link>
+          <Link
+            style={{ color: 'white' }}
+            to={{ pathname: `/tournament/${tournamentId}/leaderboard`, search: '?page=1' }}
+          >
+            <ListItem
+              className={styles['list-item']}
+              button
+              selected={location.pathname === `/tournament/${tournamentId}/leaderboard`}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: 'white',
+                  borderRadius: '10px',
+                  '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                    color: 'black'
+                  },
+                  '&:hover': {
+                    opacity: 0.9,
+                    backgroundColor: 'white'
+                  }
+                },
+                '&:hover': {
+                  opacity: 0.7
+                }
+              }}
+            >
+              <ListItemIcon sx={{ color: 'white' }}>
+                <LeaderboardIcon />
+              </ListItemIcon>
+              {!collapsed && <ListItemText className={styles['text-menu']} primary="Leaderboard" />}
             </ListItem>
           </Link>
         </List>

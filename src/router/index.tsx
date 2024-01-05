@@ -12,6 +12,7 @@ import Result from '../layouts/Result'
 import { Login } from '../pages/Login'
 import NotFound from '../pages/NotFound'
 import Teams from '../layouts/Teams'
+import Leaderboard from '../layouts/Leaderboard'
 
 const getDefaultRedirectPath = () => {
   const storedRole = localStorage.getItem('userRole')
@@ -75,6 +76,10 @@ export const router = createBrowserRouter([
       {
         path: '/tournament/schedule',
         element: <ProtectedRoute element={<Schedule />} allowedRoles={['ADMIN', 'ORGANIZER']} />
+      },
+      {
+        path: '/tournament/:tournamentId/leaderboard',
+        element: <ProtectedRoute element={<Leaderboard />} allowedRoles={['ADMIN', 'ORGANIZER']} />
       }
     ]
   },
