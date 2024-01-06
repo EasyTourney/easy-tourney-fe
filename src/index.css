@@ -42,3 +42,11 @@ body {
 * {
   font-family: 'Poppins', sans-serif !important;
 }
+
+.swal2-horizontal-buttons {
+  flex-direction: row-reverse;
+}
+
+.swal2-custom-title {
+  font-weight: 500;
+}

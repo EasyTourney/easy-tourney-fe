@@ -78,12 +78,15 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
       text: 'You will not be able to revert this!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#dc4848',
+      cancelButtonColor: 'transient',
       confirmButtonText: 'Yes, delete it!',
+      focusCancel: true,
       allowOutsideClick: false,
       customClass: {
-        container: 'swal2-container'
+        actions: 'swal2-horizontal-buttons',
+        container: 'swal2-container',
+        title: 'swal2-custom-title'
       }
     }).then(async (result) => {
       if (result.isConfirmed) {

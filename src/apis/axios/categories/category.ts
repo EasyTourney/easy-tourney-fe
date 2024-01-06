@@ -44,3 +44,11 @@ export async function apiEditCategory(id: number, data: any) {
   })
   return res
 }
+
+export async function getTotalTournamentsByCategory(categoryId: number) {
+  const res = await axios({
+    url: `/category/countTournament/${categoryId}`,
+    method: 'GET'
+  })
+  return res
+}

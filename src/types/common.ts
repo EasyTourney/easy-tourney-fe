@@ -132,3 +132,11 @@ export interface GeneralInformationAPIRes extends AxiosResponse {
   } | null
   errorMessage: { [key: string]: string }
 }
+
+export interface CommonAPIRes extends AxiosResponse {
+  success: boolean
+  data: any
+  total: number
+  additionalData: any
+  errorMessage: { [key: string]: string }
+}

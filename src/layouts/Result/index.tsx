@@ -79,11 +79,13 @@ const Result = () => {
       text: 'You cannot edit scores because this tournament has been discarded!',
       icon: 'warning',
       showCancelButton: false,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#dc4848',
       confirmButtonText: 'OK',
       allowOutsideClick: false,
+      focusCancel: true,
       customClass: {
-        container: 'swal2-container'
+        container: 'swal2-container',
+        title: 'swal2-custom-title'
       }
     })
   }

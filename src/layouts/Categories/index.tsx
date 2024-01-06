@@ -4,9 +4,15 @@ import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { APIRes, ParamApi } from '../../types/common'
+import { APIRes, CommonAPIRes, ParamApi } from '../../types/common'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
-import { apiDeleteCategory, getAllCategories, addCategory, apiEditCategory } from '../../apis/axios/categories/category'
+import {
+  apiDeleteCategory,
+  getAllCategories,
+  addCategory,
+  apiEditCategory,
+  getTotalTournamentsByCategory
+} from '../../apis/axios/categories/category'
 import useDebounce from '../../hooks/useDebounce'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
@@ -129,15 +135,33 @@ const Category = ({ navigate, location }: any) => {
 
   const handleDelete = useCallback(async (rowData: { [key: string]: any }) => {
     const { categoryId } = rowData //get categoryId
+    let warningMessage
+    const response = (await getTotalTournamentsByCategory(categoryId)) as CommonAPIRes
+    switch (response.total) {
+      case 0:
+        warningMessage = 'You will not be able to revert this!'
+        break
+      case 1:
+        warningMessage =
+          '<p style="margin-top: 0">Deleting this category will delete <span style="color: red; font-weight: 500">1 tournament</span> currently associated with it.</p> Are you sure you want to proceed?'
+        break
+      default:
+        warningMessage = `<p style="margin-top: 0">Deleting this category will delete <span style="color: red; font-weight: 500">${response.total} tournaments</span> currently associated with it.</p> Are you sure you want to proceed?`
+    }
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You will not be able to revert this!',
+      html: `${warningMessage}`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#dc4848',
+      cancelButtonColor: 'transient',
       confirmButtonText: 'Yes, delete it!',
-      allowOutsideClick: false
+      allowOutsideClick: false,
+      focusCancel: true,
+      customClass: {
+        actions: 'swal2-horizontal-buttons',
+        title: 'swal2-custom-title'
+      }
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = (await apiDeleteCategory(categoryId)) as APIRes

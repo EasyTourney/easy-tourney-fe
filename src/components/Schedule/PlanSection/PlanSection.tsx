@@ -51,13 +51,18 @@ const PlanSection = ({ onGenerateSchedule }: PlanInformationProps) => {
           if (status === 'READY') {
             Swal.fire({
               title: 'Re-generate schedule',
-              text: 'Generating a new schedule will discard all previously scheduled data! If you proceed, any existing tournament information will be lost. Do you wish to re-generate?',
+              html: '<p style="margin-top: 0">Generating a new schedule will discard all previously scheduled matches and events!</p> Do you wish to re-generate?',
               icon: 'warning',
               showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
+              confirmButtonColor: '#dc4848',
+              cancelButtonColor: 'transient',
               confirmButtonText: 'Yes, re-generate!',
-              allowOutsideClick: false
+              allowOutsideClick: false,
+              focusCancel: true,
+              customClass: {
+                actions: 'swal2-horizontal-buttons',
+                title: 'swal2-custom-title'
+              }
             }).then(async (result) => {
               setIsLoading(true)
               if (result.isConfirmed) {

@@ -224,10 +224,15 @@ const TournamentTable = ({ navigate, location }: any) => {
       text: 'You will not be able to revert this!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#dc4848',
+      cancelButtonColor: 'transient',
       confirmButtonText: 'Yes, delete it!',
-      allowOutsideClick: false
+      allowOutsideClick: false,
+      focusCancel: true,
+      customClass: {
+        actions: 'swal2-horizontal-buttons',
+        title: 'swal2-custom-title'
+      }
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = (await deleteTournament(id)) as TournamentAPIRes
