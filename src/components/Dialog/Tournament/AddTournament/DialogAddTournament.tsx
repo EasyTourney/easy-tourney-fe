@@ -260,7 +260,7 @@ const DialogAddTournament = ({ addTournament, open, setOpen, onAdd }: Tournament
               format="DD/MM/YYYY"
               calendarPosition="top"
               plugins={[<DatePanel />]}
-              minDate={moment(today).format('DD/MM/YYYY')}
+              minDate={moment(today).add(1, 'day').format('DD/MM/YYYY')}
               placeholder="YYYY/MM/DD"
               render={<CustomMultipleInput errorDatePicker={errorDatePicker} />}
             />

@@ -10,12 +10,14 @@ import { getCategories } from './redux/reducers/categories/categories.slice'
 import { ThunkDispatch } from '@reduxjs/toolkit'
 import 'react-toastify/dist/ReactToastify.css'
 import Theme from './theme'
+import useHideSwalOnBack from './utils/hidePopupSwal'
 
 function App() {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
   useEffect(() => {
     dispatch(getCategories())
   }, [dispatch])
+  useHideSwalOnBack()
   return (
     <Box>
       <Suspense fallback={<>Loading...</>}>

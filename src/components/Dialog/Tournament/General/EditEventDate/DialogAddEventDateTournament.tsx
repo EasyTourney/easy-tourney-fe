@@ -170,7 +170,7 @@ const DiaLogAddEventDateTournamnet = ({ open, setOpen, eventDates }: OrganizerPr
                 format="DD/MM/YYYY"
                 calendarPosition="bottom"
                 plugins={[<DatePanel />]}
-                minDate={moment(today).format('DD/MM/YYYY')}
+                minDate={moment(today).add(1, 'day').format('DD/MM/YYYY')}
                 placeholder="YYYY/MM/DD"
                 render={<CustomMultipleInput errorDatePicker={errorDatePicker} />}
                 mapDays={({ date }) => {
