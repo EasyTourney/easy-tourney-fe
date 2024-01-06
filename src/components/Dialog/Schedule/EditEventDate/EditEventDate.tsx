@@ -7,23 +7,34 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { TimePicker } from '@mui/x-date-pickers'
 import { useFormik } from 'formik'
 import { Alert, Box, Typography } from '@mui/material'
-import styles from './EditTimeEvent.module.css'
+import styles from './EditEventDate.module.css'
 import dayjs, { Dayjs } from 'dayjs'
 import { toast } from 'react-toastify'
 import { ScheduleSchema } from '../../../../services/validator/schedule.validator'
 import { EditEventTimeApi } from '../../../../apis/axios/schedule/schedule'
 import { useParams } from 'react-router-dom'
 import { ScheduleTimeEventAPIRes } from '../../../../types/common'
-interface EditTimeEventProps {
+interface EditEventDateProps {
   editEvent: boolean
   setEditEvent: (value: boolean) => void
   eventDateId?: number
   render: () => void
+  startTimeDefaultValue: string
+  endTimeDefaultValue: string
 }
 
-const EditTimeEvent = ({ editEvent, setEditEvent, eventDateId, render }: EditTimeEventProps) => {
+const EditEventDate = ({
+  editEvent,
+  setEditEvent,
+  eventDateId,
+  render,
+  startTimeDefaultValue,
+  endTimeDefaultValue
+}: EditEventDateProps) => {
   const { tournamentId } = useParams()
   const [error, setError] = React.useState<string>()
+  const [defaultStartTime, setDefaultStartTime] = React.useState<Dayjs | null>(null)
+  const [defaultEndTime, setDefaultEndTime] = React.useState<Dayjs | null>(null)
   const handleClose = () => {
     setEditEvent(false)
   }
@@ -37,8 +48,8 @@ const EditTimeEvent = ({ editEvent, setEditEvent, eventDateId, render }: EditTim
     onSubmit: async (values) => {
       try {
         const planInformation = {
-          startTime: values.startTimeEventDate ? dayjs(values.startTimeEventDate).format('HH:mm') : undefined,
-          endTime: values.endTimeEventDate ? dayjs(values.endTimeEventDate).format('HH:mm') : undefined
+          startTime: values.startTimeEventDate && dayjs(values.startTimeEventDate).format('HH:mm'),
+          endTime: values.endTimeEventDate && dayjs(values.endTimeEventDate).format('HH:mm')
         }
         const res = (await EditEventTimeApi(
           Number(tournamentId),
@@ -58,6 +69,17 @@ const EditTimeEvent = ({ editEvent, setEditEvent, eventDateId, render }: EditTim
     }
   })
 
+  React.useEffect(() => {
+    if (startTimeDefaultValue) {
+      setDefaultStartTime(dayjs(startTimeDefaultValue, 'HH:mm'))
+      formik.setFieldValue('startTimeEventDate', dayjs(startTimeDefaultValue, 'HH:mm'))
+    }
+    if (endTimeDefaultValue) {
+      setDefaultEndTime(dayjs(endTimeDefaultValue, 'HH:mm'))
+      formik.setFieldValue('endTimeEventDate', dayjs(endTimeDefaultValue, 'HH:mm'))
+    }
+  }, [startTimeDefaultValue, endTimeDefaultValue])
+
   return (
     <Dialog
       open={editEvent}
@@ -65,7 +87,7 @@ const EditTimeEvent = ({ editEvent, setEditEvent, eventDateId, render }: EditTim
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{'Edit time event'}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{'Edit Time Event Date'}</DialogTitle>
       {error && (
         <Alert className={styles['alert-message']} severity="error">
           {error}
@@ -80,8 +102,7 @@ const EditTimeEvent = ({ editEvent, setEditEvent, eventDateId, render }: EditTim
             </Box>
             <TimePicker
               ampm={false}
-              defaultValue={dayjs()}
-              value={formik.values.startTimeEventDate || null}
+              value={defaultStartTime}
               onChange={(value) => (value === null ? dayjs() : formik.setFieldValue('startTimeEventDate', value))}
               slotProps={{
                 textField: {
@@ -104,7 +125,7 @@ const EditTimeEvent = ({ editEvent, setEditEvent, eventDateId, render }: EditTim
             </Box>
             <TimePicker
               ampm={false}
-              value={formik.values.endTimeEventDate || null}
+              value={defaultEndTime}
               onChange={(value) => formik.setFieldValue('endTimeEventDate', value)}
               slotProps={{
                 textField: {
@@ -135,4 +156,4 @@ const EditTimeEvent = ({ editEvent, setEditEvent, eventDateId, render }: EditTim
   )
 }
 
-export default EditTimeEvent
+export default EditEventDate

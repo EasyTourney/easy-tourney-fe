@@ -6,6 +6,23 @@ export interface TeamDataType {
   updatedAt: string | null
   createdAt: string | null
 }
+export interface MatchDataDuplicate {
+  endTime: string
+  eventDateId: number
+  id: number
+  matchDuration: number
+  startTime: string
+  teamOneId: number
+  teamOneResult: number | null
+  teamTwoId: number
+  teamTwoResult: number | null
+  title: string | null
+  type: string
+}
+export interface TimeNotEnough {
+  warningMessage: string
+  eventDateId: number[]
+}
 
 export interface MatchDataType {
   id: string | number

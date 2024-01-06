@@ -36,3 +36,12 @@ export async function generateSchedule(tournamentId: number, data: PlanInformati
   })
   return res
 }
+
+export async function editMatchApi(tournamentId: number, matchId: number, data: any) {
+  const res = await axios({
+    url: `/tournament/${tournamentId}/match/${matchId}`,
+    method: 'PUT',
+    data
+  })
+  return res
+}

@@ -1,9 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { PlanInformation } from '../../../types/plan'
+import { MatchDataDuplicate, TimeNotEnough } from '../../../types/schedule.type'
 
 interface ScheduleState {
   planInformation: PlanInformation
   totalTeams: number
+  duplicateMatch: MatchDataDuplicate[] | []
+  timeNotEnoughdata: TimeNotEnough
 }
 
 const initialState: ScheduleState = {
@@ -13,7 +16,12 @@ const initialState: ScheduleState = {
     startTime: '',
     endTime: ''
   },
-  totalTeams: 0
+  duplicateMatch: [],
+  totalTeams: 0,
+  timeNotEnoughdata: {
+    warningMessage: '',
+    eventDateId: []
+  }
 }
 
 const scheduleSlice = createSlice({
@@ -25,10 +33,16 @@ const scheduleSlice = createSlice({
     },
     setTotalTeams: (state, action) => {
       state.totalTeams = action.payload
+    },
+    setDuplicateMatch: (state, action) => {
+      state.duplicateMatch = action.payload
+    },
+    setTimeNotEnough: (state, action) => {
+      state.timeNotEnoughdata = action.payload
     }
   }
 })
 
-export const { setPlanInformation, setTotalTeams } = scheduleSlice.actions
+export const { setPlanInformation, setTotalTeams, setDuplicateMatch, setTimeNotEnough } = scheduleSlice.actions
 
 export default scheduleSlice.reducer

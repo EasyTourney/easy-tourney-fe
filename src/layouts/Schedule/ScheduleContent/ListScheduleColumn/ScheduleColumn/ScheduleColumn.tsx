@@ -9,13 +9,15 @@ import ListScheduleCard from './ListScheduleCard/ListScheduleCard'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ScheduleDataType } from '../../../../../types/schedule.type'
-import EditTimeEvent from '../../../../../components/Dialog/Schedule/EditTimeEvent/EditTimeEvent'
+import EditEventDate from '../../../../../components/Dialog/Schedule/EditEventDate/EditEventDate'
 import { DialogAddEvent } from '../../../../../components/Dialog/MatchEvent/AddEvent'
 import { addEvent } from '../../../../../apis/axios/matchEvent/matchEvent'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setGeneral } from '../../../../../redux/reducers/tournaments/tournaments.reducer'
 import { getTournamentById } from '../../../../../apis/axios/tournaments/tournament'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import { timeNotEnough } from '../../../../../redux/reducers/schedule/schedule.selectors'
 
 interface ScheduleColumnProps {
   column: ScheduleDataType
@@ -34,6 +36,17 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
   const tournamentStatus = useSelector((state: any) => state.tournament.general.status)
   const [editEvent, setEditEvent] = useState<boolean>(false)
   const [eventDateId, setEventDateId] = useState<number>()
+
+  const { timeNotEnoughdata } = useSelector(timeNotEnough)
+
+  const today = moment().startOf('day')
+  const dateOfColumn = moment(column?.date, 'YYYY/MM/DD')
+
+  const isPastDate = today.isAfter(dateOfColumn, 'day')
+
+  const filteredTimeNotEnoughInEvenDate = timeNotEnoughdata?.eventDateId?.flatMap(
+    (eventDateId: number) => eventDateId === column.eventDateId
+  )
 
   const dntKitStyle = {
     transform: CSS.Translate.toString(transform),
@@ -65,8 +78,12 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
         maxWidth: '240px',
         minWidth: '240px',
         background: '#333643',
+        opacity: isPastDate ? 0.6 : 1,
+        pointerEvents: isPastDate ? 'none' : 'auto',
         ml: 3,
         borderRadius: '6px',
+        border: `${filteredTimeNotEnoughInEvenDate?.map((a: any) => a && '3px solid rgb(245, 124, 0)')}`,
+        boxShadow: 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px',
         outline: 'none',
         height: 'fit-content',
         maxHeight: (theme) => `calc(100vh - 72px - 88px - ${theme.spacing(5)})`
@@ -74,7 +91,14 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
     >
       {/* Show popup edit eventime */}
       {editEvent && (
-        <EditTimeEvent editEvent={editEvent} setEditEvent={setEditEvent} eventDateId={eventDateId} render={render} />
+        <EditEventDate
+          editEvent={editEvent}
+          setEditEvent={setEditEvent}
+          eventDateId={eventDateId}
+          render={render}
+          startTimeDefaultValue={column?.startTime?.slice(0, 5)}
+          endTimeDefaultValue={column?.endTime?.slice(0, 5)}
+        />
       )}
       {/* Box column header */}
       <Box
@@ -91,6 +115,31 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
           position: 'relative'
         }}
       >
+        {/* Show icon error here */}
+        {filteredTimeNotEnoughInEvenDate?.map((a: boolean, index: number) => {
+          if (a) {
+            return (
+              <Tooltip title={timeNotEnoughdata.warningMessage} placement="top" key={index}>
+                <Button
+                  sx={{
+                    position: 'absolute',
+                    left: '8px',
+                    minWidth: '24px !important',
+                    minHeight: '16px !important',
+                    backgroundColor: 'rgb(245, 124, 0)',
+                    '&:hover': {
+                      backgroundColor: 'rgb(214 148 79);'
+                    },
+                    padding: '3px 4px !important'
+                  }}
+                >
+                  <WarningAmberIcon sx={{ color: '#ffdd00' }} />
+                </Button>
+              </Tooltip>
+            )
+          }
+        })}
+
         <Box
           sx={{
             display: 'flex',

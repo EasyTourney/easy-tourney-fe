@@ -167,6 +167,9 @@ const endTimeEventDate = Yup.string()
     return dayjs(value).isValid()
   })
 
+const teamOne = Yup.string().trim().required('Team one is required.')
+const teamTwo = Yup.string().trim().required('Team two is required.')
+
 export {
   email,
   password,
@@ -189,5 +192,7 @@ export {
   teamTwoResult,
   durationEvent,
   startTimeEventDate,
-  endTimeEventDate
+  endTimeEventDate,
+  teamOne,
+  teamTwo
 }

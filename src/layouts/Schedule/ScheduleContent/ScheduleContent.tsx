@@ -26,6 +26,9 @@ import { dragDropApi, getAllScheduledMatches } from '../../../apis/axios/schedul
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { ScheduleMatchesAPIRes } from '../../../types/common'
+import { useDispatch } from 'react-redux'
+import { setDuplicateMatch, setTimeNotEnough } from '../../../redux/reducers/schedule/schedule.reducer'
+
 export type CollisionDetectionArgs = Parameters<CollisionDetection>[0]
 
 interface ScheduleContentProps {
@@ -33,8 +36,8 @@ interface ScheduleContentProps {
 }
 
 const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
+  const dispatch = useDispatch()
   const [columnData, setColumnData] = useState<ScheduleDataType[]>([])
-
   const [activeDragItemId, setActiveDragItemId] = useState<number | null>(null) //  Get the id of card being draging
   const [activeDragItemData, setActiveDragItemData] = useState<MatchDataType | null>(null) // Get the data of card being draging
   const [oldColumnWhenDragingCard, setOldColumnWhenDragingCard] = useState<any>(null) // Get old data when draging start
@@ -129,6 +132,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
       let cardOrderIds = filterIdOfColumn?.filter((item: any) => item !== undefined).flat()
 
       // Column old
+
       if (nextActiveColumns) {
         // Delete the dragging card from its column when dragging to a new column
         nextActiveColumns.matches = nextActiveColumns?.matches?.filter((match: any) => match.id !== activeDragingCardId)
@@ -179,6 +183,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
       setOldColumnWhenDragingCard(findColumnByMatchCardId(event?.active?.id))
     }
   }
+
   // Trigger during the card drag and drop process
   const handleDragOver = (event: { active: any; over: any }) => {
     const { active, over } = event
@@ -196,7 +201,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
     const activeColumns = findColumnByMatchCardId(activeDragingCardId)
     const overColumns = findColumnByMatchCardId(overCardId)
 
-    if (!activeColumns || !overColumns) return // If one of the two columns does not exist, return does nothing (avoid website crashes).
+    if (!activeColumns || !overColumns || !isPastDateColumn(overColumns)) return // If one of the two columns does not exist, return does nothing (avoid website crashes).
 
     if (activeColumns.eventDateId !== overColumns.eventDateId) {
       moveCardBetweenTwoColumns(
@@ -210,6 +215,11 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
         'handleDragOver'
       )
     }
+  }
+  const isPastDateColumn = (column: ScheduleDataType) => {
+    const currentDate = new Date() // Get current date
+    const columnDate = new Date(column.date)
+    return columnDate > currentDate
   }
 
   // Trigger when end draging card
@@ -228,7 +238,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
     const activeColumns = findColumnByMatchCardId(activeDragingCardId)
     const overColumns = findColumnByMatchCardId(overCardId)
 
-    if (!activeColumns || !overColumns) return
+    if (!activeColumns || !overColumns || !isPastDateColumn(overColumns)) return
 
     // Check draging card between two column or inside a column
     if (oldColumnWhenDragingCard?.eventDateId !== overColumns.eventDateId) {
@@ -290,6 +300,10 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
     if (res?.success) {
       setColumnData(res?.data)
     }
+    if (res?.additionalData) {
+      dispatch(setDuplicateMatch(res?.additionalData?.DuplicateMatch))
+      dispatch(setTimeNotEnough(res?.additionalData?.TimeNoEnough))
+    }
     // Generate special match (id,eventDataId,FE_PlaceholderCard) when matches array is empty
     res?.data?.map((column: any) => {
       if (column?.matches?.length === 0) {
@@ -307,7 +321,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
     const res = (await dragDropApi(id, data)) as ScheduleMatchesAPIRes
 
     if (res?.success) {
-      toast.success('Changed Schedule Matches successfully !')
+      toast.success('A match has changed successfully!')
       render()
     } else {
       render()
@@ -342,9 +356,8 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
       }
     })
   }
-
   return (
-    <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem' }}>
+    <Box sx={{ backgroundColor: 'white', paddingRight: '1.2rem', borderRadius: '1rem' }}>
       <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Schedule</Box>
       <DndContext
         onDragEnd={handleDragEnd}
@@ -359,12 +372,13 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
           sx={{
             backgroundColor: '#fff',
             width: '100%',
-            height: 'calc(100vh - 235px)',
+            height: 'calc(100vh - 120px - 5.2rem)',
             marginTop: '0.5rem',
             transition: 'all 0.5s ease',
-            overflowX: 'scroll',
+            overflowX: 'auto',
             overflowY: 'hidden',
-            '&::-webkit-scrollbar-track': { m: 3 }
+            borderRadius: '1rem',
+            '&::-webkit-scrollbar-track': { marginLeft: '1.3rem ' }
           }}
         >
           <ListScheduleColumn columnData={columnData} render={render} />

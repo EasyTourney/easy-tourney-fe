@@ -2,9 +2,9 @@ import { AxiosResponse } from 'axios'
 import { Categories } from './category'
 import { Organizer, OrganizerRecord } from './organizer'
 import { Tournament } from './tournament'
-import { Team } from './team'
+import { Team, TeamOfMatch } from './team'
 import { Player } from './player'
-import { ScheduleDataType, TimeEvent } from './schedule.type'
+import { MatchDataDuplicate, ScheduleDataType, TimeEvent, TimeNotEnough } from './schedule.type'
 import { MatchEvent } from './event'
 
 export interface APIRes extends AxiosResponse {
@@ -104,12 +104,14 @@ export interface ParamApi {
   filterCategory?: string
   id?: number
 }
+
 export interface ScheduleMatchesAPIRes extends AxiosResponse {
   success: boolean
   data: ScheduleDataType[]
   total: number
   additionalData: {
-    totalOrganizer: number
+    DuplicateMatch: MatchDataDuplicate[]
+    TimeNoEnough: TimeNotEnough
   } | null
   errorMessage: { [key: string]: string }
 }
@@ -138,5 +140,24 @@ export interface CommonAPIRes extends AxiosResponse {
   data: any
   total: number
   additionalData: any
+  errorMessage: { [key: string]: string }
+}
+export interface TeamsOfMatchAPIRes extends AxiosResponse {
+  success: boolean
+  data: TeamOfMatch[]
+  total: number
+  additionalData: {
+    totalTeamOfTournament: number
+  }
+  message: string
+}
+
+export interface EditMatchAPIRes extends AxiosResponse {
+  success: boolean
+  data: any
+  total: number
+  additionalData: {
+    totalOrganizer: number
+  } | null
   errorMessage: { [key: string]: string }
 }

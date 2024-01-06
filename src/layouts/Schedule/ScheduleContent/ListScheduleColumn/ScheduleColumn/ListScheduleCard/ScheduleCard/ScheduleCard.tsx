@@ -10,14 +10,18 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { CSS } from '@dnd-kit/utilities'
 import { MatchDataType } from '../../../../../../../types/schedule.type'
 import { checkLengthTeamOfMatch } from '../../../../../../../utils/function'
-import { Chip, IconButton, Menu, MenuItem } from '@mui/material'
+import DialogEditMatch from '../../../../../../../components/Dialog/Schedule/EditMatch/DialogEditMatch'
+import { getAllTeams } from '../../../../../../../apis/axios/teams/team'
+import { TeamsOfMatchAPIRes } from '../../../../../../../types/common'
+import { TeamOfMatch } from '../../../../../../../types/team'
+import { useParams } from 'react-router-dom'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import { useSelector } from 'react-redux'
+import { matchDuplicateSelector } from '../../../../../../../redux/reducers/schedule/schedule.selectors'
+import { Button, Chip, IconButton, Menu, MenuItem } from '@mui/material'
 import { DialogEditEvent } from '../../../../../../../components/Dialog/MatchEvent/EditEvent'
 import { editEvent } from '../../../../../../../apis/axios/matchEvent/matchEvent'
 import { MatchEvent } from '../../../../../../../types/event'
-import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { getTournamentById } from '../../../../../../../apis/axios/tournaments/tournament'
-import { setGeneral } from '../../../../../../../redux/reducers/tournaments/tournaments.reducer'
 
 interface ScheduleCardProps {
   card: MatchDataType
@@ -27,6 +31,13 @@ interface ScheduleCardProps {
 const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => {
   const [showAction, setShowAction] = useState<boolean>(false)
   const [cardIdAtive, setCardIdActive] = useState<number | null>(null)
+  const [editMatch, setEditMatch] = useState<boolean>(false)
+  const [teams, setTeams] = useState<TeamOfMatch[]>([])
+  const [matchId, setMatchId] = useState<number | null>(null)
+  const { duplicateMatch } = useSelector(matchDuplicateSelector)
+  const duplicateMatchArray = duplicateMatch?.map((cardDpl: any) => cardDpl.id === card.id)
+  const tournamentStatus = useSelector((state: any) => state.tournament.general.status)
+  const { tournamentId } = useParams()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card.id,
     data: { ...card },
@@ -36,10 +47,10 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
     }
   })
 
+  const checkForcusCard = card.id === activeDragItemId
+
   const event: MatchEvent =
     card?.type === 'EVENT' ? { title: card?.title, timeDuration: card?.timeDuration } : { title: null, timeDuration: 0 }
-
-  const checkForcusCard = card.id === activeDragItemId
   const [isOpenDialogEditEvent, setIsOpenDialogEditEvent] = useState(false)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -68,160 +79,227 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
     }
   }
 
-  const { tournamentId } = useParams()
-  const dispatch = useDispatch()
-  const tournamentStatus = useSelector((state: any) => state.tournament.general.status)
+  const handleEditMatch = (id: number) => {
+    setEditMatch(true)
+    setMatchId(id)
+  }
+
+  const getAllTeamsOfMatch = async (tournamentId: number) => {
+    const res = (await getAllTeams(tournamentId)) as TeamsOfMatchAPIRes
+    if (res?.success) {
+      setTeams(res.data)
+    }
+  }
 
   useEffect(() => {
-    const fetchTournamentData = async () => {
-      const response = await getTournamentById(Number(tournamentId))
-      dispatch(setGeneral(response.data))
-    }
-
-    if (tournamentId) {
-      fetchTournamentData()
-    }
+    getAllTeamsOfMatch(Number(tournamentId))
   }, [tournamentId])
 
+  // Css when card has been duplicated
+  const borderStyles = duplicateMatchArray?.map((matchDpt: boolean) => {
+    if (matchDpt) {
+      return '2px solid rgb(245, 124, 0)'
+    }
+    return 'none'
+  })
+  const validBorderStyles = borderStyles?.filter((style: string) => style !== 'none')
+  const border = validBorderStyles?.join(', ')
+
+  const borderWithRadius = borderStyles?.map((style: string) => {
+    if (style !== 'none') {
+      return `4px;`
+    }
+    return style
+  })
+  const validBorderStylesRadius = borderWithRadius?.filter((style: string) => style !== 'none')
+  const borderRadius = validBorderStylesRadius?.join(', ')
+
   return (
-    <Card
-      ref={setNodeRef}
-      style={dntKitCardStyle}
-      {...attributes}
-      {...listeners}
-      sx={{
-        cursor: 'pointer',
-        boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
-        overflow: 'unset',
-        background: card?.type === 'EVENT' ? '#ffc0aa' : '#fff0ad',
-        border: 'none',
-        outline: 'none',
-        position: 'relative'
-      }}
-      onMouseEnter={() => handleShowAction(Number(card.id), 'MOUSE_ENTER')}
-      onMouseLeave={() => handleShowAction(Number(card.id), 'MOUSE_LEAVE')}
-    >
-      <CardContent
+    <>
+      {editMatch && card?.type === 'MATCH' && (
+        <DialogEditMatch
+          editMatch={editMatch}
+          setEditMatch={setEditMatch}
+          teams={teams}
+          matchId={matchId}
+          tournamentId={Number(tournamentId)}
+          teamOneDefaultValue={card.teamOne.teamName}
+          teamTwoDefaultValue={card.teamTwo.teamName}
+          timeDurationDefaultValue={card.timeDuration}
+          render={render}
+        />
+      )}
+      <Card
+        ref={setNodeRef}
+        style={dntKitCardStyle}
+        {...attributes}
+        {...listeners}
         sx={{
-          p: 2,
-          '&:last-child': {
-            p: 2
-          },
-          display: card?.FE_PlaceholderCard ? 'none' : 'flex',
-          alignItems: 'center',
-          gap: 1
+          cursor: 'pointer',
+          boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
+          overflow: 'unset',
+          background: card?.type === 'EVENT' ? '#ffc0aa' : '#fff0ad',
+          border: 'none',
+          outline: 'none',
+          position: 'relative'
         }}
+        onMouseEnter={() => handleShowAction(Number(card.id), 'MOUSE_ENTER')}
+        onMouseLeave={() => handleShowAction(Number(card.id), 'MOUSE_LEAVE')}
       >
-        {/* Match Card time */}
-        <Box
+        {/* Show DialogEditMatch */}
+
+        <CardContent
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 1,
+            p: 2,
+            '&:last-child': {
+              p: 2
+            },
+            display: card?.FE_PlaceholderCard ? 'none' : 'flex',
             alignItems: 'center',
-            fontSize: '0.8rem',
-            width: '45px'
+            gap: 1,
+            border: border,
+            borderRadius: borderRadius
           }}
         >
-          <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.startTime?.slice(0, 5)}</Typography>
-          <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.endTime?.slice(0, 5)}</Typography>
-        </Box>
-        {/* Match Card match */}
+          {/* Match Card time */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              alignItems: 'center',
+              fontSize: '0.8rem',
+              width: '45px'
+            }}
+          >
+            <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.startTime?.slice(0, 5)}</Typography>
+            <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>{card?.endTime?.slice(0, 5)}</Typography>
+          </Box>
+          {/* Match Card match */}
 
-        {card?.type === 'EVENT' ? (
-          <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-              <Typography sx={{ maxWidth: '100px', fontWeight: '500', fontSize: '12.8px', textTransform: 'uppercase' }}>
-                <Tooltip title={card?.title}>
-                  <Chip
+          {duplicateMatchArray?.map((matchDuplicate: boolean, index: number) => {
+            if (matchDuplicate) {
+              return (
+                <Tooltip title="Duplicate matches" placement="top" key={index}>
+                  <Button
                     sx={{
-                      backgroundColor: 'transparent',
-                      whiteSpace: 'nowrap'
+                      position: 'absolute',
+                      top: '11px',
+                      left: '68px',
+                      minWidth: '24px !important',
+                      minHeight: '16px !important',
+                      backgroundColor: 'rgb(245, 124, 0)',
+                      '&:hover': {
+                        backgroundColor: 'rgb(214 148 79);'
+                      },
+                      padding: '3px 4px !important'
                     }}
-                    label={card?.title}
-                  />
+                  >
+                    {' '}
+                    <WarningAmberIcon fontSize="small" sx={{ color: '#ffdd00' }} />
+                  </Button>
                 </Tooltip>
-              </Typography>
-            </Box>
-          </Box>
-        ) : (
-          <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
-            <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>Match</Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-              <Tooltip title={card?.teamOne?.teamName} placement="top">
-                <Typography sx={{ fontWeight: '500', fontSize: '12.8px', width: '59px' }}>
-                  {checkLengthTeamOfMatch(card?.teamOne?.teamName, 7)}
-                </Typography>
-              </Tooltip>
-              <Typography sx={{ fontSize: '12.8px' }}>vs</Typography>
-              <Tooltip title={card?.teamTwo?.teamName} placement="top">
-                <Typography sx={{ fontWeight: '500', fontSize: '12.8px', width: '59px' }}>
-                  {checkLengthTeamOfMatch(card?.teamTwo?.teamName, 7)}
-                </Typography>
-              </Tooltip>
-            </Box>
-          </Box>
-        )}
+              )
+            }
+          })}
 
-        {/* CardActions */}
-
-        {cardIdAtive === card?.id && showAction && (
-          <Tooltip title={!open && !isOpenDialogEditEvent ? 'Options' : ''} placement="right-start">
-            <CardActions disableSpacing sx={{ position: 'absolute', right: 0, top: 0, cursor: 'pointer' }}>
-              {card?.type === 'EVENT' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
-                <Box>
-                  <IconButton
-                    id="option-button"
-                    aria-controls={open ? 'option-button' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClick}
-                  >
-                    <MoreHorizIcon />
-                  </IconButton>
-                  <Menu
-                    id="option-button"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right'
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left'
-                    }}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <MenuItem
-                      onClick={() => {
-                        setIsOpenDialogEditEvent(true)
-                        handleClose()
+          {card?.type === 'EVENT' ? (
+            <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+                <Typography
+                  sx={{ maxWidth: '100px', fontWeight: '500', fontSize: '12.8px', textTransform: 'uppercase' }}
+                >
+                  <Tooltip title={card?.title}>
+                    <Chip
+                      sx={{
+                        backgroundColor: 'transparent',
+                        whiteSpace: 'nowrap'
                       }}
+                      label={card?.title}
+                    />
+                  </Tooltip>
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
+              <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>Match</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+                <Tooltip title={card?.teamOne?.teamName} placement="top">
+                  <Typography sx={{ fontWeight: '500', fontSize: '12.8px', width: '59px' }}>
+                    {checkLengthTeamOfMatch(card?.teamOne?.teamName, 7)}
+                  </Typography>
+                </Tooltip>
+                <Typography sx={{ fontSize: '12.8px' }}>vs</Typography>
+                <Tooltip title={card?.teamTwo?.teamName} placement="top">
+                  <Typography sx={{ fontWeight: '500', fontSize: '12.8px', width: '59px' }}>
+                    {checkLengthTeamOfMatch(card?.teamTwo?.teamName, 7)}
+                  </Typography>
+                </Tooltip>
+              </Box>
+            </Box>
+          )}
+
+          {/* CardActions */}
+
+          {cardIdAtive === card?.id && showAction && (
+            <Tooltip title={!open && !isOpenDialogEditEvent ? 'Options' : ''} placement="right-start">
+              <CardActions disableSpacing sx={{ position: 'absolute', right: 0, top: 0, cursor: 'pointer' }}>
+                {card?.type === 'EVENT' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
+                  <Box>
+                    <IconButton
+                      id="option-button"
+                      aria-controls={open ? 'option-button' : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? 'true' : undefined}
+                      onClick={handleClick}
                     >
-                      Edit
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>Delete</MenuItem>
-                  </Menu>
-                </Box>
-              ) : (
-                <MoreHorizIcon fontSize="small" />
-              )}
-            </CardActions>
-          </Tooltip>
-        )}
-        <DialogEditEvent
-          editEvent={editEvent}
-          onOpen={isOpenDialogEditEvent}
-          onClose={() => {
-            setIsOpenDialogEditEvent(false)
-          }}
-          eventId={Number(card?.id)}
-          render={render}
-          event={event}
-        />
-      </CardContent>
-    </Card>
+                      <MoreHorizIcon />
+                    </IconButton>
+                    <Menu
+                      id="option-button"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right'
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left'
+                      }}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          setIsOpenDialogEditEvent(true)
+                          handleClose()
+                        }}
+                      >
+                        Edit
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>Delete</MenuItem>
+                    </Menu>
+                  </Box>
+                ) : (
+                  <MoreHorizIcon fontSize="small" onClick={() => handleEditMatch(Number(card?.id))} />
+                )}
+              </CardActions>
+            </Tooltip>
+          )}
+          <DialogEditEvent
+            editEvent={editEvent}
+            onOpen={isOpenDialogEditEvent}
+            onClose={() => {
+              setIsOpenDialogEditEvent(false)
+            }}
+            eventId={Number(card?.id)}
+            render={render}
+            event={event}
+          />
+        </CardContent>
+      </Card>
+    </>
   )
 }
 
