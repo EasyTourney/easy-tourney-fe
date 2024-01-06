@@ -19,8 +19,7 @@
   padding: 0.8rem 1.5rem !important;
   transition: all 0.1s ease-in-out;
 }
-.menu-list-item:hover {
-}
+
 .menu-list-text {
   font-size: 0.9rem !important;
   display: flex !important;

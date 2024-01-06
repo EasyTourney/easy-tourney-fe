@@ -18,3 +18,11 @@ export async function editEvent(tournamentId: number, data: MatchEvent, eventId:
   })
   return res
 }
+
+export async function deleteEvent(tournamentId: number, eventId: number) {
+  const res = await axios({
+    url: `/tournament/${tournamentId}/event/` + eventId,
+    method: 'DELETE'
+  })
+  return res
+}

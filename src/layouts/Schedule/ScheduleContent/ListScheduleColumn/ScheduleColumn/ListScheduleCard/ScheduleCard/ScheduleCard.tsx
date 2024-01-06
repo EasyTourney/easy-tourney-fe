@@ -12,16 +12,18 @@ import { MatchDataType } from '../../../../../../../types/schedule.type'
 import { checkLengthTeamOfMatch } from '../../../../../../../utils/function'
 import DialogEditMatch from '../../../../../../../components/Dialog/Schedule/EditMatch/DialogEditMatch'
 import { getAllTeams } from '../../../../../../../apis/axios/teams/team'
-import { TeamsOfMatchAPIRes } from '../../../../../../../types/common'
+import { CommonAPIRes, TeamsOfMatchAPIRes } from '../../../../../../../types/common'
 import { TeamOfMatch } from '../../../../../../../types/team'
 import { useParams } from 'react-router-dom'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import { useSelector } from 'react-redux'
 import { matchDuplicateSelector } from '../../../../../../../redux/reducers/schedule/schedule.selectors'
-import { Button, Chip, IconButton, Menu, MenuItem } from '@mui/material'
+import { Button, Chip, Menu, MenuItem } from '@mui/material'
 import { DialogEditEvent } from '../../../../../../../components/Dialog/MatchEvent/EditEvent'
-import { editEvent } from '../../../../../../../apis/axios/matchEvent/matchEvent'
+import { deleteEvent, editEvent } from '../../../../../../../apis/axios/matchEvent/matchEvent'
 import { MatchEvent } from '../../../../../../../types/event'
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
 
 interface ScheduleCardProps {
   card: MatchDataType
@@ -54,9 +56,7 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
   const [isOpenDialogEditEvent, setIsOpenDialogEditEvent] = useState(false)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
+
   const handleClose = () => {
     setAnchorEl(null)
   }
@@ -82,6 +82,34 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
   const handleEditMatch = (id: number) => {
     setEditMatch(true)
     setMatchId(id)
+  }
+
+  const handleDeleteEvent = (id: number) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc4848',
+      cancelButtonColor: 'transient',
+      confirmButtonText: 'Yes, delete it!',
+      allowOutsideClick: false,
+      focusCancel: true,
+      customClass: {
+        actions: 'swal2-horizontal-buttons',
+        title: 'swal2-custom-title'
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = (await deleteEvent(Number(tournamentId), id)) as CommonAPIRes
+        if (res.success) {
+          toast.success('An event is deleted successfully!')
+          render()
+        } else {
+          toast.error(res.errorMessage?.['NotFound Error'])
+        }
+      }
+    })
   }
 
   const getAllTeamsOfMatch = async (tournamentId: number) => {
@@ -247,15 +275,14 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
               <CardActions disableSpacing sx={{ position: 'absolute', right: 0, top: 0, cursor: 'pointer' }}>
                 {card?.type === 'EVENT' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
                   <Box>
-                    <IconButton
+                    <MoreHorizIcon
                       id="option-button"
                       aria-controls={open ? 'option-button' : undefined}
                       aria-haspopup="true"
                       aria-expanded={open ? 'true' : undefined}
-                      onClick={handleClick}
-                    >
-                      <MoreHorizIcon />
-                    </IconButton>
+                      fontSize="small"
+                      onClick={(event: any) => setAnchorEl(event.currentTarget)}
+                    />
                     <Menu
                       id="option-button"
                       anchorEl={anchorEl}
@@ -278,7 +305,14 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
                       >
                         Edit
                       </MenuItem>
-                      <MenuItem onClick={handleClose}>Delete</MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          handleDeleteEvent(Number(card?.id))
+                          handleClose()
+                        }}
+                      >
+                        Delete
+                      </MenuItem>
                     </Menu>
                   </Box>
                 ) : (
