@@ -45,7 +45,7 @@ const CustomizedBreadcrumbsOrganizer: React.FC = () => {
   const pathSegments = location.pathname.split('/').filter((segment) => segment !== '' && !Number(segment))
 
   return (
-    <div role="presentation" style={{ backgroundColor: '#f0f2f5ad', paddingLeft: '12px' }}>
+    <div role="presentation" style={{ backgroundColor: '#f0f2f5ad', paddingLeft: '12px', paddingTop: '8px' }}>
       <Breadcrumbs aria-label="breadcrumb" sx={{ zIndex: 1001, position: 'absolute' }}>
         {pathSegments.map((segment, index) => {
           const isLastSegment = index === pathSegments.length - 1

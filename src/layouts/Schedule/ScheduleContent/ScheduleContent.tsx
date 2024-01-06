@@ -359,7 +359,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
           sx={{
             backgroundColor: '#fff',
             width: '100%',
-            height: 'calc(100vh - 225px)',
+            height: 'calc(100vh - 235px)',
             marginTop: '0.5rem',
             transition: 'all 0.5s ease',
             overflowX: 'scroll',
