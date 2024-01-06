@@ -143,10 +143,10 @@ const Category = ({ navigate, location }: any) => {
         break
       case 1:
         warningMessage =
-          '<p style="margin-top: 0">Deleting this category will delete <span style="color: red; font-weight: 500">1 tournament</span> currently associated with it.</p> Are you sure you want to proceed?'
+          '<p style="margin-top: 0">Deleting this category will delete <span style="color: rgb(220, 72, 72); font-weight: 500">1 tournament</span> currently associated with it.</p> Are you sure you want to proceed?'
         break
       default:
-        warningMessage = `<p style="margin-top: 0">Deleting this category will delete <span style="color: red; font-weight: 500">${response.total} tournaments</span> currently associated with it.</p> Are you sure you want to proceed?`
+        warningMessage = `<p style="margin-top: 0">Deleting this category will delete <span style="color: rgb(220, 72, 72); font-weight: 500">${response.total} tournaments</span> currently associated with it.</p> Are you sure you want to proceed?`
     }
     Swal.fire({
       title: 'Are you sure?',

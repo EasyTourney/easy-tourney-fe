@@ -183,6 +183,9 @@ const DialogAddTournament = ({ addTournament, open, setOpen, onAdd }: Tournament
                     padding: '0'
                   }
                 }}
+                onBlur={formik.handleBlur}
+                error={formik.touched.description && Boolean(formik.errors.description)}
+                helperText={formik.touched.description && formik.errors.description}
               />
             </FormControl>{' '}
           </Stack>{' '}
@@ -198,7 +201,7 @@ const DialogAddTournament = ({ addTournament, open, setOpen, onAdd }: Tournament
               <Autocomplete
                 disableClearable={formik?.values?.selectCategory ? false : true}
                 options={listCategory?.map((option: CategoryName) => option.categoryName)}
-                onChange={(event, value) => formik.setFieldValue('selectCategory', value)}
+                onChange={(event: any, value) => formik.setFieldValue('selectCategory', value)}
                 value={isOptionExists ? selectedValue : null}
                 ListboxProps={{
                   style: {

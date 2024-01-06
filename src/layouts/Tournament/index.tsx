@@ -82,7 +82,7 @@ const TournamentTable = ({ navigate, location }: any) => {
     {
       id: 'createdAt',
       sortTable: true,
-      label: 'Create at',
+      label: 'Created at',
       sortBy: 'createdAt',
       left: false,
       style: {

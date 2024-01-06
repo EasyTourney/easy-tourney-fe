@@ -6,8 +6,10 @@ import IconButton from '@mui/material/IconButton'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
-import { Divider, Typography } from '@mui/material'
+import { Avatar, Divider, Typography } from '@mui/material'
 import { Logout } from '@mui/icons-material'
+import KeyIcon from '@mui/icons-material/Key'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../../redux/reducers'
@@ -32,6 +34,10 @@ const Header: React.FC = () => {
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
+  }
+
+  const handleChangePassword = () => {
+    console.log('change password')
   }
 
   const handleLogout = () => {
@@ -72,6 +78,7 @@ const Header: React.FC = () => {
             >
               <AccountCircle />
             </IconButton>
+            {/* MENU */}
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}
@@ -86,14 +93,43 @@ const Header: React.FC = () => {
               }}
               open={Boolean(anchorEl)}
               onClose={handleClose}
+              sx={{
+                '& .MuiList-root': {
+                  padding: '0 !important'
+                },
+                '& .MuiPaper-root': {
+                  borderRadius: '10px !important',
+                  padding: '0 !important'
+                }
+              }}
             >
+              <Box className={styles['profile-pictures-wrapper']}>
+                <Avatar
+                  alt="profile-background"
+                  src={`https://images.unsplash.com/photo-1545809074-59472b3f5ecc?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8M`}
+                  className={styles['profile-background']}
+                />
+                <Avatar alt="profile-avatar" src={''} className={styles['profile-avatar']} />
+              </Box>
               <MenuItem className={styles['menu-info-item']} onClick={handleClose} disabled>
-                Hello {userInfo ? `${userInfo.firstName} ${userInfo.lastName}` : 'Guest'}
+                <Typography className={styles['username']}>
+                  {userInfo ? `${userInfo.firstName} ${userInfo.lastName}` : 'Guest'}
+                </Typography>
               </MenuItem>
               <Divider className={styles['menu-divider']} />
+              <MenuItem className={styles['menu-list-item']} onClick={handleChangePassword}>
+                <Box className={styles['menu-list-text']}>
+                  <KeyIcon className={styles['menu-list-icon-password']} />
+                  Change Password
+                </Box>
+                <ChevronRightIcon className={styles['menu-list-icon']} />
+              </MenuItem>
               <MenuItem className={styles['menu-list-item']} onClick={handleLogout}>
-                <Logout />
-                Logout
+                <Box className={styles['menu-list-text']}>
+                  <Logout className={styles['menu-list-icon-logout']} />
+                  Logout
+                </Box>
+                <ChevronRightIcon className={styles['menu-list-icon']} />
               </MenuItem>
             </Menu>
           </Box>

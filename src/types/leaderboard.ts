@@ -1,4 +1,8 @@
 export interface LeaderboardRecord {
+  started: boolean
+  teamsTop1: Leaderboard[]
+  teamsTop2: Leaderboard[]
+  teamsTop3: Leaderboard[]
   leaderBoard: Leaderboard[]
   matches: MatchForLeaderboard[]
 }
