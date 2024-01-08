@@ -27,6 +27,16 @@ const getDefaultRedirectPath = () => {
   }
 }
 
+const LoginWrapper = () => {
+  const token = localStorage.getItem('token')
+
+  if (token) {
+    return <Navigate to={getDefaultRedirectPath()} replace={true} />
+  }
+
+  return <Login />
+}
+
 export const router = createBrowserRouter([
   {
     element: <BaseTemplate />,
@@ -85,7 +95,7 @@ export const router = createBrowserRouter([
   },
   {
     path: 'login',
-    element: <Login />
+    element: <LoginWrapper />
   },
   {
     path: '*',
