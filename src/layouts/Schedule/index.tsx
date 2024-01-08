@@ -4,7 +4,7 @@ import ScheduleContent from './ScheduleContent/ScheduleContent'
 import PlanSection from '../../components/Schedule/PlanSection/PlanSection'
 import { useParams } from 'react-router-dom'
 import { getTournamentById } from '../../apis/axios/tournaments/tournament'
-import { setGeneral } from '../../redux/reducers/tournaments/tournaments.reducer'
+import { setGeneral, setTeamsInSelectedTournament } from '../../redux/reducers/tournaments/tournaments.reducer'
 import { useDispatch } from 'react-redux'
 import { GeneralInformationAPIRes } from '../../types/common'
 import { setPlanInformation, setTotalTeams } from '../../redux/reducers/schedule/schedule.reducer'
@@ -40,6 +40,7 @@ function Schedule() {
       const responseData = await getAllTeamsInTournament(Number(param.tournamentId))
       dispatch(setGeneral(response.data))
       dispatch(setTotalTeams(responseData.data?.length))
+      dispatch(setTeamsInSelectedTournament(responseData.data))
     }
     if (param.tournamentId) {
       fetchTournamentData()

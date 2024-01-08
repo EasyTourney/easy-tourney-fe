@@ -1,5 +1,5 @@
 import moment from 'moment'
-import React, { useState, memo, useEffect } from 'react'
+import React, { useState, memo } from 'react'
 import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
@@ -12,10 +12,7 @@ import { ScheduleDataType } from '../../../../../types/schedule.type'
 import EditEventDate from '../../../../../components/Dialog/Schedule/EditEventDate/EditEventDate'
 import { DialogAddEvent } from '../../../../../components/Dialog/MatchEvent/AddEvent'
 import { addEvent } from '../../../../../apis/axios/matchEvent/matchEvent'
-import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { setGeneral } from '../../../../../redux/reducers/tournaments/tournaments.reducer'
-import { getTournamentById } from '../../../../../apis/axios/tournaments/tournament'
+import { useSelector } from 'react-redux'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import { timeNotEnough } from '../../../../../redux/reducers/schedule/schedule.selectors'
 
@@ -31,8 +28,6 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
   })
 
   const [isOpenDialogAddEvent, setIsOpenDialogAddEvent] = useState(false)
-  const { tournamentId } = useParams()
-  const dispatch = useDispatch()
   const tournamentStatus = useSelector((state: any) => state.tournament.general.status)
   const [editEvent, setEditEvent] = useState<boolean>(false)
   const [eventDateId, setEventDateId] = useState<number>()
@@ -57,17 +52,6 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
     setEventDateId(eventDateId)
     setEditEvent(true)
   }
-
-  useEffect(() => {
-    const fetchTournamentData = async () => {
-      const response = await getTournamentById(Number(tournamentId))
-      dispatch(setGeneral(response.data))
-    }
-
-    if (tournamentId) {
-      fetchTournamentData()
-    }
-  }, [tournamentId])
 
   return (
     <Box

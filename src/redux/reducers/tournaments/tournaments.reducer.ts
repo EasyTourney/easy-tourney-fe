@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Tournament, TournamentRecord } from '../../../types/tournament'
+import { TeamOfMatch } from '../../../types/team'
 
 interface TournamentState {
   tournaments: TournamentRecord[]
   isLoading: boolean
   general: Tournament
+  teams: TeamOfMatch[]
 }
 
 const initialState: TournamentState = {
@@ -24,7 +26,8 @@ const initialState: TournamentState = {
     status: '',
     format: '',
     matchDuration: ''
-  }
+  },
+  teams: []
 }
 
 const tournamentsSlice = createSlice({
@@ -37,6 +40,9 @@ const tournamentsSlice = createSlice({
     setGeneral: (state, action) => {
       state.general = action.payload
     },
+    setTeamsInSelectedTournament: (state, action) => {
+      state.teams = [...action.payload]
+    },
     updatedOrganizer: (state, action) => {
       state.general.organizers = action.payload
     },
@@ -46,6 +52,7 @@ const tournamentsSlice = createSlice({
   }
 })
 
-export const { setTournaments, setGeneral, updatedOrganizer, updatedEventDate } = tournamentsSlice.actions
+export const { setTournaments, setGeneral, setTeamsInSelectedTournament, updatedOrganizer, updatedEventDate } =
+  tournamentsSlice.actions
 
 export default tournamentsSlice.reducer

@@ -4,7 +4,7 @@ import styles from './Result.module.css'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllResult } from '../../apis/axios/tournaments/result'
-import { Button, Tooltip } from '@mui/material'
+import { Button, Tooltip, Typography } from '@mui/material'
 import { setResult, setSelectedGoal } from '../../redux/reducers/result/result.reducer'
 import { DialogEditScore } from '../../components/Dialog/Result/DialogEditScore'
 import moment from 'moment'
@@ -206,8 +206,10 @@ const Result = () => {
             ) : (
               <Box className={styles['no-match-message']}>
                 <img width="200px" height="200px" src={noresult} alt="" />
-                <Box sx={{ margin: '10px 0' }}>
-                  There are no match results. Please create a match schedule in advance.
+                <Box sx={{ margin: '1rem 0' }}>
+                  <Typography variant="h5">
+                    There are no match results. Please create a match schedule in advance.
+                  </Typography>
                 </Box>
               </Box>
             )}

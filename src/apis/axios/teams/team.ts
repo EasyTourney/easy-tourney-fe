@@ -52,10 +52,3 @@ export async function getAllTeamsInTournament(tournamentId: number) {
   })
   return res
 }
-export async function getAllTeams(tournamentId: number) {
-  const res = await axios({
-    url: `/tournament/${tournamentId}/team/all`,
-    method: 'GET'
-  })
-  return res
-}

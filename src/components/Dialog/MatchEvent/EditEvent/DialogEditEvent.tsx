@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Alert } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Alert,
+  InputAdornment
+} from '@mui/material'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
 import { EventSchema } from '../../../../services/validator/event.validator'
@@ -134,6 +144,7 @@ export function DialogEditEvent({ editEvent, onOpen, onClose, eventId, render, e
                 name="durationEvent"
                 type="number"
                 InputProps={{
+                  endAdornment: <InputAdornment position="start">minutes</InputAdornment>,
                   inputProps: { min: 0 }
                 }}
                 value={formik.values.durationEvent}

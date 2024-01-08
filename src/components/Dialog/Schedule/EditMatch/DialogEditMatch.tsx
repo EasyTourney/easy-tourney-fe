@@ -13,11 +13,12 @@ import { ScheduleSchemaEditMatch } from '../../../../services/validator/schedule
 import { TeamOfMatch } from '../../../../types/team'
 import { editMatchApi } from '../../../../apis/axios/schedule/schedule'
 import { EditMatchAPIRes } from '../../../../types/common'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../redux/store'
 
 interface DialogEditMatchProps {
   editMatch: boolean
   setEditMatch: (value: boolean) => void
-  teams: TeamOfMatch[]
   matchId: number | null
   tournamentId: number | null
   teamOneDefaultValue: string | null
@@ -29,7 +30,6 @@ interface DialogEditMatchProps {
 const DialogEditMatch = ({
   editMatch,
   setEditMatch,
-  teams,
   matchId,
   tournamentId,
   teamOneDefaultValue,
@@ -37,13 +37,14 @@ const DialogEditMatch = ({
   render,
   timeDurationDefaultValue
 }: DialogEditMatchProps) => {
+  const teams = useSelector((state: RootState) => state.tournament.teams)
   const [error, setError] = React.useState<string>()
   const [errorTeamOne, setErrorTeamOne] = useState<boolean>(false)
   const [errorTeamTwo, setErrorTeamTwo] = useState<boolean>(false)
   const [teamOneValue, setTeamOneValue] = useState<string | null>(null)
   const [teamTwoValue, setTeamTwoValue] = useState<string | null>(null)
-  const [teamOneOptions, setTeamOneOptions] = useState(teams)
-  const [teamTwoOptions, setTeamTwoOptions] = useState(teams)
+  const [teamOneOptions, setTeamOneOptions] = useState<TeamOfMatch[]>(teams)
+  const [teamTwoOptions, setTeamTwoOptions] = useState<TeamOfMatch[]>(teams)
 
   const handleClose = () => {
     setEditMatch(false)

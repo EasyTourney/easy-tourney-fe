@@ -145,7 +145,7 @@ const Teams = ({ navigate, location }: any) => {
     if (param.tournamentId) {
       fetchTournamentData()
     }
-  }, [param.tournamentId])
+  }, [param.tournamentId, update])
 
   const handleDelete = useCallback(
     (rowData: { [key: string]: any }) => {

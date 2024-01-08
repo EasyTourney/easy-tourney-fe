@@ -136,7 +136,7 @@ const General = () => {
     if (param.tournamentId) {
       fetchTournamentData()
     }
-  }, [param.tournamentId])
+  }, [param.tournamentId, isDiscardVisible])
   const handleDiscard = useCallback(async () => {
     const tournamentId = Number(location.pathname.split('/')[2])
     Swal.fire({

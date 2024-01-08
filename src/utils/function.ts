@@ -92,7 +92,7 @@ export const convertFormatTime = (inputTime: string) => {
 }
 export const checkLengthDescription = (str: string, number: number) => {
   if (str?.length > 295) {
-    return `${str.slice(0, number)} ...`
+    return `${str.slice(0, number)}...`
   } else {
     return str
   }
@@ -105,8 +105,8 @@ export const checkLengthTeam = (str: string) => {
   }
 }
 export const checkLengthTeamOfMatch = (str: string, number: number) => {
-  if (str?.length > 7) {
-    return `${str.slice(0, number)}`
+  if (str?.length > number) {
+    return `${str.slice(0, number)}...`
   } else {
     return str
   }

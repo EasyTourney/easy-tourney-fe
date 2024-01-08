@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import Card from '@mui/material/Card'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
@@ -11,9 +11,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { MatchDataType } from '../../../../../../../types/schedule.type'
 import { checkLengthTeamOfMatch } from '../../../../../../../utils/function'
 import DialogEditMatch from '../../../../../../../components/Dialog/Schedule/EditMatch/DialogEditMatch'
-import { getAllTeams } from '../../../../../../../apis/axios/teams/team'
-import { CommonAPIRes, TeamsOfMatchAPIRes } from '../../../../../../../types/common'
-import { TeamOfMatch } from '../../../../../../../types/team'
+import { CommonAPIRes } from '../../../../../../../types/common'
 import { useParams } from 'react-router-dom'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import { useSelector } from 'react-redux'
@@ -24,6 +22,7 @@ import { deleteEvent, editEvent } from '../../../../../../../apis/axios/matchEve
 import { MatchEvent } from '../../../../../../../types/event'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import { DeleteSweep, EditNote } from '@mui/icons-material'
 
 interface ScheduleCardProps {
   card: MatchDataType
@@ -34,7 +33,6 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
   const [showAction, setShowAction] = useState<boolean>(false)
   const [cardIdAtive, setCardIdActive] = useState<number | null>(null)
   const [editMatch, setEditMatch] = useState<boolean>(false)
-  const [teams, setTeams] = useState<TeamOfMatch[]>([])
   const [matchId, setMatchId] = useState<number | null>(null)
   const { duplicateMatch } = useSelector(matchDuplicateSelector)
   const duplicateMatchArray = duplicateMatch?.map((cardDpl: any) => cardDpl.id === card.id)
@@ -112,17 +110,6 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
     })
   }
 
-  const getAllTeamsOfMatch = async (tournamentId: number) => {
-    const res = (await getAllTeams(tournamentId)) as TeamsOfMatchAPIRes
-    if (res?.success) {
-      setTeams(res.data)
-    }
-  }
-
-  useEffect(() => {
-    getAllTeamsOfMatch(Number(tournamentId))
-  }, [tournamentId])
-
   // Css when card has been duplicated
   const borderStyles = duplicateMatchArray?.map((matchDpt: boolean) => {
     if (matchDpt) {
@@ -148,7 +135,6 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
         <DialogEditMatch
           editMatch={editMatch}
           setEditMatch={setEditMatch}
-          teams={teams}
           matchId={matchId}
           tournamentId={Number(tournamentId)}
           teamOneDefaultValue={card.teamOne.teamName}
@@ -253,15 +239,15 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
             <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
               <Typography sx={{ fontWeight: '500', fontSize: '12.8px' }}>Match</Typography>
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-                <Tooltip title={card?.teamOne?.teamName} placement="top">
+                <Tooltip title={card?.teamOne?.teamName?.length > 6 ? card?.teamOne?.teamName : ''} placement="top">
                   <Typography sx={{ fontWeight: '500', fontSize: '12.8px', width: '59px' }}>
-                    {checkLengthTeamOfMatch(card?.teamOne?.teamName, 7)}
+                    {checkLengthTeamOfMatch(card?.teamOne?.teamName, 6)}
                   </Typography>
                 </Tooltip>
                 <Typography sx={{ fontSize: '12.8px' }}>vs</Typography>
-                <Tooltip title={card?.teamTwo?.teamName} placement="top">
+                <Tooltip title={card?.teamTwo?.teamName?.length > 6 ? card?.teamTwo?.teamName : ''} placement="top">
                   <Typography sx={{ fontWeight: '500', fontSize: '12.8px', width: '59px' }}>
-                    {checkLengthTeamOfMatch(card?.teamTwo?.teamName, 7)}
+                    {checkLengthTeamOfMatch(card?.teamTwo?.teamName, 6)}
                   </Typography>
                 </Tooltip>
               </Box>
@@ -271,9 +257,9 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
           {/* CardActions */}
 
           {cardIdAtive === card?.id && showAction && (
-            <Tooltip title={!open && !isOpenDialogEditEvent ? 'Options' : ''} placement="right-start">
-              <CardActions disableSpacing sx={{ position: 'absolute', right: 0, top: 0, cursor: 'pointer' }}>
-                {card?.type === 'EVENT' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
+            <CardActions disableSpacing sx={{ position: 'absolute', right: 0, top: 0, cursor: 'pointer' }}>
+              {card?.type === 'EVENT' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
+                <Tooltip title={!open && !isOpenDialogEditEvent ? 'Options' : ''} placement="right-start">
                   <Box>
                     <MoreHorizIcon
                       id="option-button"
@@ -303,6 +289,7 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
                           handleClose()
                         }}
                       >
+                        <EditNote sx={{ marginRight: '0.75rem' }} />
                         Edit
                       </MenuItem>
                       <MenuItem
@@ -311,15 +298,18 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
                           handleClose()
                         }}
                       >
+                        <DeleteSweep sx={{ marginRight: '0.75rem' }} />
                         Delete
                       </MenuItem>
                     </Menu>
                   </Box>
-                ) : (
-                  <MoreHorizIcon fontSize="small" onClick={() => handleEditMatch(Number(card?.id))} />
-                )}
-              </CardActions>
-            </Tooltip>
+                </Tooltip>
+              ) : (
+                <Tooltip title="Edit match" placement="right-start">
+                  <EditNote fontSize="small" onClick={() => handleEditMatch(Number(card?.id))} />
+                </Tooltip>
+              )}
+            </CardActions>
           )}
           <DialogEditEvent
             editEvent={editEvent}
