@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom'
 import { useState } from 'react'
 import React from 'react'
 import SidebarOrganizer from '../../components/Sidebar/organizer'
-import CustomizedBreadcrumbsOrganizer from '../../components/Navigation/organizer'
 import withTokenCheck from '../../hoc/withTokenCheck'
 import styles from '../Template.module.css'
 import TournamentHeader from '../../components/Header/Tournament/TournamentHeader'
@@ -19,16 +18,9 @@ function OrganizerTemplate() {
       <Box>
         <SidebarOrganizer onToggleCollapse={handleSidebarToggle} />
       </Box>
-      <Box className={styles['main-content']} sx={{ paddingLeft: `${sidebarCollapsed ? '7rem' : '17.5rem'}` }}>
-        <Box>
-          <Box className={styles['sticky-header']}>
-            <CustomizedBreadcrumbsOrganizer />
-            <TournamentHeader />
-          </Box>
-          <Box>
-            <Outlet />
-          </Box>
-        </Box>
+      <Box className={styles['main-content']} sx={{ paddingLeft: `${sidebarCollapsed ? '8rem' : '18.5rem'}` }}>
+        <TournamentHeader />
+        <Outlet />
       </Box>
     </Box>
   )

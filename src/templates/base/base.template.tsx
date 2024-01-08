@@ -27,15 +27,9 @@ function BaseTemplate() {
       <Box>
         <Sidebar onToggleCollapse={handleSidebarToggle} />
       </Box>
-      <Box className={styles['main-content']} sx={{ marginLeft: `${sidebarCollapsed ? '7rem' : '17.5rem'}` }}>
-        <Box>
-          <Box className={styles['sticky-header']}>
-            <Header />
-          </Box>
-          <Box>
-            <Outlet />
-          </Box>
-        </Box>
+      <Box className={styles['main-content']} sx={{ paddingLeft: `${sidebarCollapsed ? '8rem' : '18.5rem'}` }}>
+        <Header />
+        <Outlet />
       </Box>
     </Box>
   )

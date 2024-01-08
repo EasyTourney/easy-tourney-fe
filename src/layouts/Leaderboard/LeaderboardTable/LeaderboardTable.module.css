@@ -3,7 +3,7 @@
   color: white !important;
   font-weight: 500;
   text-transform: uppercase;
-  border-right: 1px solid rgba(224, 224, 224, 1);
+  border-right: 1px solid rgb(224, 224, 224);
   border-collapse: collapse;
 }
 .noitem-container {

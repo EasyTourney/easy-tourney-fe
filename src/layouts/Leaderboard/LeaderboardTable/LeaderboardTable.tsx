@@ -124,22 +124,27 @@ export function LeaderboardTable({ leaderboardData, loading }: LeaderboardCardPr
     )
   }
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 'calc(100vh - 232px)' }}>
-      <Table sx={{ minWidth: 650 }} stickyHeader={true} size="small">
+    <TableContainer component={Paper} sx={{ maxHeight: '535px' }}>
+      <Table size="small" sx={{ minWidth: 650, position: 'relative' }}>
         <TableHead
-          sx={{
-            background: ' linear-gradient(195deg, #3562A6, #0E1E5B)'
-          }}
           style={{
             WebkitTouchCallout: 'none',
             WebkitUserSelect: 'none',
             KhtmlUserSelect: 'none',
             MozUserSelect: 'none',
             msUserSelect: 'none',
-            userSelect: 'none'
+            userSelect: 'none',
+            position: 'relative'
           }}
         >
-          <TableRow>
+          <TableRow
+            sx={{
+              background: ' linear-gradient(195deg, #3562A6, #0E1E5B)',
+              position: 'sticky',
+              top: 0,
+              zIndex: 1002
+            }}
+          >
             {columnsLeaderboard.map((column) => (
               <TableCell
                 className={styles['table-header-cell']}

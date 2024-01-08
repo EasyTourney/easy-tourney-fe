@@ -149,7 +149,7 @@ const DialogEditOrganizerTournament = ({ open, setOpen }: DialogProps) => {
         }}
         scroll="paper"
         maxWidth="xl"
-        sx={{ zIndex: 1000 }}
+        sx={{ zIndex: 1004 }}
       >
         <DialogTitle className={styles['dialog-title']}>Edit Organizers</DialogTitle>
         <DialogContent className={styles['dialog-container']}>

@@ -80,7 +80,6 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
         background: '#333643',
         opacity: isPastDate ? 0.6 : 1,
         pointerEvents: isPastDate ? 'none' : 'auto',
-        ml: 3,
         borderRadius: '6px',
         border: `${filteredTimeNotEnoughInEvenDate?.map((a: any) => a && '3px solid rgb(245, 124, 0)')}`,
         boxShadow: 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px',

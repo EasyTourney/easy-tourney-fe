@@ -15,7 +15,7 @@ import LeaderboardIcon from '@mui/icons-material/Leaderboard'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { IconButton } from '@mui/material'
-import styles from './SibarOrganizer.module.css'
+import styles from './SidebarOrganizer.module.css'
 import React from 'react'
 
 type SidebarProps = {

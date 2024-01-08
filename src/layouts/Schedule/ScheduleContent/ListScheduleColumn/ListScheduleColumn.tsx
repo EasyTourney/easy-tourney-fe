@@ -16,7 +16,8 @@ const ListScheduleColumn = ({ columnData, render }: ListScheduleColumnProps) => 
         width: '100%',
         height: 'auto',
         display: 'flex',
-        borderRadius: '1rem'
+        borderRadius: '1rem',
+        gap: '1rem'
       }}
     >
       {columnData?.map((column: ScheduleDataType) => (

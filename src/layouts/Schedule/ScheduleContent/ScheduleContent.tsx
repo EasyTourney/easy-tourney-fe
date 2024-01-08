@@ -357,7 +357,7 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
     })
   }
   return (
-    <Box sx={{ backgroundColor: 'white', paddingRight: '1.2rem', borderRadius: '1rem' }}>
+    <Box sx={{ backgroundColor: 'white', padding: '1rem 1rem 0', borderRadius: '1rem' }}>
       <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Schedule</Box>
       <DndContext
         onDragEnd={handleDragEnd}
@@ -372,12 +372,12 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
           sx={{
             backgroundColor: '#fff',
             width: '100%',
-            height: 'calc(100vh - 120px - 5.2rem)',
-            marginTop: '0.5rem',
+            height: 'calc(100vh - 137px - 5.2rem)',
+            marginTop: '1rem',
             transition: 'all 0.5s ease',
             overflowX: 'auto',
             overflowY: 'hidden',
-            borderRadius: '1rem',
+            borderRadius: '6px',
             '&::-webkit-scrollbar-track': { marginLeft: '1.3rem ' }
           }}
         >

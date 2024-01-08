@@ -185,7 +185,7 @@ const DialogViewPlayerList = ({ onAddPlayer, onOpen, onClose, onDelete }: Dialog
       }}
       scroll="paper"
       maxWidth="xl"
-      sx={{ zIndex: 1000 }}
+      sx={{ zIndex: 1004 }}
     >
       <DialogTitle className={styles['dialog-title']}>Players</DialogTitle>
       <DialogContent className={styles['dialog-container']}>
