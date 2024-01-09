@@ -2,12 +2,14 @@ import Box from '@mui/material/Box'
 import React, { memo } from 'react'
 import ScheduleCard from './ScheduleCard/ScheduleCard'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { MatchDataType } from '../../../../../../types/schedule.type'
+import { MatchDataType, ScheduleDataType } from '../../../../../../types/schedule.type'
 interface ListScheduleCardProps {
   cards: MatchDataType[]
   render: () => void
+  isPastDate: boolean
+  column: ScheduleDataType
 }
-const ListScheduleCard = ({ cards, render }: ListScheduleCardProps) => {
+const ListScheduleCard = ({ cards, render, isPastDate, column }: ListScheduleCardProps) => {
   return (
     <SortableContext items={cards?.map((c: MatchDataType) => c.id)} strategy={verticalListSortingStrategy}>
       <Box
@@ -28,7 +30,9 @@ const ListScheduleCard = ({ cards, render }: ListScheduleCardProps) => {
           }
         }}
       >
-        {cards?.map((card: MatchDataType) => <ScheduleCard key={card.id} card={card} render={render} />)}
+        {cards?.map((card: MatchDataType) => (
+          <ScheduleCard key={card.id} card={card} render={render} isPastDate={isPastDate} column={column} />
+        ))}
       </Box>
     </SortableContext>
   )

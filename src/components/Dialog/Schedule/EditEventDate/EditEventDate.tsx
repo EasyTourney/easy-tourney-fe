@@ -14,6 +14,8 @@ import { ScheduleSchema } from '../../../../services/validator/schedule.validato
 import { EditEventTimeApi } from '../../../../apis/axios/schedule/schedule'
 import { useParams } from 'react-router-dom'
 import { ScheduleTimeEventAPIRes } from '../../../../types/common'
+import { ScheduleDataType } from '../../../../types/schedule.type'
+import moment from 'moment'
 interface EditEventDateProps {
   editEvent: boolean
   setEditEvent: (value: boolean) => void
@@ -21,6 +23,7 @@ interface EditEventDateProps {
   render: () => void
   startTimeDefaultValue: string
   endTimeDefaultValue: string
+  column?: ScheduleDataType
 }
 
 const EditEventDate = ({
@@ -29,15 +32,34 @@ const EditEventDate = ({
   eventDateId,
   render,
   startTimeDefaultValue,
-  endTimeDefaultValue
+  endTimeDefaultValue,
+  column
 }: EditEventDateProps) => {
   const { tournamentId } = useParams()
   const [error, setError] = React.useState<string>()
   const [defaultStartTime, setDefaultStartTime] = React.useState<Dayjs | null>(null)
   const [defaultEndTime, setDefaultEndTime] = React.useState<Dayjs | null>(null)
+  const [checkTimeIsPast, setCheckTimeIsPast] = React.useState<boolean>(false)
   const handleClose = () => {
     setEditEvent(false)
   }
+  const today = moment(new Date()).format('DD/MM/YYYY')
+  const dateOfColumn = moment(column?.date).format('DD/MM/YYYY')
+  const currentDate = moment()
+  const isPastDate = moment(column?.date)
+
+  React.useEffect(() => {
+    if (dateOfColumn === today) {
+      if (column?.date) {
+        const today = new Date()
+        const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
+        if (time > startTimeDefaultValue) {
+          setCheckTimeIsPast(true)
+          console.log('code chay vao day')
+        }
+      }
+    }
+  }, [dateOfColumn, today, column])
 
   const formik = useFormik({
     initialValues: {
@@ -115,7 +137,8 @@ const EditEventDate = ({
                 width: '100%',
                 '& .MuiFormHelperText-root': {
                   marginLeft: 0
-                }
+                },
+                pointerEvents: checkTimeIsPast || isPastDate.isBefore(currentDate, 'day') ? 'none' : 'auto'
               }}
             />
           </Box>

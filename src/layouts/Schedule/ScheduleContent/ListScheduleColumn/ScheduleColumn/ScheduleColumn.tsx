@@ -33,13 +33,15 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
   const [eventDateId, setEventDateId] = useState<number>()
 
   const { timeNotEnoughdata } = useSelector(timeNotEnough)
-
   const today = moment().startOf('day')
   const dateOfColumn = moment(column?.date, 'YYYY/MM/DD')
 
   const isPastDate = today.isAfter(dateOfColumn, 'day')
 
-  const filteredTimeNotEnoughInEvenDate = timeNotEnoughdata?.eventDateId?.flatMap(
+  const currentDate = moment()
+  const pastDate = moment(column?.date)
+
+  const filteredTimeNotEnoughInEvenDate = timeNotEnoughdata?.eventDateId?.find(
     (eventDateId: number) => eventDateId === column.eventDateId
   )
 
@@ -63,9 +65,12 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
         minWidth: '240px',
         background: '#333643',
         opacity: isPastDate ? 0.6 : 1,
-        pointerEvents: isPastDate ? 'none' : 'auto',
         borderRadius: '6px',
-        border: `${filteredTimeNotEnoughInEvenDate?.map((a: any) => a && '3px solid rgb(245, 124, 0)')}`,
+        border: `${
+          timeNotEnoughdata?.eventDateId?.length > 0 && filteredTimeNotEnoughInEvenDate === column?.eventDateId
+            ? '3px solid rgb(245, 124, 0)'
+            : 'none'
+        }`,
         boxShadow: 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px',
         outline: 'none',
         height: 'fit-content',
@@ -81,6 +86,7 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
           render={render}
           startTimeDefaultValue={column?.startTime?.slice(0, 5)}
           endTimeDefaultValue={column?.endTime?.slice(0, 5)}
+          column={column}
         />
       )}
       {/* Box column header */}
@@ -94,34 +100,30 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
           color: 'white',
           backgroundColor: '#1280c3',
           borderRadius: '6px',
-          m: 1,
+          m: `${!column?.startTime || column?.matches[0].FE_PlaceholderCard ? '8px 8px 0 8px' : '8px'}`,
           position: 'relative'
         }}
       >
         {/* Show icon error here */}
-        {filteredTimeNotEnoughInEvenDate?.map((a: boolean, index: number) => {
-          if (a) {
-            return (
-              <Tooltip title={timeNotEnoughdata.warningMessage} placement="top" key={index}>
-                <Button
-                  sx={{
-                    position: 'absolute',
-                    left: '8px',
-                    minWidth: '24px !important',
-                    minHeight: '16px !important',
-                    backgroundColor: 'rgb(245, 124, 0)',
-                    '&:hover': {
-                      backgroundColor: 'rgb(214 148 79);'
-                    },
-                    padding: '3px 4px !important'
-                  }}
-                >
-                  <WarningAmberIcon sx={{ color: '#ffdd00' }} />
-                </Button>
-              </Tooltip>
-            )
-          }
-        })}
+        {filteredTimeNotEnoughInEvenDate === column?.eventDateId && (
+          <Tooltip title={timeNotEnoughdata?.warningMessage} placement="top">
+            <Button
+              sx={{
+                position: 'absolute',
+                left: '8px',
+                minWidth: '24px !important',
+                minHeight: '16px !important',
+                backgroundColor: 'rgb(245, 124, 0)',
+                '&:hover': {
+                  backgroundColor: 'rgb(214 148 79);'
+                },
+                padding: '3px 4px !important'
+              }}
+            >
+              <WarningAmberIcon sx={{ color: '#ffdd00' }} />
+            </Button>
+          </Tooltip>
+        )}
 
         <Box
           sx={{
@@ -143,7 +145,12 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
         </Box>
         <Box
           component="span"
-          sx={{ cursor: 'pointer', position: 'absolute', right: '10px' }}
+          sx={{
+            cursor: 'pointer',
+            position: 'absolute',
+            right: '10px',
+            pointerEvents: pastDate.isBefore(currentDate, 'day') ? 'none' : 'auto'
+          }}
           onClick={() => handleEditEvenTime(column?.eventDateId)}
         >
           <Tooltip title="Edit" placement="top">
@@ -152,7 +159,7 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
         </Box>
       </Box>
       {/* Box List Card */}
-      <ListScheduleCard cards={column?.matches} render={render} />
+      <ListScheduleCard cards={column?.matches} render={render} isPastDate={isPastDate} column={column} />
       {/* Box footer */}
       {tournamentStatus !== 'NEED_INFORMATION' &&
       tournamentStatus !== 'FINISHED' &&

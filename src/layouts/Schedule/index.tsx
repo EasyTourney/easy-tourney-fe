@@ -14,7 +14,6 @@ function Schedule() {
   const dispatch = useDispatch()
   const param: { tournamentId?: string } = useParams()
   const [update, setUpdate] = useState<boolean>(false)
-
   useEffect(() => {
     const fetchTournamentData = async () => {
       const response = (await getTournamentById(Number(param.tournamentId))) as GeneralInformationAPIRes

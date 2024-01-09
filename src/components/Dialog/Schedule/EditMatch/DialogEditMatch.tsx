@@ -49,7 +49,6 @@ const DialogEditMatch = ({
   const handleClose = () => {
     setEditMatch(false)
   }
-
   const formik = useFormik({
     initialValues: {
       duration: 0,

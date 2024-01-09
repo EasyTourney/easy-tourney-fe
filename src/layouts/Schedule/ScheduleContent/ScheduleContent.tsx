@@ -217,9 +217,16 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
     }
   }
   const isPastDateColumn = (column: ScheduleDataType) => {
-    const currentDate = new Date() // Get current date
+    if (!column) return false
+    const currentDate = new Date()
     const columnDate = new Date(column.date)
-    return columnDate > currentDate
+
+    if (currentDate.toDateString() === columnDate.toDateString()) {
+      return true
+    } else if (columnDate < currentDate) {
+      return false
+    }
+    return true
   }
 
   // Trigger when end draging card
@@ -296,13 +303,16 @@ const ScheduleContent = ({ isGenerated }: ScheduleContentProps) => {
   // Handle api here
   const getAllScheduleMatches = async (id: number) => {
     const res = (await getAllScheduledMatches(id)) as ScheduleMatchesAPIRes
-
     if (res?.success) {
       setColumnData(res?.data)
     }
+
     if (res?.additionalData) {
       dispatch(setDuplicateMatch(res?.additionalData?.DuplicateMatch))
       dispatch(setTimeNotEnough(res?.additionalData?.TimeNoEnough))
+    } else {
+      dispatch(setTimeNotEnough(res?.additionalData?.TimeNoEnough))
+      dispatch(setDuplicateMatch(res?.additionalData?.DuplicateMatch))
     }
     // Generate special match (id,eventDataId,FE_PlaceholderCard) when matches array is empty
     res?.data?.map((column: any) => {

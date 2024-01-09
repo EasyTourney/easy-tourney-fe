@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import Card from '@mui/material/Card'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
@@ -8,32 +8,36 @@ import Typography from '@mui/material/Typography'
 import { useSortable } from '@dnd-kit/sortable'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { CSS } from '@dnd-kit/utilities'
-import { MatchDataType } from '../../../../../../../types/schedule.type'
+import { MatchDataType, ScheduleDataType } from '../../../../../../../types/schedule.type'
 import { checkLengthTeamOfMatch } from '../../../../../../../utils/function'
 import DialogEditMatch from '../../../../../../../components/Dialog/Schedule/EditMatch/DialogEditMatch'
-import { CommonAPIRes } from '../../../../../../../types/common'
 import { useParams } from 'react-router-dom'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import { useSelector } from 'react-redux'
 import { matchDuplicateSelector } from '../../../../../../../redux/reducers/schedule/schedule.selectors'
-import { Button, Chip, Menu, MenuItem } from '@mui/material'
+import { Button, Chip, IconButton, Menu, MenuItem } from '@mui/material'
 import { DialogEditEvent } from '../../../../../../../components/Dialog/MatchEvent/EditEvent'
 import { deleteEvent, editEvent } from '../../../../../../../apis/axios/matchEvent/matchEvent'
 import { MatchEvent } from '../../../../../../../types/event'
-import Swal from 'sweetalert2'
+import { EditNote } from '@mui/icons-material'
+import { CommonAPIRes } from '../../../../../../../types/common'
 import { toast } from 'react-toastify'
-import { DeleteSweep, EditNote } from '@mui/icons-material'
+import Swal from 'sweetalert2'
+import moment from 'moment'
 
 interface ScheduleCardProps {
   card: MatchDataType
   activeDragItemId?: number | null
   render: () => void
+  isPastDate?: boolean
+  column?: ScheduleDataType
 }
-const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => {
+const ScheduleCard = ({ card, activeDragItemId, render, isPastDate, column }: ScheduleCardProps) => {
   const [showAction, setShowAction] = useState<boolean>(false)
   const [cardIdAtive, setCardIdActive] = useState<number | null>(null)
   const [editMatch, setEditMatch] = useState<boolean>(false)
   const [matchId, setMatchId] = useState<number | null>(null)
+  const [matchOverTime, setMatchOverTime] = useState<MatchDataType[]>([])
   const { duplicateMatch } = useSelector(matchDuplicateSelector)
   const duplicateMatchArray = duplicateMatch?.map((cardDpl: any) => cardDpl.id === card.id)
   const tournamentStatus = useSelector((state: any) => state.tournament.general.status)
@@ -46,7 +50,6 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
       easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
     }
   })
-
   const checkForcusCard = card.id === activeDragItemId
 
   const event: MatchEvent =
@@ -55,6 +58,24 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
+  const today = moment(new Date()).format('DD/MM/YYYY')
+  const dateOfColumn = moment(column?.date).format('DD/MM/YYYY')
+
+  useEffect(() => {
+    if (dateOfColumn === today) {
+      if (column?.date) {
+        const today = new Date()
+        const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
+
+        const filteredMatch = column?.matches?.filter((match) => match.startTime < time)
+        setMatchOverTime(filteredMatch)
+      }
+    }
+  }, [dateOfColumn, today, column])
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
   const handleClose = () => {
     setAnchorEl(null)
   }
@@ -81,7 +102,6 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
     setEditMatch(true)
     setMatchId(id)
   }
-
   const handleDeleteEvent = (id: number) => {
     Swal.fire({
       title: 'Are you sure?',
@@ -113,7 +133,7 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
   // Css when card has been duplicated
   const borderStyles = duplicateMatchArray?.map((matchDpt: boolean) => {
     if (matchDpt) {
-      return '2px solid rgb(245, 124, 0)'
+      return '3px solid rgb(245, 124, 0)'
     }
     return 'none'
   })
@@ -128,6 +148,9 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
   })
   const validBorderStylesRadius = borderWithRadius?.filter((style: string) => style !== 'none')
   const borderRadius = validBorderStylesRadius?.join(', ')
+  const isMatchOverTime = matchOverTime?.some((v: MatchDataType) => v?.id === card?.id)
+  const opacityValue = isMatchOverTime || isPastDate ? '0.7' : '1'
+  const cursorValue = isMatchOverTime || isPastDate ? 'none' : 'auto'
 
   return (
     <>
@@ -155,7 +178,9 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
           background: card?.type === 'EVENT' ? '#ffc0aa' : '#fff0ad',
           border: 'none',
           outline: 'none',
-          position: 'relative'
+          opacity: opacityValue,
+          position: 'relative',
+          pointerEvents: cursorValue
         }}
         onMouseEnter={() => handleShowAction(Number(card.id), 'MOUSE_ENTER')}
         onMouseLeave={() => handleShowAction(Number(card.id), 'MOUSE_LEAVE')}
@@ -191,31 +216,32 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
           </Box>
           {/* Match Card match */}
 
-          {duplicateMatchArray?.map((matchDuplicate: boolean, index: number) => {
-            if (matchDuplicate) {
-              return (
-                <Tooltip title="Duplicate matches" placement="top" key={index}>
-                  <Button
-                    sx={{
-                      position: 'absolute',
-                      top: '11px',
-                      left: '68px',
-                      minWidth: '24px !important',
-                      minHeight: '16px !important',
-                      backgroundColor: 'rgb(245, 124, 0)',
-                      '&:hover': {
-                        backgroundColor: 'rgb(214 148 79);'
-                      },
-                      padding: '3px 4px !important'
-                    }}
-                  >
-                    {' '}
-                    <WarningAmberIcon fontSize="small" sx={{ color: '#ffdd00' }} />
-                  </Button>
-                </Tooltip>
-              )
-            }
-          })}
+          {duplicateMatchArray &&
+            duplicateMatchArray?.map((matchDuplicate: boolean, index: number) => {
+              if (matchDuplicate) {
+                return (
+                  <Tooltip title="Duplicate matches" placement="top" key={index}>
+                    <Button
+                      sx={{
+                        position: 'absolute',
+                        top: '11px',
+                        left: '68px',
+                        minWidth: '24px !important',
+                        minHeight: '16px !important',
+                        backgroundColor: 'rgb(245, 124, 0)',
+                        '&:hover': {
+                          backgroundColor: 'rgb(214 148 79);'
+                        },
+                        padding: '3px 4px !important'
+                      }}
+                    >
+                      {' '}
+                      <WarningAmberIcon fontSize="small" sx={{ color: '#ffdd00' }} />
+                    </Button>
+                  </Tooltip>
+                )
+              }
+            })}
 
           {card?.type === 'EVENT' ? (
             <Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 0.8 }}>
@@ -261,14 +287,15 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
               {card?.type === 'EVENT' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
                 <Tooltip title={!open && !isOpenDialogEditEvent ? 'Options' : ''} placement="right-start">
                   <Box>
-                    <MoreHorizIcon
+                    <IconButton
                       id="option-button"
                       aria-controls={open ? 'option-button' : undefined}
                       aria-haspopup="true"
                       aria-expanded={open ? 'true' : undefined}
-                      fontSize="small"
-                      onClick={(event: any) => setAnchorEl(event.currentTarget)}
-                    />
+                      onClick={handleClick}
+                    >
+                      <MoreHorizIcon />
+                    </IconButton>
                     <Menu
                       id="option-button"
                       anchorEl={anchorEl}
@@ -298,7 +325,6 @@ const ScheduleCard = ({ card, activeDragItemId, render }: ScheduleCardProps) => 
                           handleClose()
                         }}
                       >
-                        <DeleteSweep sx={{ marginRight: '0.75rem' }} />
                         Delete
                       </MenuItem>
                     </Menu>
