@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Formik, Field, Form, ErrorMessage, FormikProps } from 'formik'
+import { Formik, Field, Form, FormikProps } from 'formik'
 import { LoginSchema } from '../../services/validator/auth.validator'
 import { Alert, Box, Button, IconButton, InputAdornment, Stack, TextField } from '@mui/material'
 import { LoginForm } from './Login.types'
@@ -70,8 +70,8 @@ const Login: React.FC = () => {
                 <Field
                   as={TextField}
                   className="login-textfield"
-                  color={formProps.touched.email && formProps.errors.email && 'error'}
-                  error={formProps.touched.email && formProps.errors.email ? true : false}
+                  error={formProps.touched.email && Boolean(formProps.errors.email)}
+                  helperText={formProps.touched.email && formProps.errors.email}
                   fullWidth
                   id="email-login"
                   label="Email"
@@ -87,16 +87,13 @@ const Login: React.FC = () => {
                     )
                   }}
                 />
-                <span className={styles['error-message']}>
-                  <ErrorMessage name="email" />
-                </span>
               </Stack>
               <Stack spacing={2} width={'60vw'} minWidth={100} maxWidth={450}>
                 <Field
                   as={TextField}
                   className="login-textfield"
-                  color={formProps.touched.password && formProps.errors.password && 'error'}
-                  error={formProps.touched.password && formProps.errors.password ? true : false}
+                  error={formProps.touched.password && Boolean(formProps.errors.password)}
+                  helperText={formProps.touched.password && formProps.errors.password}
                   fullWidth
                   id="password-login"
                   label="Password"
@@ -120,9 +117,6 @@ const Login: React.FC = () => {
                     )
                   }}
                 />
-                <span className={styles['error-message']}>
-                  <ErrorMessage name="password" />
-                </span>
               </Stack>
               <Stack spacing={2} width={'60vw'} minWidth={100} maxWidth={450}>
                 <Button className={styles['submit-login-btn']} size="large" type="submit" variant="contained">

@@ -23,7 +23,7 @@ function App() {
       <Suspense fallback={<>Loading...</>}>
         <ThemeProvider theme={Theme}>
           <GlobalStyle>
-            <ToastContainer style={{ fontSize: '15px' }} autoClose={1000} draggable />
+            <ToastContainer style={{ fontSize: '15px', zIndex: 1005 }} autoClose={1000} draggable />
             <RouterProvider router={router}></RouterProvider>
           </GlobalStyle>
         </ThemeProvider>

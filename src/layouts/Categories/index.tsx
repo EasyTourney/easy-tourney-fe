@@ -48,11 +48,12 @@ const Category = ({ navigate, location }: any) => {
 
   const dispatch = useDispatch()
   const [searchText, setSearchText] = useState<string | ''>('')
-  const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
+  const [sortType, setSortType] = useState('')
   const categories = useSelector((state: any) => state.category.categories)
   const [totalCategories, setTotalCategories] = useState<number>(0)
   const [params] = useSearchParams()
   const pageURL = Number(params.get('page'))
+  const sortTypeURL = params.get('sortType')
   const [currentPage, setCurrentPage] = useState<number>(pageURL | 1)
   const [update, setUpdate] = useState<boolean>(false)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
@@ -88,11 +89,22 @@ const Category = ({ navigate, location }: any) => {
   })
 
   useEffect(() => {
-    if (pageURL > 0 && isSetPageURL.current === false) {
-      setCurrentPage(() => pageURL)
-      isSetPageURL.current = true
+    // if (pageURL > 0 && isSetPageURL.current === false) {
+    //   setCurrentPage(() => pageURL)
+    //   isSetPageURL.current = true
+    // }
+    // pageSearch(pageURL)
+    setSortType(sortTypeURL === 'asc' || sortTypeURL === 'desc' ? sortTypeURL : '')
+    setCurrentPage(pageURL | 1)
+    const param: ParamApi = {
+      sortType: sortType,
+      page: currentPage,
+      keyword: searchText
     }
-  }, [pageURL])
+    getAll({ ...param })
+    setLoading(false)
+    setIsAdded(false)
+  }, [pageURL, sortTypeURL])
 
   useEffect(() => {
     if (debouceSearch) {
@@ -111,15 +123,6 @@ const Category = ({ navigate, location }: any) => {
         search: createSearchParams({ page: String(currentPage) }).toString()
       })
     }
-
-    const param: ParamApi = {
-      sortType: sortType,
-      page: currentPage,
-      keyword: searchText
-    }
-    getAll({ ...param })
-    setLoading(false)
-    setIsAdded(false)
   }, [debouceSearch, update])
 
   const handleEdit = useCallback(

@@ -12,13 +12,13 @@ import theme from './theme'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Provider store={store}>
-    <React.StrictMode>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <CssVarsProvider theme={theme}>
-          <CssBaseline />
-          <App />
-        </CssVarsProvider>
-      </LocalizationProvider>
-    </React.StrictMode>
+    {/* <React.StrictMode> */}
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <CssVarsProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </CssVarsProvider>
+    </LocalizationProvider>
+    {/* </React.StrictMode> */}
   </Provider>
 )
