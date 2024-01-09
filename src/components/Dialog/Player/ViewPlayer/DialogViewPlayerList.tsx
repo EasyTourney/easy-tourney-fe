@@ -189,7 +189,7 @@ const DialogViewPlayerList = ({ onAddPlayer, onOpen, onClose, onDelete }: Dialog
     >
       <DialogTitle className={styles['dialog-title']}>Players</DialogTitle>
       <DialogContent className={styles['dialog-container']}>
-        {tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED' && (
+        {tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'IN_PROGRESS' && (
           <DialogAddPlayer
             addPlayer={addPlayer}
             onAdd={() => {
@@ -213,7 +213,9 @@ const DialogViewPlayerList = ({ onAddPlayer, onOpen, onClose, onDelete }: Dialog
           total={totalPlayers}
           loading={loading}
           hidePagination={false}
-          showActions={tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED'}
+          showActions={
+            tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'IN_PROGRESS'
+          }
         />
       </DialogContent>
       <DialogActions className={styles['group-btn']}>

@@ -19,3 +19,13 @@ export const checkToken = (data: any) => {
   })
   return res
 }
+
+export const changePassword = (data: any) => {
+  const res = axios({
+    url: '/organizer/changePassword',
+    method: 'PUT',
+    data
+  })
+
+  return res
+}

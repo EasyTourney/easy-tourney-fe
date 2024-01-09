@@ -161,3 +161,19 @@ export interface EditMatchAPIRes extends AxiosResponse {
   } | null
   errorMessage: { [key: string]: string }
 }
+
+export interface ChangePasswordAPIRes extends AxiosResponse {
+  success: boolean
+  data: any
+  total: number
+  additionalData: any
+  errorMessage: { [key: string]: string }
+}
+
+export interface GeneralTournamentAPIRes extends AxiosResponse {
+  success: boolean
+  data: any
+  total: number
+  additionalData: any
+  errorMessage: { [key: string]: string }
+}

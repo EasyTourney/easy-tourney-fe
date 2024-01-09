@@ -191,15 +191,17 @@ const Teams = ({ navigate, location }: any) => {
       <Box sx={{ fontWeight: '500', fontSize: '2rem', textAlign: 'center' }}>Participant</Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-          {tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED' && (
-            <DialogAddTeam
-              addTeam={addTeam}
-              onAdd={() => {
-                setCurrentPage(1)
-                setUpdate((prev) => !prev)
-              }}
-            />
-          )}
+          {tournamentStatus !== 'DISCARDED' &&
+            tournamentStatus !== 'FINISHED' &&
+            tournamentStatus !== 'IN_PROGRESS' && (
+              <DialogAddTeam
+                addTeam={addTeam}
+                onAdd={() => {
+                  setCurrentPage(1)
+                  setUpdate((prev) => !prev)
+                }}
+              />
+            )}
         </Box>
         <DialogEditTeam
           editTeam={putTeamById}
@@ -220,7 +222,9 @@ const Teams = ({ navigate, location }: any) => {
         handlePageSearch={pageSearch}
         totalCurrentPage={totalCurrentPage}
         loading={loading}
-        showActions={tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED'}
+        showActions={
+          tournamentStatus !== 'DISCARDED' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'IN_PROGRESS'
+        }
       />
       {isOpenPlayerDialog && (
         <DialogViewPlayerList

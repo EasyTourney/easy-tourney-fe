@@ -15,6 +15,7 @@ import DialogEditOrganizerTournament from '../../../components/Dialog/Tournament
 import DialogEditEventDateTournament from '../../../components/Dialog/Tournament/General/EditEventDate/DialogEditEventDateTournament'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  setEventdate,
   setSelectedCategory,
   setSelectedDescription,
   setSelectedEventDate,
@@ -26,6 +27,7 @@ import { MdEditSquare } from 'react-icons/md'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { discardTournament } from '../../../apis/axios/tournaments/generalTournaments'
+import { GeneralTournamentAPIRes } from '../../../types/common'
 
 const General = () => {
   const dispatch = useDispatch()
@@ -123,8 +125,9 @@ const General = () => {
   const param: { tournamentId?: string } = useParams()
   useEffect(() => {
     const fetchTournamentData = async () => {
-      const response = await getTournamentById(Number(param.tournamentId))
-      dispatch(setGeneral(response.data))
+      const response = (await getTournamentById(Number(param.tournamentId))) as GeneralTournamentAPIRes
+      dispatch(setGeneral(response?.data))
+      dispatch(setEventdate(response?.additionalData))
       setLoading(false)
     }
 

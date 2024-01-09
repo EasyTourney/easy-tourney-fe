@@ -45,6 +45,7 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
     }
   ]
   const eventDates = useSelector((state: any) => state.general.selectedEventDate)
+  const matchEvendate = useSelector((state: any) => state.general.eventDate)
   const [openAddEventDate, setOpenAddEventDate] = useState(false)
   const [loading, setLoading] = useState<boolean>(true)
   const [update] = useState<boolean>(false)
@@ -73,6 +74,7 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
     const dates = rowData.date
     const parsedDate = moment(dates, 'dddd, MMMM D, YYYY - [from] HH:mm [to] HH:mm')
     const formattedDate = parsedDate.format('YYYY-MM-DD')
+    const matches = matchEvendate.matchOfEventDates
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to revert this!',
@@ -90,18 +92,31 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
       }
     }).then(async (result) => {
       if (result.isConfirmed) {
+        Swal.showLoading()
         try {
           const currentEventDates = await getEventDatesFromBackend(tournamentId)
-          const updatedEventDates = currentEventDates.filter((eventDate) => {
-            return eventDate !== formattedDate
-          })
-          const eventDateUpdated = await editEventDatesInTournament(tournamentId, updatedEventDates)
-          dispatch(setSelectedEventDate(eventDateUpdated.eventDates))
-          dispatch(updatedEventDate(eventDateUpdated.eventDates))
-          toast.success('EventDate is deleted successfully!')
+          const eventDateId = rowData.id
+          const matchingMatch = matches.find((match: any) => match.id === eventDateId)
+
+          if (matchingMatch && matchingMatch.numMatch === 0) {
+            const updatedEventDates = currentEventDates.filter((eventDate) => eventDate !== formattedDate)
+            const eventDateUpdated = await editEventDatesInTournament(tournamentId, updatedEventDates)
+
+            dispatch(setSelectedEventDate(eventDateUpdated.eventDates))
+            dispatch(updatedEventDate(eventDateUpdated.eventDates))
+
+            toast.success('EventDate is deleted successfully!')
+          } else {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Can not delete',
+              text: 'Cannot delete this date because it is containing scheduled matches. Please move all matches from this date to another date before deleting!'
+            })
+          }
         } catch (error) {
           console.error(error)
-          toast.error('Failed to delete eventDate.')
+        } finally {
+          Swal.hideLoading()
         }
       }
     })
@@ -109,8 +124,8 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
 
   const getEventDatesFromBackend = async (tournamentId: number): Promise<string[]> => {
     const tournamentResponse = await getTournamentById(tournamentId)
-    const eventDates = tournamentResponse.data.eventDates
-    const dates = eventDates.map((date: any) => date.date)
+    const eventDates = tournamentResponse?.data?.eventDates
+    const dates = eventDates?.map((date: any) => date.date)
     return dates
   }
 

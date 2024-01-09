@@ -170,6 +170,19 @@ const endTimeEventDate = Yup.string()
 const teamOne = Yup.string().trim().required('Team one is required.')
 const teamTwo = Yup.string().trim().required('Team two is required.')
 
+const oldPassword = Yup.string()
+  .trim()
+  .required('Old password is required.')
+  .min(6, 'Old password must be at least 6 characters')
+const newPassword = Yup.string()
+  .trim()
+  .required('New password is required.')
+  .min(6, 'New password must be at least 6 characters')
+const confirmPassword = Yup.string()
+  .trim()
+  .required('Confirm password is required.')
+  .min(6, 'Confirm password must be at least 6 characters')
+
 export {
   email,
   password,
@@ -194,5 +207,8 @@ export {
   startTimeEventDate,
   endTimeEventDate,
   teamOne,
-  teamTwo
+  teamTwo,
+  oldPassword,
+  newPassword,
+  confirmPassword
 }

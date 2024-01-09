@@ -6,6 +6,7 @@ interface GeneralState {
   selectedDes: string
   selectedOrganizer: []
   selectedEventDate: []
+  eventDate: []
 }
 
 const initialState: GeneralState = {
@@ -13,7 +14,8 @@ const initialState: GeneralState = {
   selectedCategory: '',
   selectedDes: '',
   selectedOrganizer: [],
-  selectedEventDate: []
+  selectedEventDate: [],
+  eventDate: []
 }
 const generalSlice = createSlice({
   name: 'generals',
@@ -33,6 +35,9 @@ const generalSlice = createSlice({
     },
     setSelectedEventDate: (state, action) => {
       state.selectedEventDate = action.payload
+    },
+    setEventdate: (state, action) => {
+      state.eventDate = action.payload
     }
   }
 })
@@ -42,7 +47,8 @@ export const {
   setSelectedCategory,
   setSelectedDescription,
   setSelectedOrganizer,
-  setSelectedEventDate
+  setSelectedEventDate,
+  setEventdate
 } = generalSlice.actions
 
 export default generalSlice.reducer
