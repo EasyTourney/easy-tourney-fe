@@ -71,6 +71,8 @@ const Category = ({ navigate, location }: any) => {
       setTotalCurrentPage(getCategories?.total)
       setTotalCategories(getCategories?.additionalData?.totalCategories)
       setLoading(false)
+    } else {
+      dispatch(setCategories([]))
     }
   }
 

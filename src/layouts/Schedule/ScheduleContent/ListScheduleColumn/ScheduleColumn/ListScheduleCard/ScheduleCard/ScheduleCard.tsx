@@ -15,11 +15,11 @@ import { useParams } from 'react-router-dom'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import { useSelector } from 'react-redux'
 import { matchDuplicateSelector } from '../../../../../../../redux/reducers/schedule/schedule.selectors'
-import { Button, Chip, IconButton, Menu, MenuItem } from '@mui/material'
+import { Button, Chip, Menu, MenuItem } from '@mui/material'
 import { DialogEditEvent } from '../../../../../../../components/Dialog/MatchEvent/EditEvent'
 import { deleteEvent, editEvent } from '../../../../../../../apis/axios/matchEvent/matchEvent'
 import { MatchEvent } from '../../../../../../../types/event'
-import { EditNote } from '@mui/icons-material'
+import { DeleteSweep, EditNote } from '@mui/icons-material'
 import { CommonAPIRes } from '../../../../../../../types/common'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
@@ -73,9 +73,6 @@ const ScheduleCard = ({ card, activeDragItemId, render, isPastDate, column }: Sc
     }
   }, [dateOfColumn, today, column])
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
   const handleClose = () => {
     setAnchorEl(null)
   }
@@ -287,15 +284,14 @@ const ScheduleCard = ({ card, activeDragItemId, render, isPastDate, column }: Sc
               {card?.type === 'EVENT' && tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
                 <Tooltip title={!open && !isOpenDialogEditEvent ? 'Options' : ''} placement="right-start">
                   <Box>
-                    <IconButton
+                    <MoreHorizIcon
                       id="option-button"
                       aria-controls={open ? 'option-button' : undefined}
                       aria-haspopup="true"
                       aria-expanded={open ? 'true' : undefined}
-                      onClick={handleClick}
-                    >
-                      <MoreHorizIcon />
-                    </IconButton>
+                      fontSize="small"
+                      onClick={(event: any) => setAnchorEl(event.currentTarget)}
+                    />
                     <Menu
                       id="option-button"
                       anchorEl={anchorEl}
@@ -325,6 +321,7 @@ const ScheduleCard = ({ card, activeDragItemId, render, isPastDate, column }: Sc
                           handleClose()
                         }}
                       >
+                        <DeleteSweep sx={{ marginRight: '0.75rem' }} />
                         Delete
                       </MenuItem>
                     </Menu>
