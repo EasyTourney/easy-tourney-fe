@@ -23,7 +23,6 @@ const ListScheduleColumn = ({ columnData, render }: ListScheduleColumnProps) => 
       {columnData?.map((column: ScheduleDataType) => (
         <ScheduleColumn key={column?.eventDateId} column={column} render={render} />
       ))}
-      <Box sx={{ mx: 2 }}></Box>
     </Box>
   )
 }

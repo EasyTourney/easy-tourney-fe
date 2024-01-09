@@ -168,14 +168,6 @@ time {
   cursor: default;
 }
 
-.result-pdf a {
-  text-align: center;
-  margin-right: 20px;
-  color: blue !important;
-  align-items: center;
-  display: flex;
-}
-
 .result-icon a {
   text-align: center;
   margin-right: 20px;

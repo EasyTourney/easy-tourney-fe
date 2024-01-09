@@ -3,7 +3,6 @@ import React, { useState, memo } from 'react'
 import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
-import AddIcon from '@mui/icons-material/Add'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import ListScheduleCard from './ListScheduleCard/ListScheduleCard'
 import { useSortable } from '@dnd-kit/sortable'
@@ -15,6 +14,7 @@ import { addEvent } from '../../../../../apis/axios/matchEvent/matchEvent'
 import { useSelector } from 'react-redux'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import { timeNotEnough } from '../../../../../redux/reducers/schedule/schedule.selectors'
+import { AddCircle } from '@mui/icons-material'
 
 interface ScheduleColumnProps {
   column: ScheduleDataType
@@ -154,20 +154,23 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
       {/* Box List Card */}
       <ListScheduleCard cards={column?.matches} render={render} />
       {/* Box footer */}
-      <Box
-        sx={{
-          height: '56px',
-          p: 1.2,
-          display: 'flex',
-          justifyContent: 'center',
-          color: 'white',
-          alignItems: 'center'
-        }}
-      >
-        {tournamentStatus !== 'FINISHED' && tournamentStatus !== 'DISCARDED' ? (
+      {tournamentStatus !== 'NEED_INFORMATION' &&
+      tournamentStatus !== 'FINISHED' &&
+      tournamentStatus !== 'DISCARDED' ? (
+        <Box
+          sx={{
+            height: '48px',
+            p: 1.2,
+            display: 'flex',
+            justifyContent: 'center',
+            color: 'white',
+            alignItems: 'center',
+            paddingTop: 0
+          }}
+        >
           <Tooltip title="Add new event" arrow>
             <Button
-              startIcon={<AddIcon />}
+              endIcon={<AddCircle />}
               sx={{
                 width: '100%',
                 background: 'rgb(102, 187, 106)',
@@ -182,23 +185,23 @@ const ScheduleColumn = ({ column, render }: ScheduleColumnProps) => {
                 setIsOpenDialogAddEvent(true)
               }}
             >
-              Event
+              Add event
             </Button>
           </Tooltip>
-        ) : (
-          ''
-        )}
 
-        <DialogAddEvent
-          addEvent={addEvent}
-          onOpen={isOpenDialogAddEvent}
-          onClose={() => {
-            setIsOpenDialogAddEvent(false)
-          }}
-          eventDateId={column?.eventDateId}
-          render={render}
-        />
-      </Box>
+          <DialogAddEvent
+            addEvent={addEvent}
+            onOpen={isOpenDialogAddEvent}
+            onClose={() => {
+              setIsOpenDialogAddEvent(false)
+            }}
+            eventDateId={column?.eventDateId}
+            render={render}
+          />
+        </Box>
+      ) : (
+        ''
+      )}
     </Box>
   )
 }

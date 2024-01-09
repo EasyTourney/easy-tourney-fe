@@ -16,7 +16,7 @@ const ListScheduleCard = ({ cards, render }: ListScheduleCardProps) => {
           flexDirection: 'column',
           gap: 1,
           p: '0 5px',
-          m: '0 5px',
+          m: '0 5px 5px',
           overflowX: 'hidden',
           overflowY: 'auto',
           maxHeight: (theme) => `calc(100vh - 72px - 115px - ${theme.spacing(5)} - 90px - 80px)`,
