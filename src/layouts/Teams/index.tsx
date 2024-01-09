@@ -58,7 +58,7 @@ const Teams = ({ navigate, location }: any) => {
   const [isOpenPlayerDialog, setIsOpenPlayerDialog] = useState<boolean>(false)
   const [totalTeams, setTotalTeams] = useState<number>(0)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [update, setUpdate] = useState<boolean>(false)
   const [params] = useSearchParams()
   const pageURL = Number(params.get('page'))
@@ -75,12 +75,14 @@ const Teams = ({ navigate, location }: any) => {
       dispatch(setTeams([...getTeams.data]))
       setTotalCurrentPage(getTeams?.total)
       setTotalTeams(getTeams?.additionalData?.totalTeamOfTournament)
+      setLoading(false)
     }
   }
 
   const pageSearch = (value: number) => {
     setCurrentPage(() => value)
     isSetPageURL.current = false
+    setUpdate((prev) => !prev)
   }
 
   useEffect(() => {
@@ -100,14 +102,7 @@ const Teams = ({ navigate, location }: any) => {
       page: currentPage
     }
     getAll({ ...param }, Number(tournamentId))
-    setLoading(true)
-  }, [currentPage, update])
-
-  useEffect(() => {
-    if (totalTeams === undefined && currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1)
-    }
-  }, [totalTeams])
+  }, [update])
 
   const handleOpenPlayerDialog = useCallback((rowData: { [key: string]: any }) => {
     dispatch(setPlayers([]))
@@ -173,6 +168,9 @@ const Teams = ({ navigate, location }: any) => {
               const res = (await deleteTeam(teamId, Number(tournamentId))) as TeamAPIRes
               if (res.success) {
                 toast.success('A team is deleted successfully!')
+                if (totalCurrentPage === 1 && currentPage > 1) {
+                  setCurrentPage((prevPage) => prevPage - 1)
+                }
                 setUpdate((prev) => !prev)
               } else {
                 toast.error(res.message)
@@ -186,7 +184,7 @@ const Teams = ({ navigate, location }: any) => {
         toast.error('Deleting a team is not allowed for a discarded or finished tournament.')
       }
     },
-    [tournamentStatus, setUpdate, tournamentId]
+    [tournamentStatus, setUpdate, tournamentId, totalCurrentPage, currentPage]
   )
   return (
     <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '2rem' }}>
@@ -197,6 +195,7 @@ const Teams = ({ navigate, location }: any) => {
             <DialogAddTeam
               addTeam={addTeam}
               onAdd={() => {
+                setCurrentPage(1)
                 setUpdate((prev) => !prev)
               }}
             />

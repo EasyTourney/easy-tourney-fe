@@ -162,7 +162,7 @@ export function LeaderboardTable({ leaderboardData, loading }: LeaderboardCardPr
           </TableRow>
         </TableHead>
         <TableBody>
-          {!loading ? (
+          {loading ? (
             // LOADING
             <TableRowsLoader rowsNum={10} />
           ) : leaderboardData.leaderBoard?.length === 0 ? (

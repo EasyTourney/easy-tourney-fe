@@ -33,6 +33,7 @@ interface ReusedTableProps {
   handlePageSearch?: (page: number) => void
   totalCurrentPage?: number
   loading?: boolean
+  isAdded?: boolean
   hidePagination?: boolean
 }
 
@@ -48,6 +49,7 @@ const TableReused = ({
   handlePageSearch,
   totalCurrentPage,
   loading,
+  isAdded,
   hidePagination = true
 }: ReusedTableProps) => {
   const [sortStates, setSortStates] = useState<{ [key: string]: 'asc' | 'desc' | '' }>(
@@ -90,18 +92,16 @@ const TableReused = ({
       return <TiArrowUnsorted size={15} />
     }
   }
-  // pagination
-  const [page, setPage] = useState(1)
+
+  // Return to 1st page and reset sort type when add new record
   useEffect(() => {
-    // update when delete all records last page
-    if (rows?.length === 0 && page > 1) {
-      setPage(page - 1)
+    if (isAdded) {
+      setSortStates(Object.fromEntries(columns.map((column) => [column.id, ''])))
     }
-  }, [page, rows])
+  }, [isAdded])
 
   const handlePageChange = (pageNumber: number) => {
     handlePageSearch?.(pageNumber)
-    setPage(pageNumber)
   }
 
   // Loading skeleton
@@ -199,7 +199,7 @@ const TableReused = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {!loading ? (
+            {loading ? (
               <TableRowsLoader rowsNum={10} />
             ) : rows?.length === 0 ? (
               <TableRow>

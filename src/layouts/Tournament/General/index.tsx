@@ -29,7 +29,7 @@ import { discardTournament } from '../../../apis/axios/tournaments/generalTourna
 
 const General = () => {
   const dispatch = useDispatch()
-  const [loading, setIsLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const tournamentData = useSelector((state: any) => state.tournament.general)
   const [openTitle, setOpenTitle] = useState(false)
   const [openDescription, setOpenDescription] = useState(false)
@@ -120,17 +120,12 @@ const General = () => {
     }
   ]
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(true)
-    }, 1000)
-  }, [loading])
-
   const param: { tournamentId?: string } = useParams()
   useEffect(() => {
     const fetchTournamentData = async () => {
       const response = await getTournamentById(Number(param.tournamentId))
       dispatch(setGeneral(response.data))
+      setLoading(false)
     }
 
     if (param.tournamentId) {

@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import Box from '@mui/material/Box'
 import withBaseLogic from '../../hoc/withBaseLogic'
 import TableReused from '../../components/Tables'
 import Input from '../../components/Input'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { APIRes, CommonAPIRes, ParamApi } from '../../types/common'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
 import {
@@ -47,7 +47,7 @@ const Category = ({ navigate, location }: any) => {
   ]
 
   const dispatch = useDispatch()
-  const [value, setValue] = useState<string | ''>('')
+  const [searchText, setSearchText] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
   const categories = useSelector((state: any) => state.category.categories)
   const [totalCategories, setTotalCategories] = useState<number>(0)
@@ -56,35 +56,38 @@ const Category = ({ navigate, location }: any) => {
   const [currentPage, setCurrentPage] = useState<number>(pageURL | 1)
   const [update, setUpdate] = useState<boolean>(false)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
   const [categoryName, setCategoryName] = useState('')
+  const [isAdded, setIsAdded] = useState(false)
   const isSetPageURL = useRef(false)
 
   // get all category from DB
   const getAll = async (param: ParamApi) => {
     const getCategories = (await getAllCategories(param)) as APIRes
-    if (getCategories) {
+    if (getCategories?.data.length !== 0) {
       dispatch(setCategories([...getCategories.data]))
       setTotalCurrentPage(getCategories?.total)
       setTotalCategories(getCategories?.additionalData?.totalCategories)
+      setLoading(false)
     }
   }
 
   const pageSearch = (value: number) => {
     setCurrentPage(() => value)
+    setUpdate((prev) => !prev)
   }
 
   //delaying the execution of function search
   const debouceSearch = useDebounce({
-    value: value,
+    value: searchText,
     ms: 800
   })
 
   useEffect(() => {
     if (pageURL > 0 && isSetPageURL.current === false) {
-      setCurrentPage(pageURL)
+      setCurrentPage(() => pageURL)
       isSetPageURL.current = true
     }
   }, [pageURL])
@@ -93,7 +96,7 @@ const Category = ({ navigate, location }: any) => {
     if (debouceSearch) {
       navigate({
         pathname: location.pathname,
-        search: createSearchParams({ keyword: value, sortType: sortType, page: String(currentPage) }).toString()
+        search: createSearchParams({ keyword: searchText, sortType: sortType, page: String(currentPage) }).toString()
       })
     } else if (sortType !== '') {
       navigate({
@@ -110,19 +113,12 @@ const Category = ({ navigate, location }: any) => {
     const param: ParamApi = {
       sortType: sortType,
       page: currentPage,
-      keyword: value
+      keyword: searchText
     }
     getAll({ ...param })
-    setLoading(true)
-  }, [sortType, currentPage, debouceSearch, update])
-
-  useEffect(() => {
-    if (totalCategories === undefined && currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1)
-    } else if (debouceSearch) {
-      setCurrentPage(() => 1)
-    }
-  }, [totalCategories])
+    setLoading(false)
+    setIsAdded(false)
+  }, [debouceSearch, update])
 
   const handleEdit = useCallback(
     (rowData: { [key: string]: any }) => {
@@ -133,50 +129,57 @@ const Category = ({ navigate, location }: any) => {
     [dispatch]
   )
 
-  const handleDelete = useCallback(async (rowData: { [key: string]: any }) => {
-    const { categoryId } = rowData //get categoryId
-    let warningMessage
-    const response = (await getTotalTournamentsByCategory(categoryId)) as CommonAPIRes
-    switch (response.total) {
-      case 0:
-        warningMessage = 'You will not be able to revert this!'
-        break
-      case 1:
-        warningMessage =
-          '<p style="margin-top: 0">Deleting this category will delete <span style="color: rgb(220, 72, 72); font-weight: 500">1 tournament</span> currently associated with it.</p> Are you sure you want to proceed?'
-        break
-      default:
-        warningMessage = `<p style="margin-top: 0">Deleting this category will delete <span style="color: rgb(220, 72, 72); font-weight: 500">${response.total} tournaments</span> currently associated with it.</p> Are you sure you want to proceed?`
-    }
-    Swal.fire({
-      title: 'Are you sure?',
-      html: `${warningMessage}`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc4848',
-      cancelButtonColor: 'transient',
-      confirmButtonText: 'Yes, delete it!',
-      allowOutsideClick: false,
-      focusCancel: true,
-      customClass: {
-        actions: 'swal2-horizontal-buttons',
-        title: 'swal2-custom-title'
+  const handleDelete = useCallback(
+    async (rowData: { [key: string]: any }) => {
+      const { categoryId } = rowData //get categoryId
+      let warningMessage
+      const response = (await getTotalTournamentsByCategory(categoryId)) as CommonAPIRes
+      switch (response.total) {
+        case 0:
+          warningMessage = 'You will not be able to revert this!'
+          break
+        case 1:
+          warningMessage =
+            '<p style="margin-top: 0">Deleting this category will delete <span style="color: rgb(220, 72, 72); font-weight: 500">1 tournament</span> currently associated with it.</p> Are you sure you want to proceed?'
+          break
+        default:
+          warningMessage = `<p style="margin-top: 0">Deleting this category will delete <span style="color: rgb(220, 72, 72); font-weight: 500">${response.total} tournaments</span> currently associated with it.</p> Are you sure you want to proceed?`
       }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const res = (await apiDeleteCategory(categoryId)) as APIRes
-        if (res.success) {
-          toast.success('A category was successfully deleted !')
-          setUpdate((prev) => !prev)
-        } else {
-          toast.error(res.message)
+      Swal.fire({
+        title: 'Are you sure?',
+        html: `${warningMessage}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc4848',
+        cancelButtonColor: 'transient',
+        confirmButtonText: 'Yes, delete it!',
+        allowOutsideClick: false,
+        focusCancel: true,
+        customClass: {
+          actions: 'swal2-horizontal-buttons',
+          title: 'swal2-custom-title'
         }
-      }
-    })
-  }, [])
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res = (await apiDeleteCategory(categoryId)) as APIRes
+          if (res.success) {
+            toast.success('A category was successfully deleted !')
+            if (totalCurrentPage === 1 && currentPage > 1) {
+              setCurrentPage((prevPage) => prevPage - 1)
+            }
+            setUpdate((prev) => !prev)
+          } else {
+            toast.error(res.message)
+          }
+        }
+      })
+    },
+    [totalCurrentPage, currentPage]
+  )
 
   const handleColumnSort = useCallback((idColumm: any, sortType: 'asc' | 'desc' | '') => {
     setSortType(sortType)
+    setUpdate((prev) => !prev)
   }, [])
 
   return (
@@ -194,6 +197,10 @@ const Category = ({ navigate, location }: any) => {
           <DialogAddCategory
             addCategory={addCategory}
             onAdd={() => {
+              setIsAdded(true)
+              setSortType('')
+              setSearchText('')
+              setCurrentPage(1)
               setUpdate((prev) => !prev)
             }}
           />
@@ -212,10 +219,10 @@ const Category = ({ navigate, location }: any) => {
             id="outlined-search"
             placeholder="Search here..."
             handleChange={(e) => {
-              setValue(e.target.value)
               setCurrentPage(1)
+              setSearchText(e.target.value)
             }}
-            value={value}
+            value={searchText}
           />
         </Box>
       </Box>
@@ -230,6 +237,7 @@ const Category = ({ navigate, location }: any) => {
         handlePageSearch={pageSearch}
         totalCurrentPage={totalCurrentPage}
         loading={loading}
+        isAdded={isAdded}
       />
     </Box>
   )

@@ -53,7 +53,7 @@ const DialogEditOrganizerTournament = ({ open, setOpen }: DialogProps) => {
       }
     }
   ]
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [update] = useState<boolean>(false)
   const dispatch = useDispatch()
   const organizer = useSelector((state: any) => state.general.selectedOrganizer)
@@ -120,7 +120,7 @@ const DialogEditOrganizerTournament = ({ open, setOpen }: DialogProps) => {
   }
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [update])
 

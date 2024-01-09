@@ -78,7 +78,7 @@ const DialogViewPlayerList = ({ onAddPlayer, onOpen, onClose, onDelete }: Dialog
 
   const players = useSelector((state: any) => state.player.players)
   const [totalPlayers, setTotalPlayers] = useState<number>(0)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [update, setUpdate] = useState<boolean>(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
@@ -161,7 +161,7 @@ const DialogViewPlayerList = ({ onAddPlayer, onOpen, onClose, onDelete }: Dialog
 
   useEffect(() => {
     getAll()
-    setLoading(true)
+    setLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [update])
 

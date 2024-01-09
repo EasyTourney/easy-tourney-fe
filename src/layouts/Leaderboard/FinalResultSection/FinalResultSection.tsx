@@ -16,8 +16,8 @@ export function FinalResultSection({ leaderboardData, loading }: LeaderboardCard
     <Box
       className={styles['card-container']}
       sx={{
-        visibility: !loading ? 'hidden' : 'visible',
-        opacity: !loading ? 0 : 1
+        visibility: loading ? 'hidden' : 'visible',
+        opacity: loading ? 0 : 1
       }}
     >
       {/* CARD TOP 2 */}

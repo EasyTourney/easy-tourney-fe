@@ -172,10 +172,6 @@ const Paginations: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, onPa
       </Box>
     )
   }
-  // active pagination when delete all records last page
-  if (totalPages > 0 && currentPage > totalPages) {
-    setCurrentPage(totalPages)
-  }
 
   return (
     <Box className="pagination" sx={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>

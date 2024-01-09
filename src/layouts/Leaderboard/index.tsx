@@ -15,7 +15,7 @@ import { FinalResultSection } from './FinalResultSection/FinalResultSection'
 import { LeaderboardTable } from './LeaderboardTable/LeaderboardTable'
 
 const Leaderboard = () => {
-  const [loading, setIsLoading] = useState<boolean>(false)
+  const [loading, setIsLoading] = useState<boolean>(true)
   const dispatch = useDispatch()
   const leaderboardData = useSelector((state: RootState) => state.leaderboard.leaderboard)
   const param: { tournamentId?: string } = useParams()
@@ -28,7 +28,7 @@ const Leaderboard = () => {
       if (leaderboardResponse.data) {
         const convertedData = convertLeaderboardRecord(leaderboardResponse.data)
         dispatch(setLeaderboard(convertedData))
-        setIsLoading(true)
+        setIsLoading(false)
       } else {
         dispatch(setLeaderboard({ leaderBoard: [], matches: [] }))
       }

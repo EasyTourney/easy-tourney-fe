@@ -110,7 +110,7 @@ const TournamentTable = ({ navigate, location }: any) => {
 
   const [params] = useSearchParams()
   const pageURL = Number(params.get('page'))
-  const [value, setValue] = useState<string | ''>('')
+  const [searchText, setSearchText] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
   const [sortValue, setSortValue] = useState<string | ''>('')
   const [filterStatus, setFilterStatus] = useState<string | ''>('')
@@ -120,7 +120,8 @@ const TournamentTable = ({ navigate, location }: any) => {
   const [currentPage, setCurrentPage] = useState<number>(pageURL | 1)
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
   const [update, setUpdate] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [isAdded, setIsAdded] = useState(false)
   const { listCategory } = useSelector(categoriesSelector)
   const dispatch = useDispatch()
   const isSetPageURL = useRef(false)
@@ -146,15 +147,18 @@ const TournamentTable = ({ navigate, location }: any) => {
       setTotalTournaments(0)
       setTotalCurrentPage(0)
     }
+    setLoading(false)
+    setIsAdded(false)
   }, [])
 
   const pageSearch = (value: number) => {
     setCurrentPage(() => value)
     isSetPageURL.current = false
+    setUpdate((prev) => !prev)
   }
 
   const debounceSearch = useDebounce({
-    value: value,
+    value: searchText,
     ms: 800
   })
 
@@ -168,7 +172,7 @@ const TournamentTable = ({ navigate, location }: any) => {
   useEffect(() => {
     const currentParams = {
       page: String(currentPage),
-      keyword: value,
+      keyword: searchText,
       sortType: sortType,
       sortValue: sortType && sortValue,
       filterStatus: filterStatus !== 'All' ? filterStatus : '',
@@ -181,7 +185,7 @@ const TournamentTable = ({ navigate, location }: any) => {
     })
     const param: ParamApi = {
       page: currentPage,
-      keyword: value,
+      keyword: searchText,
       sortType: sortType,
       sortValue: sortType && sortValue,
       filterStatus: filterStatus !== 'All' ? filterStatus : '',
@@ -189,74 +193,65 @@ const TournamentTable = ({ navigate, location }: any) => {
     }
     removeEmptyFields(param)
     getAll({ ...param })
-    setLoading(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    debounceSearch,
-    sortType,
-    sortValue,
-    currentPage,
-    navigate,
-    location.pathname,
-    filterStatus,
-    filterCategory,
-    update
-  ])
-
-  useEffect(() => {
-    if (totalTournaments === undefined && currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1)
-    } else if (debounceSearch || filterStatus || filterCategory) {
-      setCurrentPage(() => 1)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalTournaments])
+  }, [debounceSearch, navigate, location.pathname, update])
 
   const handleEdit = useCallback((rowData: { [key: string]: any }) => {
     navigate(`/tournament/${rowData.id}/general`)
   }, [])
 
-  const handleDelete = useCallback(async (rowData: { [key: string]: any }) => {
-    const { id } = rowData
+  const handleDelete = useCallback(
+    async (rowData: { [key: string]: any }) => {
+      const { id } = rowData
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to revert this!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc4848',
-      cancelButtonColor: 'transient',
-      confirmButtonText: 'Yes, delete it!',
-      allowOutsideClick: false,
-      focusCancel: true,
-      customClass: {
-        actions: 'swal2-horizontal-buttons',
-        title: 'swal2-custom-title'
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const res = (await deleteTournament(id)) as TournamentAPIRes
-        if (res.success) {
-          toast.success('A tournament is deleted successfully!')
-          setUpdate((prev) => !prev)
-        } else {
-          toast.error(res.message)
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc4848',
+        cancelButtonColor: 'transient',
+        confirmButtonText: 'Yes, delete it!',
+        allowOutsideClick: false,
+        focusCancel: true,
+        customClass: {
+          actions: 'swal2-horizontal-buttons',
+          title: 'swal2-custom-title'
         }
-      }
-    })
-  }, [])
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res = (await deleteTournament(id)) as TournamentAPIRes
+          if (res.success) {
+            toast.success('A tournament is deleted successfully!')
+            if (totalCurrentPage === 1 && currentPage > 1) {
+              setCurrentPage((prevPage) => prevPage - 1)
+            }
+            setUpdate((prev) => !prev)
+          } else {
+            toast.error(res.message)
+          }
+        }
+      })
+    },
+    [totalCurrentPage, currentPage]
+  )
 
   const handleColumnSort = useCallback((idColumm: any, sortType: 'asc' | 'desc' | '') => {
     setSortType(sortType)
     setSortValue(idColumm)
+    setUpdate((prev) => !prev)
   }, [])
 
   const handleChangeFilterStatus = useCallback((event: ChangeEvent<{ value: string }>) => {
+    setCurrentPage(1)
     setFilterStatus(event.target.value)
+    setUpdate((prev) => !prev)
   }, [])
 
   const handleChangeFilterCategory = useCallback((event: ChangeEvent<{ value: string }>) => {
+    setCurrentPage(1)
     setFilterCategory(event.target.value)
+    setUpdate((prev) => !prev)
   }, [])
 
   return (
@@ -289,6 +284,13 @@ const TournamentTable = ({ navigate, location }: any) => {
                 open={open}
                 setOpen={setOpen}
                 onAdd={() => {
+                  setIsAdded(true)
+                  setSortType('')
+                  setSortValue('')
+                  setSearchText('')
+                  setFilterStatus('All')
+                  setFilterCategory('All')
+                  setCurrentPage(1)
                   setUpdate((prev) => !prev)
                 }}
               />
@@ -313,6 +315,7 @@ const TournamentTable = ({ navigate, location }: any) => {
               }
             }}
             onChange={handleChangeFilterCategory}
+            value={filterCategory}
           >
             <MenuItem value="All">All</MenuItem>
             {listCategory?.map((option: any) => (
@@ -338,6 +341,7 @@ const TournamentTable = ({ navigate, location }: any) => {
               }
             }}
             onChange={handleChangeFilterStatus}
+            value={filterStatus}
           >
             {tournamentStatuses.map((option: any) => (
               <MenuItem key={option.value} value={option.value}>
@@ -350,10 +354,10 @@ const TournamentTable = ({ navigate, location }: any) => {
             id="outlined-search"
             placeholder="Search here..."
             handleChange={(e) => {
-              setValue(e.target.value)
               setCurrentPage(1)
+              setSearchText(e.target.value)
             }}
-            value={value}
+            value={searchText}
           />
         </Box>
       </Box>
@@ -368,6 +372,7 @@ const TournamentTable = ({ navigate, location }: any) => {
         handlePageSearch={pageSearch}
         totalCurrentPage={totalCurrentPage}
         loading={loading}
+        isAdded={isAdded}
       />
     </Box>
   )

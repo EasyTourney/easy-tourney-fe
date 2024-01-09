@@ -103,7 +103,7 @@ const Organizers = ({ navigate, location }: any) => {
     }
   ]
 
-  const [value, setValue] = useState<string | ''>('')
+  const [searchText, setSearchText] = useState<string | ''>('')
   const [sortType, setSortType] = useState<'asc' | 'desc' | ''>('')
   const [params] = useSearchParams()
   const pageURL = Number(params.get('page'))
@@ -113,8 +113,9 @@ const Organizers = ({ navigate, location }: any) => {
   const [currentPage, setCurrentPage] = useState<number>(pageURL | 1)
 
   const [totalCurrentPage, setTotalCurrentPage] = useState<number>(0)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [update, setUpdate] = useState<boolean>(false)
+  const [isAdded, setIsAdded] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const isSetPageURL = useRef(false)
@@ -136,16 +137,18 @@ const Organizers = ({ navigate, location }: any) => {
     }
     setTotalCurrentPage(getOrganizers?.total)
     setTotalOrganizer(getOrganizers?.additionalData?.totalOrganizer)
+    setLoading(false)
   }
 
   const pageSearch = (value: number) => {
     setCurrentPage(() => value)
     isSetPageURL.current = false
+    setUpdate((prev) => !prev)
   }
 
   //delaying the execution of function search
   const debouceSearch = useDebounce({
-    value: value,
+    value: searchText,
     ms: 800
   })
 
@@ -162,35 +165,42 @@ const Organizers = ({ navigate, location }: any) => {
     [dispatch]
   )
 
-  const handleDelete = useCallback((rowData: { [key: string]: any }) => {
-    const { id } = rowData //get organizerId
+  const handleDelete = useCallback(
+    (rowData: { [key: string]: any }) => {
+      const { id } = rowData //get organizerId
+      console.log(totalCurrentPage, currentPage)
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to revert this!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc4848',
-      cancelButtonColor: 'transient',
-      confirmButtonText: 'Yes, delete it!',
-      allowOutsideClick: false,
-      focusCancel: true,
-      customClass: {
-        actions: 'swal2-horizontal-buttons',
-        title: 'swal2-custom-title'
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const res = (await deleteOrganizer(id)) as OrganizerAPIRes
-        if (res.success) {
-          toast.success('An organizer is deleted successfully!')
-          setUpdate((prev) => !prev)
-        } else {
-          toast.error(res.message)
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc4848',
+        cancelButtonColor: 'transient',
+        confirmButtonText: 'Yes, delete it!',
+        allowOutsideClick: false,
+        focusCancel: true,
+        customClass: {
+          actions: 'swal2-horizontal-buttons',
+          title: 'swal2-custom-title'
         }
-      }
-    })
-  }, [])
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res = (await deleteOrganizer(id)) as OrganizerAPIRes
+          if (res.success) {
+            toast.success('An organizer is deleted successfully!')
+            if (totalCurrentPage === 1 && currentPage > 1) {
+              setCurrentPage((prevPage) => prevPage - 1)
+            }
+            setUpdate((prev) => !prev)
+          } else {
+            toast.error(res.message)
+          }
+        }
+      })
+    },
+    [totalCurrentPage, currentPage]
+  )
 
   const handleColumnSort = useCallback((idColumm: any, sortType: 'asc' | 'desc' | '') => {
     setSortType(sortType)
@@ -201,6 +211,7 @@ const Organizers = ({ navigate, location }: any) => {
     } else {
       setSortValue(idColumm)
     }
+    setUpdate((prev) => !prev)
   }, [])
 
   useEffect(() => {
@@ -215,7 +226,7 @@ const Organizers = ({ navigate, location }: any) => {
     if (debouceSearch) {
       navigate({
         pathname: location.pathname,
-        search: createSearchParams({ keyword: value, sortType: sortType, page: String(currentPage) }).toString()
+        search: createSearchParams({ keyword: searchText, sortType: sortType, page: String(currentPage) }).toString()
       })
     } else if (sortType !== '' && sortValue) {
       navigate({
@@ -232,22 +243,13 @@ const Organizers = ({ navigate, location }: any) => {
     const param: ParamApi = {
       sortType: sortType,
       page: currentPage,
-      keyword: value,
+      keyword: searchText,
       sortValue: sortValue
     }
     getAll(param)
-    setLoading(true)
-  }, [debouceSearch, sortType, currentPage, update, sortValue])
-
-  useEffect(() => {
-    // update the current page when delete the last organizer on the current page
-    if (totalOrganizer === undefined && currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1)
-      // update the current page when starting a search
-    } else if (debouceSearch) {
-      setCurrentPage(() => 1)
-    }
-  }, [totalOrganizer])
+    setLoading(false)
+    setIsAdded(false)
+  }, [debouceSearch, update])
 
   return (
     <Box sx={{ backgroundColor: 'white', padding: '1rem', borderRadius: '1rem', marginTop: '1rem' }}>
@@ -264,6 +266,10 @@ const Organizers = ({ navigate, location }: any) => {
           <DialogAddOrganizer
             addOrganizer={addOrganizer}
             onAdd={() => {
+              setIsAdded(true)
+              setSortType('')
+              setSearchText('')
+              setCurrentPage(1)
               setUpdate((prev) => !prev)
             }}
           />
@@ -274,10 +280,10 @@ const Organizers = ({ navigate, location }: any) => {
             id="outlined-search"
             placeholder="Search here..."
             handleChange={(e) => {
-              setValue(e.target.value)
               setCurrentPage(1)
+              setSearchText(e.target.value)
             }}
-            value={value}
+            value={searchText}
           />
         </Box>
       </Box>
@@ -298,6 +304,7 @@ const Organizers = ({ navigate, location }: any) => {
         handlePageSearch={pageSearch}
         totalCurrentPage={totalCurrentPage}
         loading={loading}
+        isAdded={isAdded}
       />
     </Box>
   )

@@ -46,7 +46,7 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
   ]
   const eventDates = useSelector((state: any) => state.general.selectedEventDate)
   const [openAddEventDate, setOpenAddEventDate] = useState(false)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [update] = useState<boolean>(false)
   const dispatch = useDispatch()
   const eventDatesFormatted: any[] = convertDateFormat(eventDates)
@@ -61,7 +61,7 @@ const DialogEditEventDateTournament = ({ open, setOpen }: DialogProps) => {
     setOpenAddEventDate(true)
   }
   useEffect(() => {
-    setLoading(true)
+    setLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [update])
   const handleClose = () => {

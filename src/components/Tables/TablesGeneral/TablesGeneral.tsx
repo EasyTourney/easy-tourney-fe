@@ -174,7 +174,7 @@ const TableGeneral = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {!loading ? (
+            {loading ? (
               <TableRowsLoader rowsNum={10} />
             ) : rows?.length === 0 ? (
               <TableRow>
