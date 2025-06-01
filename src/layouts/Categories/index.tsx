@@ -62,7 +62,6 @@ const Category = ({ navigate, location }: any) => {
 
   const [categoryName, setCategoryName] = useState('')
   const [isAdded, setIsAdded] = useState(false)
-  const isSetPageURL = useRef(false)
 
   // get all category from DB
   const getAll = useCallback(async () => {
