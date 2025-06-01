@@ -1,46 +1,119 @@
-# Getting Started with Create React App
+# EasyTourney Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The frontend application for **EasyTourney**, a platform for organizing and managing esports tournaments. This project is built using **React** with **TypeScript** and follows a modular structure to support scalability and maintainability.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+- User authentication
+- Tournament creation and management
+- Match scheduling and result reporting
+- Admin dashboard
+- Real-time updates (via polling or websockets, if supported)
+- Responsive UI
 
-### `npm start`
+## 🧰 Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3003](http://localhost:3001) to view it in the browser.
+- ⚛️ React
+- ⛑ TypeScript
+- 📦 Redux Toolkit
+- 🎨 SCSS Modules
+- 📡 Axios (for API requests)
+- 🧪 Jest & React Testing Library
+- 🏗 React Router
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 📦 Installation
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js ≥ 14
+- npm ≥ 6
 
-### `npm build`
+### Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Clone the repository:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+git clone https://github.com/EasyTourney/easy-tourney-fe.git
+cd easy-tourney-fe
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Install dependencies:
 
-### `npm eject`
+```bash
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Create a `.env` file based on `.env.example` if available and configure your environment variables.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🚀 Available Scripts
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Start development server
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+npm start
+```
 
-## Learn More
+Runs the app in development mode.
+Visit: [http://localhost:3003](http://localhost:3003)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Run tests
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm test
+```
+
+Launches the test runner in interactive watch mode.
+
+### Build for production
+
+```bash
+npm run build
+```
+
+Builds the app for production to the `build` folder.
+
+### Linting and formatting
+
+```bash
+npm run lint
+npm run format
+```
+
+Uses ESLint and Prettier to lint and format the codebase.
+
+## 📁 Folder Structure
+
+```bash
+├── public/             # Static files and index.html
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── pages/          # Application views/pages
+│   ├── services/       # API communication
+│   ├── store/          # Redux Toolkit store & slices
+│   ├── utils/          # Utility functions
+│   ├── assets/         # Images, icons, styles
+│   └── App.tsx         # Main app component
+├── .eslintrc.json      # ESLint config
+├── .prettierrc         # Prettier config
+├── package.json        # Dependencies and scripts
+├── tsconfig.json       # TypeScript config
+└── Jenkinsfile         # CI/CD pipeline config
+```
+
+## 🚀 Deployment
+
+This app can be deployed to any static hosting provider (Netlify, Vercel, etc.) or served with a Node.js backend.
+Make sure to build the project before deployment:
+
+```bash
+npm run build
+```
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+See the [LICENSE](./LICENSE) file for details.
+
+---
+
+> For backend and deployment instructions, see [easy-tourney-be](https://github.com/EasyTourney/easy-tourney-be)

@@ -65,7 +65,12 @@ const Category = ({ navigate, location }: any) => {
   const isSetPageURL = useRef(false)
 
   // get all category from DB
-  const getAll = async (param: ParamApi) => {
+  const getAll = useCallback(async () => {
+    const param: ParamApi = {
+      sortType: sortType,
+      page: currentPage,
+      keyword: searchText
+    }
     const getCategories = (await getAllCategories(param)) as APIRes
     if (getCategories?.data.length !== 0) {
       dispatch(setCategories([...getCategories.data]))
@@ -75,7 +80,7 @@ const Category = ({ navigate, location }: any) => {
     } else {
       dispatch(setCategories([]))
     }
-  }
+  }, [sortType, currentPage, searchText, dispatch])
 
   const pageSearch = (value: number) => {
     setCurrentPage(() => value)
@@ -96,14 +101,8 @@ const Category = ({ navigate, location }: any) => {
     // pageSearch(pageURL)
     setSortType(sortTypeURL === 'asc' || sortTypeURL === 'desc' ? sortTypeURL : '')
     setCurrentPage(pageURL | 1)
-    const param: ParamApi = {
-      sortType: sortType,
-      page: currentPage,
-      keyword: searchText
-    }
-    getAll({ ...param })
+    getAll()
     setLoading(false)
-    setIsAdded(false)
   }, [pageURL, sortTypeURL])
 
   useEffect(() => {
@@ -207,6 +206,7 @@ const Category = ({ navigate, location }: any) => {
               setSearchText('')
               setCurrentPage(1)
               setUpdate((prev) => !prev)
+              setIsAdded(false)
             }}
           />
         </Box>
